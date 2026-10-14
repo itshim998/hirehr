@@ -24,11 +24,7 @@ def update_file(path):
     # "HireHR Consultancy services" -> "HireHR Services"
     content = re.sub(r'HireHR\s+Consultancy\s+services', 'HireHR Services', content)
 
-    # 2. LinkedIn URL:
-    # "hirehr-consultancy-services" -> "hirehr-services"
-    content = re.sub(r'hirehr-consultancy-services', 'hirehr-services', content)
-
-    # 3. Domain & Email replacements:
+    # 2. Domain & Email replacements (site domain only, preserving third-party domains):
     # "hirehrconsultancy.com" -> "hirehrservices.com"
     content = re.sub(r'hirehrconsultancy\.com', 'hirehrservices.com', content)
 

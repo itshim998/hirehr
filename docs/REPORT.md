@@ -251,9 +251,38 @@ Per the owner's explicit directive:
    - Canonical URLs updated across all pages: `https://hirehrservices.com/`
    - XML sitemap (`sitemap.xml`) updated to point all 11 URLs to `https://hirehrservices.com/`
    - `robots.txt` updated: `Sitemap: https://hirehrservices.com/sitemap.xml`
-   - LinkedIn URL updated: `https://www.linkedin.com/in/hirehr-services-3149a4206/`
 3. **Verification**:
-   - Grep verification across all active site files confirmed **zero occurrences of `consultancy`**.
+   - Grep verification across all active site files confirmed zero occurrences of `consultancy` in internal domain, email, and brand names.
    - Automated verification in `tools/verify_site.py` passed with 100% integrity.
+
+---
+
+## 10. Review Fixes (Post-Commit 746d5d6)
+
+### Fix 1 — Restored External LinkedIn URL
+- Restored `https://www.linkedin.com/in/hirehr-consultancy-services-3149a4206/` across all 11 pages (header top-bar and footer columns, 22 occurrences) and inside generator `tools/build_inner_pages.py`.
+- Preserved `target="_blank"` and `rel="noopener noreferrer"`.
+- Updated `tools/apply_brand_rename.py` to ensure third-party domains (like `linkedin.com`) and external slugs are never modified during site domain migrations.
+- Verification command confirmed exactly 22 instances of the original slug and zero corrupted slugs:
+  ```
+  22 linkedin.com/in/hirehr-consultancy-services-3149a4206/
+  ```
+
+### Fix 2 — Logo Transparent Margin Trimming
+- **Measurement of Original**: `assets/logo/HireHR-Logo.original.png` is 1569 × 1002 px (RGBA, kept untouched). Opaque artwork pixels occupy x=[138, 607], y=[54, 995] (width 470px, height 942px). The right ~60% of the original canvas was empty transparent space, causing an artificial ~50px gap between the flame and the text.
+- **Cropping**: Cropped to the opaque flame bounding box plus ~2% safe margin (x: 129 to 617, y: 35 to 1002; cropped size 488 × 967 px, aspect ratio 0.5047).
+- **Derivatives Generated (Lanczos Resampling)**:
+  - `assets/logo/hirehr-logo.png` (1x): 22 × 44 px, 1,753 bytes.
+  - `assets/logo/hirehr-logo-2x.png` (2x): 44 × 88 px, 4,491 bytes.
+- **HTML Markup**: Updated `width="22" height="44"` on logo `<img>` elements across `index.html`, `404.html`, all 10 inner pages, and `tools/build_inner_pages.py`.
+- **CSS & Layout Checks**:
+  - Desktop `.nav-bar` height measured at 71.2px (strictly within $\le 72$px budget).
+  - Gap between flame and brand text maintained at 0.6rem (0.4rem on mobile), sitting visually close and balanced.
+  - Viewport 320px horizontal scroll: `False` (zero horizontal overflow).
+  - 2x display sharpness confirmed via `header_1280px_2x.png`.
+- **Screenshots Updated**:
+  - Saved header & footer captures: `header_375px.png`, `header_768px.png`, `header_1280px.png`, `header_1280px_2x.png`, `footer_375px.png`, `footer_768px.png`, `footer_1280px.png`.
+  - Re-captured all 25 hero slide screenshots (`slide_1` to `slide_5` across 375, 768, 1280, 1920, and 2560px) in `docs/screenshots/`, reflecting "Welcome to HireHR Services".
+
 
 
