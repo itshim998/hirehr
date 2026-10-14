@@ -245,7 +245,7 @@ def generate_inner_page(page_info):
       </div>
 
       <div class="footer-bottom">
-        Copyright &copy; 2021 | Design & Developed By Zauca
+        Copyright &copy; 2021
       </div>
     </div>
   </footer>
