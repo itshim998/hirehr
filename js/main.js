@@ -1,5 +1,5 @@
 /**
- * HireHR Consultancy Services - Main Script
+ * HireHR Services - Main Script
  * Vanilla JavaScript | No framework / No external dependencies
  */
 

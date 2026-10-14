@@ -237,3 +237,23 @@ This section documents the execution and verification of follow-up Tasks A throu
 | **Task C** | `0cf7c81` | Remove Facebook and Twitter social links everywhere, keep LinkedIn, clean up CSS, and update verification suite with allowed-removals set |
 | **Task D** | `4ad64c6` | Update footer copyright line to exact 'Copyright &copy; 2021' across all site pages and generator |
 
+---
+
+## 9. Brand Name & Domain Migration to `hirehrservices.com`
+
+Per the owner's explicit directive:
+1. **Brand Name Update**:
+   - Replaced all occurrences of `HireHR consultancy services` and `HireHR Consultancy Services` with `HireHR services` / `HireHR Services` across all HTML pages, navigation wordmarks, slide titles, page titles, meta descriptions, and documentation, discarding the word `consultancy` only.
+2. **Domain & Email Migration**:
+   - Replaced email addresses:
+     - `employer@hirehrconsultancy.com` &rarr; `employer@hirehrservices.com`
+     - `jobseeker@hirehrconsultancy.com` &rarr; `jobseeker@hirehrservices.com`
+   - Canonical URLs updated across all pages: `https://hirehrservices.com/`
+   - XML sitemap (`sitemap.xml`) updated to point all 11 URLs to `https://hirehrservices.com/`
+   - `robots.txt` updated: `Sitemap: https://hirehrservices.com/sitemap.xml`
+   - LinkedIn URL updated: `https://www.linkedin.com/in/hirehr-services-3149a4206/`
+3. **Verification**:
+   - Grep verification across all active site files confirmed **zero occurrences of `consultancy`**.
+   - Automated verification in `tools/verify_site.py` passed with 100% integrity.
+
+

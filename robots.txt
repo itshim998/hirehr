@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://hirehrconsultancy.com/sitemap.xml
+Sitemap: https://hirehrservices.com/sitemap.xml

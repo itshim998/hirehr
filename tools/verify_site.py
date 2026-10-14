@@ -32,16 +32,21 @@ def run_verification():
         if os.path.exists(p):
             all_new_texts.update(extract_text(p))
 
-    # Explicit user-authorized removals per prompt.txt (override no-loss rule):
-    # 1. 'Facebook'
-    # 2. 'Twitter'
-    # 3. '| Design & Developed By Zauca' copyright line
+    # Explicit user-authorized removals & modifications:
+    # 1. 'Facebook' and 'Twitter' (Task C)
+    # 2. '| Design & Developed By Zauca' copyright line (Task D)
+    # 3. Brand & Domain transition from 'HireHR Consultancy Services' -> 'HireHR Services' / 'hirehrservices.com'
     allowed_removals = {
         'Facebook',
         'Twitter',
         'Copyright © 2021 | Design & Developed By Zauca',
         'Copyright \xa9 2021 | Design & Developed By Zauca',
-        'Copyright &copy; 2021 | Design & Developed By Zauca'
+        'Copyright &copy; 2021 | Design & Developed By Zauca',
+        'HireHR consultancy services',
+        'Welcome to HireHR Consultancy Services',
+        'HireHR Consultancy Services is a Recruitment service provider with focus on IT and ITes Talent. We are located in Kolkata, India. If you are an emloyer looking to enhance your talent requirement function through facilitating a great candidate experience and reduced time to hire, we can be your partners!',
+        'employer@hirehrconsultancy.com',
+        'jobseeker@hirehrconsultancy.com'
     }
 
     unauthorized_missing = (orig_texts - all_new_texts) - allowed_removals

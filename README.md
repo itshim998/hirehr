@@ -1,6 +1,6 @@
-# HireHR Consultancy Services - Static Website
+# HireHR Services - Static Website
 
-A clean, fast, responsive, and accessible static website for **HireHR consultancy services** (recruitment firm based in Kolkata, India).
+A clean, fast, responsive, and accessible static website for **HireHR services** (recruitment firm based in Kolkata, India).
 
 Rebuilt from a WordPress/Elementor snapshot into a clean static website without frameworks, build steps, or external dependencies.
 
@@ -90,11 +90,11 @@ You can open `index.html` directly in any web browser without a web server.
    - Branch: `main` / `ready-site` (root `/`)
 4. Save. Your site will be published at `https://<username>.github.io/<repo>/`.
 
-## Deploying to Production Domain (`hirehrconsultancy.com`)
+## Deploying to Production Domain (`hirehrservices.com`)
 
 1. Upload all repository files to your web server's web root (`public_html` or equivalent).
 2. Configure DNS A / CNAME records to point to your hosting server.
-3. If using GitHub Pages with a custom domain, add a `CNAME` file containing `hirehrconsultancy.com` in the root directory.
+3. If using GitHub Pages with a custom domain, add a `CNAME` file containing `hirehrservices.com` in the root directory.
 
 ## Form Submission Configuration
 
