@@ -130,7 +130,7 @@ def generate_inner_page(page_info):
       <div class="container">
         <!-- Logo Wordmark (Original image unrecoverable) -->
         <!-- DISABLED (image unrecoverable from dead domain/archive): <img src="wp-content/uploads/2021/07/Logo-Edited-1.png" alt="HireHR consultancy services" width="389" height="156"> -->
-        <a href="../index.html" class="brand-wordmark">HireHR consultancy services</a>
+        <a href="../index.html" class="brand-wordmark"><img src="../assets/logo/hirehr-logo.png" srcset="../assets/logo/hirehr-logo.png 1x, ../assets/logo/hirehr-logo-2x.png 2x" alt="" width="69" height="44">HireHR consultancy services</a>
 
         <!-- Mobile Menu Toggle Button -->
         <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="primary-nav" aria-label="Toggle navigation">
@@ -204,7 +204,7 @@ def generate_inner_page(page_info):
         <!-- Footer Column 1: Contact Info -->
         <div class="footer-col footer-brand">
           <!-- DISABLED (image unrecoverable from dead domain/archive): <img src="wp-content/uploads/2021/07/Logo-Edited-1.png" alt="HireHR consultancy services" width="389" height="156"> -->
-          <a href="../index.html" class="brand-wordmark" style="color: var(--color-white); margin-bottom: 1rem;">HireHR consultancy services</a>
+          <a href="../index.html" class="brand-wordmark" style="color: var(--color-white); margin-bottom: 1rem;"><img src="../assets/logo/hirehr-logo.png" srcset="../assets/logo/hirehr-logo.png 1x, ../assets/logo/hirehr-logo-2x.png 2x" alt="" width="69" height="44">HireHR consultancy services</a>
           <ul class="footer-contact-list">
             <li>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>

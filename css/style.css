@@ -215,13 +215,39 @@ img {
   letter-spacing: -0.02em;
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.6rem;
+}
+.brand-wordmark img {
+  height: 44px;
+  width: auto;
+  display: block;
+  flex-shrink: 0;
 }
 .brand-wordmark .accent {
   color: var(--color-primary);
 }
 .brand-wordmark:hover {
   color: var(--color-dark);
+}
+
+@media (max-width: 767px) {
+  .brand-wordmark img {
+    height: 36px;
+  }
+}
+
+@media (max-width: 480px) {
+  .brand-wordmark {
+    font-size: 1.05rem;
+    gap: 0.4rem;
+  }
+  .brand-wordmark img {
+    height: 32px;
+  }
+}
+
+.footer-brand .brand-wordmark img {
+  height: 40px;
 }
 
 /* Nav Menu */
