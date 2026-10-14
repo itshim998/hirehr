@@ -189,13 +189,9 @@ img {
   font-size: 0.75rem;
   transition: all var(--transition-fast);
 }
-.social-link:hover:not([aria-disabled="true"]) {
+.social-link:hover {
   background: var(--color-primary);
   color: var(--color-white);
-}
-.social-link[aria-disabled="true"] {
-  opacity: 0.5;
-  cursor: not-allowed;
 }
 
 /* Nav Bar */

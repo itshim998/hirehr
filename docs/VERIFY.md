@@ -3,10 +3,11 @@ Generated as required by Phase 4 of `prompt.txt`.
 
 ## 1. No-Loss Text Content Verification
 - **Original visible unique strings count**: 62
-- **New site cumulative unique strings count**: 84
-- **Missing strings from new site**: 0
+- **New site cumulative unique strings count**: 82
+- **User-authorized intentional removals**: 2 (Facebook, Twitter)
+- **Unauthorized missing strings from new site**: 0
 
- [PASS] **100% of original visible text strings are preserved across the new site.**
+ [PASS] **100% of required original visible text strings are preserved across the new site (with explicit user-authorized removals).**
 
 ## 2. Internal Link Resolution Verification
  [PASS] **All internal relative hyperlinks resolve to valid local files.**

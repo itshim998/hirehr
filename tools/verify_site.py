@@ -32,17 +32,32 @@ def run_verification():
         if os.path.exists(p):
             all_new_texts.update(extract_text(p))
 
-    missing_from_site = orig_texts - all_new_texts
+    # Explicit user-authorized removals per prompt.txt (override no-loss rule):
+    # 1. 'Facebook'
+    # 2. 'Twitter'
+    # 3. '| Design & Developed By Zauca' copyright line
+    allowed_removals = {
+        'Facebook',
+        'Twitter',
+        'Copyright © 2021 | Design & Developed By Zauca',
+        'Copyright \xa9 2021 | Design & Developed By Zauca',
+        'Copyright &copy; 2021 | Design & Developed By Zauca'
+    }
+
+    unauthorized_missing = (orig_texts - all_new_texts) - allowed_removals
+    authorized_removed_present = (orig_texts - all_new_texts) & allowed_removals
+
     report_lines.append("## 1. No-Loss Text Content Verification\n")
     report_lines.append(f"- **Original visible unique strings count**: {len(orig_texts)}\n")
     report_lines.append(f"- **New site cumulative unique strings count**: {len(all_new_texts)}\n")
-    report_lines.append(f"- **Missing strings from new site**: {len(missing_from_site)}\n\n")
+    report_lines.append(f"- **User-authorized intentional removals**: {len(authorized_removed_present)} ({', '.join(sorted(authorized_removed_present))})\n")
+    report_lines.append(f"- **Unauthorized missing strings from new site**: {len(unauthorized_missing)}\n\n")
 
-    if not missing_from_site:
-        report_lines.append(" [PASS] **100% of original visible text strings are preserved across the new site.**\n\n")
+    if not unauthorized_missing:
+        report_lines.append(" [PASS] **100% of required original visible text strings are preserved across the new site (with explicit user-authorized removals).**\n\n")
     else:
-        report_lines.append(" [FAIL] The following strings were missing:\n")
-        for m in sorted(missing_from_site):
+        report_lines.append(" [FAIL] The following unauthorized strings were missing:\n")
+        for m in sorted(unauthorized_missing):
             report_lines.append(f"  - `{m}`\n")
         report_lines.append("\n")
 
