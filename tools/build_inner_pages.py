@@ -1,4 +1,11 @@
 import os
+import json
+
+PAGES_JSON_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'content', 'pages.json')
+pages_data = {}
+if os.path.exists(PAGES_JSON_PATH):
+    with open(PAGES_JSON_PATH, 'r', encoding='utf-8') as f:
+        pages_data = json.load(f)
 
 inner_pages = [
     {
@@ -60,6 +67,25 @@ def generate_inner_page(page_info):
     
     os.makedirs(target_dir, exist_ok=True)
     file_path = os.path.join(target_dir, 'index.html')
+
+    meta_desc = "HireHR Services is a Recruitment service provider with focus on IT and ITes Talent. We are located in Kolkata, India."
+    if target_dir in pages_data and 'meta_description' in pages_data[target_dir]:
+        meta_desc = pages_data[target_dir]['meta_description']
+
+    if target_dir == 'contact-us':
+        main_content = """        <div class="pending-card">
+          <p data-placeholder="content-pending">Content pending from site owner.</p>
+        </div>"""
+    elif target_dir in pages_data and 'content_html' in pages_data[target_dir]:
+        raw_html = pages_data[target_dir]['content_html']
+        indented_html = '\n'.join('          ' + line if line.strip() else '' for line in raw_html.splitlines())
+        main_content = f"""        <div class=\"page-body\">
+{indented_html}
+        </div>"""
+    else:
+        main_content = """        <div class="pending-card">
+          <p data-placeholder="content-pending">Content pending from site owner.</p>
+        </div>"""
     
     html = f"""<!DOCTYPE html>
 <html lang="en-US">
@@ -70,7 +96,7 @@ def generate_inner_page(page_info):
   <link rel="canonical" href="https://hirehrservices.com/{target_dir}/">
   <meta name="robots" content="max-image-preview:large">
   <meta name="theme-color" content="#cd2653">
-  <meta name="description" content="HireHR Services is a Recruitment service provider with focus on IT and ITes Talent. We are located in Kolkata, India.">
+  <meta name="description" content="{meta_desc}">
   <link rel="icon" type="image/png" sizes="32x32" href="../assets/cropped-Capture-32x32.png">
   <link rel="stylesheet" href="../css/style.css">
 
@@ -180,9 +206,7 @@ def generate_inner_page(page_info):
 
     <section class="page-content-section">
       <div class="container">
-        <div class="pending-card">
-          <p data-placeholder="content-pending">Content pending from site owner.</p>
-        </div>
+{main_content}
       </div>
     </section>
   </main>
