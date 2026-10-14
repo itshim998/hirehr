@@ -123,3 +123,117 @@ Per Rule 2 & Copy Rules, all original spelling, punctuation quirks, and capitali
 | Added `:focus-visible` styles | Ensured clear 3px accent focus ring for keyboard navigation accessibility (WCAG 2.4.7). |
 | Converted Phone & Emails to `tel:` / `mailto:` | Enhanced usability by enabling direct click-to-call and mail client opening. |
 | Theme color `<meta name="theme-color" content="#cd2653">` | Added brand accent color to browser chrome for mobile devices. |
+
+---
+
+## 8. Follow-up Changes (Tasks A–D)
+
+This section documents the execution and verification of follow-up Tasks A through D on branch `ready-site`.
+
+### Task A — Five Hero Slide Background Images
+
+1. **Source Image Measurements & Crop Decisions (`assets/slides/source/`)**:
+   - All 5 source images downloaded into `assets/slides/source/` as untouched originals:
+     | File | Slide Title | Dimensions | Aspect Ratio | Size | Crop Decision |
+     |---|---|---|---|---|---|
+     | `slide-1.png` | Welcome to HireHR Consultancy Services | 2172 × 724 px | 3.000 : 1 | 1,748,941 B | Native 3:1 aspect ratio; no cropping needed. |
+     | `slide-2.png` | Permanent Hiring Solutions | 2172 × 724 px | 3.000 : 1 | 1,840,639 B | Native 3:1 aspect ratio; no cropping needed. |
+     | `slide-3.png` | Contract hiring Solutions | 2171 × 724 px | 2.999 : 1 | 1,859,527 B | Native aspect ratio kept (99.95% 3:1); relies on CSS `object-fit: cover`. |
+     | `slide-4.png` | Recruitment Process Outsourcing | 2172 × 724 px | 3.000 : 1 | 1,932,394 B | Native 3:1 aspect ratio; no cropping needed. |
+     | `slide-5.png` | BACKGROUND VERIFICATION SERVICE | 2172 × 724 px | 3.000 : 1 | 1,808,471 B | Native 3:1 aspect ratio; no cropping needed. |
+   - Native resolution is 2172 × 724 px. Per Rule (c), images were never upscaled beyond native resolution.
+   - Visual Inspection: All images were inspected in the IDE. Subjects are located on the right (~55–90%) with calm space on the left (~0–45%). Hands, faces, and documents are clear. Zero readable text, logos, or watermarks present.
+
+2. **Optimized Derivatives (`assets/slides/`)**:
+   - All 2400 WebP images are well within the 300 KB budget:
+     | Slide | WebP 2400 (Native 2172px) | WebP 1200 (1200×400) | Progressive JPEG 2400 |
+     |---|---|---|---|
+     | 1 (`welcome`) | 57.6 KB (Q=80) | 28.8 KB (Q=80) | 133.7 KB (Q=82) |
+     | 2 (`permanent-hiring`) | 53.7 KB (Q=80) | 24.9 KB (Q=80) | 118.6 KB (Q=82) |
+     | 3 (`contract-hiring`) | 64.7 KB (Q=80) | 30.8 KB (Q=80) | 137.5 KB (Q=82) |
+     | 4 (`rpo`) | 70.1 KB (Q=80) | 32.1 KB (Q=80) | 142.9 KB (Q=82) |
+     | 5 (`background-verification`) | 67.8 KB (Q=80) | 33.5 KB (Q=80) | 143.3 KB (Q=82) |
+
+3. **CSS Object Positioning & Contrast**:
+   - Desktop (≥ 1200px): `object-position: 70% 50%`
+   - Tablet (768px – 1199px): `object-position: 75% 50%`
+   - Mobile (≤ 767px): `object-position: 80% 50%`
+   - Overlay: `linear-gradient(90deg, rgba(11,17,32,0.82) 0%, rgba(11,17,32,0.62) 45%, rgba(11,17,32,0.15) 100%)` on desktop, `rgba(11,17,32,0.6)` on mobile.
+   - Text contrast: Title/subtitle white text maintains ≥ 5.36:1 against the lightest portion behind text (exceeds WCAG AA 4.5:1), and > 8:1 at the left edge.
+   - `prefers-reduced-motion`: explicit transition disable added for `.hero-bg-item`.
+
+4. **Synchronization (`js/main.js`)**:
+   - `goToSlide(index)` updated to synchronize `.hero-bg-item` active states with slide changes. Autoplay (4000ms), dots, and arrows work in lockstep.
+
+5. **Screenshots & Performance Verification**:
+   - 25 screenshots saved in `docs/screenshots/` (slides 1–5 at 375px, 768px, 1280px, 1920px, and 2560px viewports).
+   - Zero horizontal scroll verified across all viewports.
+   - Zero console errors during slide cycling.
+   - Lighthouse scores: Performance 99, Best Practices 100, SEO 92, Accessibility 88. FCP: 0.9s, LCP: 2.3s, CLS: 0.001.
+
+---
+
+### Task B — Logo Beside "HireHR consultancy services"
+
+1. **Original Logo Artwork (`assets/logo/HireHR-Logo.original.png`)**:
+   - Dimensions: 1569 × 1002 px (aspect ratio 1.5659 : 1, size 275,304 bytes).
+   - Format: PNG with RGBA transparency.
+   - Dominant colors: Bright cyan/turquoise RGB(1, 247, 251) / `#01f7fb`.
+   - Artwork details: Abstract dual-flame icon on the left (x in [138, 607], y in [54, 995]); right region is transparent canvas. Per instructions, preserved untouched without cropping, redrawing, or recoloring.
+   - Does not contain text inside the image. Text "HireHR consultancy services" kept in adjacent HTML markup.
+
+2. **Optimized Logo Derivatives (`assets/logo/`)**:
+   - `hirehr-logo.png`: 69 × 44 px (1x desktop nav size), 1,797 bytes (lossless PNG).
+   - `hirehr-logo-2x.png`: 138 × 88 px (2x high-DPI variant), 4,585 bytes (lossless PNG).
+   - `hirehr-logo-full.png`: 1569 × 1002 px, 212,515 bytes (lossless PNG optimization of original).
+
+3. **Placement & Responsive Sizing**:
+   - Header (all pages): `<img src="assets/logo/hirehr-logo.png" srcset="assets/logo/hirehr-logo.png 1x, assets/logo/hirehr-logo-2x.png 2x" alt="" width="69" height="44">` placed immediately before "HireHR consultancy services" inside `.brand-wordmark`.
+   - Footer (all pages): identical logo placed before wordmark text.
+   - Sizing: `height: 44px; width: auto;` on desktop; `36px` at ≤ 767px; `32px` at ≤ 480px with wordmark font size reduced to `1.05rem` at ≤ 480px.
+   - Desktop nav bar height measured at 71.2px (fits within ≤ 72px requirement).
+   - Mobile 320px viewport tested: zero horizontal scroll, zero overlap between brand wordmark and menu toggle.
+   - Footer contrast check: Background is dark navy `#0f172a`. The logo consists entirely of bright cyan `#01f7fb` with zero dark elements. Contrast ratio is 13.4:1 against `#0f172a`. Because contrast is exceptionally high and no dark elements disappear, the logo is placed directly on the navy background without needing a white plate (which would have degraded contrast to 1.34:1).
+
+---
+
+### Task C — Facebook and Twitter Removal; LinkedIn Retention
+
+1. **Removals**:
+   - Facebook and Twitter inert links, `<!-- TODO -->` comments, SVGs, and `.sr-only` text removed from the top bar and footer across all pages (`index.html`, `404.html`, all 10 inner pages, and `tools/build_inner_pages.py`).
+   - Note on rationale: Facebook and Twitter links were removed at the site owner's explicit request.
+   - Unused CSS rule `.social-link[aria-disabled="true"]` removed from `css/style.css`.
+   - LinkedIn retained with exact URL `https://www.linkedin.com/in/hirehr-consultancy-services-3149a4206/`, `target="_blank"`, and `rel="noopener noreferrer"`.
+   - "Follow Us :" and "Follow Us" labels preserved.
+
+2. **Verification**:
+   - Grep verification across all `.html`, `.css`, `.js`, and `.xml` files (excluding `original/`, `docs/`, `tools/`) returned zero matches for "facebook" or "twitter".
+   - Top bar and footer visually verified at 375px, 768px, and 1280px: alignment is clean with no broken spacing or gaps.
+   - `tools/verify_site.py` updated to include an allowed-removals set for user-authorized removals; passed with 0 unauthorized missing strings.
+
+---
+
+### Task D — Footer Copyright Line
+
+1. **Copyright Edit**:
+   - In `index.html`, `404.html`, all 10 inner pages, and `tools/build_inner_pages.py`, copyright line updated from:
+     `Copyright &copy; 2021 | Design & Developed By Zauca`
+     to exactly:
+     `Copyright &copy; 2021`
+   - Removed pipe and Zauca attribution with no trailing spaces or empty elements.
+
+2. **Verification**:
+   - Grep for "Zauca" across site files (excluding `original/`, `docs/`, `tools/`, `prompt.txt`) returned zero matches.
+   - Automated verification in `tools/verify_site.py` passed with 100% integrity.
+
+---
+
+### Git Commits Summary
+
+| Task | Commit Hash | Description |
+|---|---|---|
+| **Task A** | `7af6c0c` | Add five full-bleed hero slide background images with responsive WebP/JPEG derivatives, synchronized slider logic, and verification screenshots |
+| **Task B** | `472dc8d` | Add responsive HireHR logo to header and footer across all pages with high-DPI variant and responsive styling |
+| **Task C** | `0cf7c81` | Remove Facebook and Twitter social links everywhere, keep LinkedIn, clean up CSS, and update verification suite with allowed-removals set |
+| **Task D** | `4ad64c6` | Update footer copyright line to exact 'Copyright &copy; 2021' across all site pages and generator |
+
