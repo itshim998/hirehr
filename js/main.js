@@ -63,6 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // ==========================================================================
   const sliderTrack = document.querySelector('.slider-track');
   const slides = document.querySelectorAll('.slider-slide');
+  const bgItems = document.querySelectorAll('.hero-bg-item');
   const prevBtn = document.querySelector('.slider-prev');
   const nextBtn = document.querySelector('.slider-next');
   const dotsContainer = document.querySelector('.slider-dots');
@@ -99,8 +100,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const goToSlide = (index) => {
       slides[currentSlide].classList.remove('is-active');
+      if (bgItems[currentSlide]) {
+        bgItems[currentSlide].classList.remove('is-active');
+      }
       currentSlide = (index + totalSlides) % totalSlides;
       slides[currentSlide].classList.add('is-active');
+      if (bgItems[currentSlide]) {
+        bgItems[currentSlide].classList.add('is-active');
+      }
       updateDots();
     };
 
