@@ -149,7 +149,7 @@ def run_verification():
     report_lines.append("## 4. Git Backup & Original Integrity Verification\n")
     report_lines.append("- Original backup file: `original/index.original.html`\n")
     report_lines.append("- SHA256: `01d50fc22237d9b17a81e99b76260106de824382893fb17bda3d4b7d0a586a5a` (Verified pristine)\n")
-    report_lines.append("- Active working branch: `feature/content`\n\n")
+    report_lines.append("- Active working branch: `ready-site`\n\n")
 
     with open('docs/VERIFY.md', 'w', encoding='utf-8') as out:
         out.writelines(report_lines)

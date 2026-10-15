@@ -1,6 +1,6 @@
 # Content and Site Verification Suite (docs/VERIFY_CONTENT.md)
 
-This document aggregates the comprehensive verification outputs from both `tools/verify_content.py` (Refined Content, Forbidden Terms, Placeholder Integrity) and `tools/verify_site.py` (No-loss original text verification, link resolution, dead domain references, and original snapshot integrity).
+This document aggregates the comprehensive verification outputs from both 	ools/verify_content.py (Refined Content, Forbidden Terms, Placeholder Integrity) and 	ools/verify_site.py (No-loss original text verification, link resolution, dead domain references, and original snapshot integrity).
 
 ---
 
@@ -75,6 +75,6 @@ Generated as required by Phase 4 of `prompt.txt`.
 ## 4. Git Backup & Original Integrity Verification
 - Original backup file: `original/index.original.html`
 - SHA256: `01d50fc22237d9b17a81e99b76260106de824382893fb17bda3d4b7d0a586a5a` (Verified pristine)
-- Active working branch: `feature/content`
+- Active working branch: `ready-site`
 
 
