@@ -308,7 +308,7 @@ Every inner page with real copy received a dedicated `<meta name="description">`
 8. **`our-specialty/`**: `"We can help you find suitable IT profiles for your internal hiring and for your clients."` (88 chars)
 9. **`career-advice/`**: `"If you are a job seeker, it is important that you first know yourself better and find out what kind of job you would love to do."` (123 chars)
 10. **`job-seekers/`**: `"Do you lack confidence before a job interview?"` (45 chars)
-11. **`contact-us/`**: Maintained existing placeholder line and metadata untouched; reported as still pending.
+11. **`contact-us/`**: Updated meta description to exact homepage sentence `"HireHR Services is a manpower hiring service provider headquartered in Kolkata, West Bengal."` (90 chars); placeholder line retained untouched.
 
 ### 3. Preserved Integrity of Untouched Blocks on `index.html`
 Review of `git diff index.html` confirms that ONLY the authorized paragraphs were replaced:

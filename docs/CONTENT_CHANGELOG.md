@@ -166,3 +166,6 @@ This changelog records all verbatim text replacements made to `index.html` and i
 
 ### 10. `contact-us/`
 - **Status**: No new copy provided. Retained placeholder shell `<p data-placeholder="content-pending">Content pending from site owner.</p>` exactly as before. Still pending.
+- **Meta Description**:
+  - Old Text: `HireHR Services is a Recruitment service provider with focus on IT and ITes Talent. We are located in Kolkata, India.`
+  - New Text: `HireHR Services is a manpower hiring service provider headquartered in Kolkata, West Bengal.`

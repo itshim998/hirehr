@@ -68,7 +68,7 @@ def generate_inner_page(page_info):
     os.makedirs(target_dir, exist_ok=True)
     file_path = os.path.join(target_dir, 'index.html')
 
-    meta_desc = "HireHR Services is a Recruitment service provider with focus on IT and ITes Talent. We are located in Kolkata, India."
+    meta_desc = "HireHR Services is a manpower hiring service provider headquartered in Kolkata, West Bengal."
     if target_dir in pages_data and 'meta_description' in pages_data[target_dir]:
         meta_desc = pages_data[target_dir]['meta_description']
 
