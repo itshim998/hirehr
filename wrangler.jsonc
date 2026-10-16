@@ -1,0 +1,31 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "hirehr",
+  "main": "worker/index.js",
+  "compatibility_date": "2024-10-16",
+  "assets": {
+    "directory": "./",
+    "binding": "ASSETS",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page",
+    "run_worker_first": [
+      "/api/*"
+    ]
+  },
+  // Stage B Email Sending Binding:
+  // Declaring send_email requires an active domain with Cloudflare Email Routing.
+  // Uncomment the send_email block below in Stage B after activating the custom domain.
+  // "send_email": [
+  //   {
+  //     "name": "EMAIL"
+  //   }
+  // ],
+  "vars": {
+    "ALLOWED_ORIGINS": "http://localhost:8787",
+    "MAIL_MODE": "log",
+    "MAIL_FROM": ""
+  },
+  "observability": {
+    "enabled": true
+  }
+}
