@@ -47,15 +47,22 @@ export default {
     }
 
     const origin = request.headers.get('Origin');
+    const secFetchSite = request.headers.get('Sec-Fetch-Site');
     const urlOrigin = url.origin;
     const allowedOrigins = (env.ALLOWED_ORIGINS || '')
       .split(',')
       .map(o => o.trim())
       .filter(Boolean);
 
-    // Validate origin if present:
-    // Accept if matches request URL origin (same-origin) OR is in ALLOWED_ORIGINS
-    const isOriginAllowed = !origin || origin === urlOrigin || allowedOrigins.includes(origin);
+    // Strict Origin check (for both OPTIONS and POST):
+    // Allow only if Origin equals the request URL's own origin, or is listed in ALLOWED_ORIGINS.
+    // If Origin is absent, allow only when the Sec-Fetch-Site header is "same-origin"; otherwise respond 403.
+    let isOriginAllowed = false;
+    if (origin) {
+      isOriginAllowed = origin === urlOrigin || allowedOrigins.includes(origin);
+    } else {
+      isOriginAllowed = secFetchSite === 'same-origin';
+    }
 
     // Preflight OPTIONS handling
     if (request.method === 'OPTIONS') {
@@ -191,10 +198,8 @@ export default {
       return jsonResponse({ ok: false, error: 'Security token required' }, 400, origin);
     }
 
-    // Select Turnstile secret (support Cloudflare documented test secret that always fails: 2x0000000000000000000000000000000AA)
-    const turnstileSecret = (turnstileToken.startsWith('2x') || turnstileToken === 'fail')
-      ? '2x0000000000000000000000000000000AA'
-      : env.TURNSTILE_SECRET;
+    // Turnstile secret must always be env.TURNSTILE_SECRET
+    const turnstileSecret = env.TURNSTILE_SECRET;
 
     if (!turnstileSecret) {
       console.error('[contact-worker] Missing TURNSTILE_SECRET secret');
