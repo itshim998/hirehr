@@ -360,3 +360,82 @@ All headings, navigation links, hero slider slides/controls, service links, cons
   - `tools/verify_site.py`: 100% no-loss test passed (0 unauthorized missing strings). All internal links resolve. Zero runtime requests to dead domain. Original backup SHA-256 verified pristine.
   - Integrity: `feature/content` preserved intact on remote, `main` completely untouched.
 
+---
+
+## 13. Backend (Stage A): Cloudflare Worker & Static Assets
+
+- **Branch**: `feature/contact-worker` created from latest `ready-site`.
+- **Target Hosting Architecture**: **Cloudflare Workers with Static Assets** (one deployment = static site + API Worker, same origin, no CORS).
+- **Cost**: **$0.00** (100% free Cloudflare tier; zero paid services, zero third-party email providers).
+
+### 1. What Was Built
+1. **Worker Backend (`worker/index.js`)**:
+   - Plain vanilla JavaScript, zero npm runtime dependencies.
+   - Handles `POST /api/contact` only (all other methods return HTTP 405 with `Allow: POST`).
+   - Request body limit: ≤ 20 KB (enforced via Content-Length and buffer length, returning HTTP 413).
+   - **Origin Check**: Automatically accepts same-origin requests (`request.origin === url.origin`) plus comma-separated `ALLOWED_ORIGINS` (`http://localhost:8787` for Stage A). Rejects cross-origin requests with HTTP 403 Forbidden without wildcard CORS.
+   - **Server-Side Validation**: Mirrors client validation:
+     - `name`: required, ≤ 100 characters.
+     - `company`: optional, ≤ 150 characters.
+     - `phone`: required, ≤ 30 characters, digits, `+`, spaces, `-`, parentheses only, must contain at least one digit.
+     - `email`: required, valid format, ≤ 254 characters, CRLF rejected.
+     - `message`: required, ≤ 5000 characters.
+     - Rejects any unknown payload fields with HTTP 400.
+   - **Header Injection Defense**: Strips `\r` and `\n` from name, company, phone, and email headers.
+   - **Anti-Spam Honeypot**: Hidden `website` field silently returns HTTP 200 `{ok: true}` without logging or dispatching email.
+   - **Turnstile Verification**: Verifies `turnstileToken` server-side via Cloudflare's `https://challenges.cloudflare.com/turnstile/v0/siteverify` endpoint using `TURNSTILE_SECRET`.
+   - **Email Modes (`MAIL_MODE`)**:
+     - `log` (Stage A default): Logs a compact timestamped audit line (no PII or message body outside local dev) and returns HTTP 200 `{ok: true, delivered: false}`.
+     - `send` (Stage B): Sends plain-text email via `env.EMAIL` binding to `NOTIFY_TO` secret from `MAIL_FROM` with Reply-To set to visitor email. Fails closed (HTTP 502) if unconfigured or failed.
+   - Responses always return JSON with `Cache-Control: no-store` and `X-Content-Type-Options: nosniff`.
+2. **Configuration (`wrangler.jsonc`)**:
+   - Worker name `hirehr`, entry point `worker/index.js`, `compatibility_date: "2024-10-16"`.
+   - `assets`: `directory: "./"`, `binding: "ASSETS"`, `html_handling: "auto-trailing-slash"`, `not_found_handling: "404-page"`, `run_worker_first: ["/api/*"]`.
+   - Environment vars: `ALLOWED_ORIGINS`, `MAIL_MODE: "log"`, `MAIL_FROM: ""`. Observability enabled.
+   - `send_email` binding template prepared and commented out with clear Stage B enablement notes per Addendum 3.
+3. **Asset Privacy (`.assetsignore`)**:
+   - Strictly excludes non-public files: `worker/`, `wrangler.jsonc`, `node_modules/`, `.git/`, `original/`, `docs/`, `tools/`, `prompt.txt`, `README.md`, `package*.json`, `.dev.vars*`, `content/`, `.gitignore`.
+   - Verified via `wrangler deploy --dry-run`: exactly 60 public site assets uploaded; all excluded files return HTTP 404 under `wrangler dev`.
+4. **Local Secrets (`.dev.vars.example` & `.dev.vars`)**:
+   - `.dev.vars.example` committed with fake/test credentials.
+   - `.dev.vars` added to `.gitignore`.
+5. **Frontend Changes (`index.html` & `js/main.js`)**:
+   - `FORM_ENDPOINT = '/api/contact'` configured with client-side fallback.
+   - Hidden honeypot field (`website`) added with `tabindex="-1"`, `autocomplete="off"`, `aria-hidden="true"`.
+   - Cloudflare Turnstile widget explicitly rendered with light theme above the Submit button.
+   - Public test sitekey `1x00000000000000000000AA` configured with replacement notice.
+   - Widget resets after each submission attempt; load failures handled gracefully without JS exceptions.
+   - Neutral staging notice displayed when Worker returns `{ok: true, delivered: false}`: *"Thank you! Your consultation request has been received (staging notice: email delivery is not yet configured)."*
+6. **Security Headers (`_headers`)**:
+   - `X-Content-Type-Options: nosniff`
+   - `Referrer-Policy: strict-origin-when-cross-origin`
+   - `X-Frame-Options: DENY`
+   - `Content-Security-Policy`: restricts origins to `self` plus `https://challenges.cloudflare.com` for Turnstile.
+
+### 2. Verification Suite Results
+- **API Test Suite (`tools/test_backend.py`)**: 41/41 test cases passed against live local `wrangler dev` server:
+  - Static homepage, inner pages, CSS, JS: HTTP 200.
+  - All 12 excluded paths (including `/content/pages.json`): HTTP 404.
+  - Security headers & CSP: Verified.
+  - HTTP method restrictions (GET -> 405): Verified.
+  - Cross-site Origin check (Wrong origin -> 403): Verified.
+  - Payload size (>20 KB -> 413): Verified.
+  - Validation errors (13 sub-cases -> 400): Verified.
+  - Turnstile verification (missing/invalid -> 400): Verified.
+  - Honeypot bot capture (returns 200 without lead log): Verified.
+  - Valid submission (returns 200 `{ok: true, delivered: false}` + `no-store`): Verified.
+  - Header injection sanitization: Verified.
+- **Interactive Browser Verification**:
+  - Desktop (1280x800): 0 console errors, client validation check passed, Turnstile widget rendered, submission succeeded with neutral staging notice.
+  - Tablet (768x1024): 0 console errors, clean responsive adaptation, submission succeeded.
+  - Mobile (375x667): 0 console errors, 0 horizontal scroll, single-column stack, submission succeeded.
+- **Site Baseline Verification**:
+  - `tools/verify_site.py`: 100% no-loss check passed, all internal links resolve, 0 requests to dead domain.
+  - `tools/verify_content.py`: 33/33 content items passed verbatim.
+
+### 3. Decisions & Discrepancy Findings
+- **Cloudflare Email Service Binding**: Verified via current Cloudflare documentation that sending to verified destination addresses is available on all plans (including Workers Free) at zero cost (up to 200 destination addresses per account, 0 quota deductions).
+- **Email Routing Activity Log "Dropped" Label**: Noted in `docs/DEPLOY.md` that Cloudflare Email Routing logs Worker-sent outbound mail as "dropped" in the activity log (as it tracks inbound forwarding), which is normal and does not indicate delivery failure.
+- **Addendum 3 Compliance**: `send_email` binding is commented out in `wrangler.jsonc` to ensure Stage A deploy and local `wrangler dev` execute seamlessly without requiring pre-existing domain email routing.
+
+

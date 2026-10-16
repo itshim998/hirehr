@@ -62,47 +62,53 @@ hirehr/
 
 ## Running Locally
 
-Because the site uses purely relative links and zero external runtime dependencies, it can be previewed using any static file server:
+### Option 1: Cloudflare Wrangler (Recommended - Full Stack)
+Runs both the static site and the `/api/contact` backend Worker locally with Turnstile testing keys:
+```bash
+npx wrangler dev
+```
+Then visit `http://127.0.0.1:8787` in your web browser. Local secrets and overrides are read automatically from `.dev.vars` (see `.dev.vars.example`).
 
-### Option 1: Python HTTP Server (Recommended)
+### Option 2: Python HTTP Server (Static Pages Only)
 ```bash
 python -m http.server 8000
 ```
 Then visit `http://localhost:8000` in your web browser.
 
-### Option 2: Node / npx
+### Option 3: Node / npx
 ```bash
 npx serve .
 ```
 
-### Option 3: Direct File Opening
-You can open `index.html` directly in any web browser without a web server.
+## Backend Architecture (Cloudflare Workers + Static Assets)
 
-## Deploying to GitHub Pages
+The site is deployed as a single unified **Cloudflare Workers with Static Assets** deployment:
+- **Routing**: Static assets (`index.html`, inner pages, `css/`, `js/`, `assets/`) are served directly at the edge via Cloudflare's global CDN without invoking the Worker. The Worker script only intercepts `/api/*` requests (`run_worker_first: ["/api/*"]`).
+- **Endpoint**: `POST /api/contact` accepts JSON submissions from `#consultation-form`.
+- **Bot Protection**: Cloudflare Turnstile explicitly rendered above the Submit button with server-side `siteverify` verification.
+- **Spam Defense**: Hidden honeypot field (`website`) silently traps automated submissions.
+- **Security Headers**: Standard security headers (`X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, `X-Frame-Options: DENY`, and strict CSP) configured via `_headers`.
+- **Privacy Enforcement**: Non-public code and files (`worker/`, `wrangler.jsonc`, `tools/`, `docs/`, `original/`, `content/`, `.dev.vars`) are excluded from edge asset uploads via `.assetsignore`.
 
-1. Push the repository to GitHub:
-   ```bash
-   git push origin ready-site:main
-   ```
-2. Navigate to your repository settings: **Settings > Pages**.
-3. Under **Build and deployment**:
-   - Source: **Deploy from a branch**
-   - Branch: `main` / `ready-site` (root `/`)
-4. Save. Your site will be published at `https://<username>.github.io/<repo>/`.
+### Environment Variables & Secrets
 
-## Deploying to Production Domain (`hirehrservices.com`)
+Configured in `wrangler.jsonc` and Cloudflare Dashboard / Wrangler secrets:
 
-1. Upload all repository files to your web server's web root (`public_html` or equivalent).
-2. Configure DNS A / CNAME records to point to your hosting server.
-3. If using GitHub Pages with a custom domain, add a `CNAME` file containing `hirehrservices.com` in the root directory.
+| Name | Type | Description | Default / Example |
+| :--- | :--- | :--- | :--- |
+| `ALLOWED_ORIGINS` | Var | Comma-separated allowed CORS origins | `http://localhost:8787` |
+| `MAIL_MODE` | Var | Email mode: `"log"` (Stage A) or `"send"` (Stage B) | `"log"` |
+| `MAIL_FROM` | Var | Sender address on custom domain (Stage B) | `""` (e.g. `employer@hirehrservices.com`) |
+| `TURNSTILE_SECRET` | Secret | Cloudflare Turnstile secret key | Documented always-pass test key in dev |
+| `NOTIFY_TO` | Secret | Owner destination email (Stage B) | `owner@example.com` |
 
-## Form Submission Configuration
+## Deployment & Verification
 
-In `js/main.js`, configure the form destination endpoint:
+For comprehensive deployment instructions for Stage A (*.workers.dev) and Stage B (hirehrservices.com), refer to:
+- **Deployment Guide**: [`docs/DEPLOY.md`](docs/DEPLOY.md)
+- **Backend Verification**: [`docs/VERIFY_BACKEND.md`](docs/VERIFY_BACKEND.md)
+- **Automated Test Suite**:
+  ```bash
+  python tools/test_backend.py
+  ```
 
-```javascript
-// Change null to your designated endpoint URL:
-const FORM_ENDPOINT = "https://formspree.io/f/your-form-id"; 
-```
-
-When `FORM_ENDPOINT` is `null`, client-side validation still executes, and submitting displays a non-misleading status message indicating that the endpoint is pending configuration.
