@@ -19,7 +19,7 @@ The architecture uses **Cloudflare Workers with Static Assets** (a single unifie
 1. In the Cloudflare Dashboard, navigate to **Compute (Workers) > Workers & Pages**.
 2. Click **Create** > **Import a repository** (Workers Builds).
 3. Connect your GitHub account and authorize access to `itshim998/HireHR`.
-4. Select the repository and the branch (e.g. `main` or `feature/contact-worker`).
+4. Select the repository and branch: Select `feature/contact-worker` (or `ready-site` after it is merged). Do NOT select `main` (it only holds the old snapshot from before migration); the production-branch choice is still undecided.
 5. Configure the build settings:
    - **Framework preset**: None
    - **Build command**: (Leave empty, pure static site)
@@ -64,8 +64,9 @@ The architecture uses **Cloudflare Workers with Static Assets** (a single unifie
      ```
      *(Paste your real Turnstile secret key when prompted).*
 2. **Update the Public Site Key in Code**:
-   - In `index.html`: Update `data-sitekey` on `<div id="turnstile-widget" ...>` to your real site key.
-   - In `js/main.js`: Replace the test site key in `const TURNSTILE_SITE_KEY = '...';` with your real site key.
+   - The Turnstile site key is maintained in exactly one place: `js/main.js` (`TURNSTILE_SITE_KEY`). Replace the dummy test site key in `const TURNSTILE_SITE_KEY = '...';` with your real production site key. (Do not add a `data-sitekey` attribute to `index.html`).
+   > [!NOTE]
+   > Tokens from the dummy test site key (`1x00000000000000000000AA`) only verify against Cloudflare's dummy test secrets, so the staging and production deployments must use a real Turnstile site key + secret pair to verify live visitors.
 3. Commit and push the updated public site key to your repository.
 
 ---
@@ -95,6 +96,9 @@ The architecture uses **Cloudflare Workers with Static Assets** (a single unifie
 
 ## Stage B: Production Domain & Live Email Routing (hirehrservices.com)
 *Objective: Connect custom domain `hirehrservices.com`, configure Cloudflare Email Routing for business inboxes, and activate live email notifications.*
+
+> [!WARNING]
+> **Do NOT onboard a Cloudflare Email Sending domain.** It is not needed to send to your own verified destination address, and general Email Sending requires the paid Workers plan. Only Email Routing + a verified destination address + the `send_email` binding are used.
 
 ### 1. Register & Add Domain to Cloudflare
 1. Register `hirehrservices.com` (via Cloudflare Registrar or your preferred registrar).
@@ -138,7 +142,18 @@ The architecture uses **Cloudflare Workers with Static Assets** (a single unifie
 
 ---
 
-### 4. Update Allowed Origins & Turnstile Hostnames
+### 4. Single Test Send to Verified Destination Address
+> [!IMPORTANT]
+> The first step immediately after enabling the binding is a single test send to the verified destination address.
+> If it fails with a plan, permission, or availability error, **STOP immediately and report it as a blocker; do NOT upgrade anything.**
+
+1. Trigger a single test submission (via form or POST request to `/api/contact`).
+2. Verify delivery in your verified destination inbox (`NOTIFY_TO`).
+3. If any plan, permission, or availability error occurs: STOP and report as a blocker.
+
+---
+
+### 5. Update Allowed Origins & Turnstile Hostnames
 1. In `wrangler.jsonc` (and Cloudflare Dashboard under **Variables and Secrets**), update `ALLOWED_ORIGINS`:
    ```
    https://hirehrservices.com, https://www.hirehrservices.com, http://localhost:8787
@@ -150,7 +165,7 @@ The architecture uses **Cloudflare Workers with Static Assets** (a single unifie
 
 ---
 
-### 5. Attach Custom Domain & Configure Apex / WWW
+### 6. Attach Custom Domain & Configure Apex / WWW
 1. In Cloudflare Dashboard, navigate to **Workers & Pages > hirehr > Settings > Domains & Routes**.
 2. Click **Add > Custom Domain**:
    - Enter `hirehrservices.com` and confirm. Cloudflare will automatically configure the DNS record.
@@ -161,7 +176,7 @@ The architecture uses **Cloudflare Workers with Static Assets** (a single unifie
 
 ---
 
-### 6. End-to-End Live Testing
+### 7. End-to-End Live Testing
 1. Visit `https://hirehrservices.com/` in your browser.
 2. Submit a consultation request through `#consultation-form`.
 3. Verify the user feedback displays:
@@ -174,7 +189,7 @@ The architecture uses **Cloudflare Workers with Static Assets** (a single unifie
 
 ---
 
-### 7. Important Cloudflare Email Routing Dashboard Note ("Dropped" Label Gotcha)
+### 8. Important Cloudflare Email Routing Dashboard Note ("Dropped" Label Gotcha)
 > [!NOTE]
 > In the Cloudflare Dashboard under **Email > Email Routing > Activity Log**, you may notice outbound messages dispatched by the Worker's `send_email` binding marked with a status of **"dropped"** or **"unhandled"**.
 > 
@@ -182,7 +197,7 @@ The architecture uses **Cloudflare Workers with Static Assets** (a single unifie
 
 ---
 
-### 8. Optional: Disable workers.dev Subdomain (Post-Stage B)
+### 9. Optional: Disable workers.dev Subdomain (Post-Stage B)
 Once `hirehrservices.com` is live and verified:
 1. Navigate to **Workers & Pages > hirehr > Settings > Domains & Routes**.
 2. Click the `...` menu next to `hirehr.<your-subdomain>.workers.dev` and select **Disable**.
