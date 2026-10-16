@@ -9,15 +9,59 @@
 /**
  * FORM SUBMISSION DESTINATION
  * Set this to your designated form handling URL (e.g., Formspree, Formkeep, custom API endpoint).
- * Per project rules, this is NOT invented or assumed. If null, a clear non-misleading
- * status message is presented to the user upon submission.
+ * Configured for Cloudflare Workers backend endpoint.
+ * If null, the fallback status message is presented to the user upon submission.
  */
-const FORM_ENDPOINT = null;
+const FORM_ENDPOINT = '/api/contact';
+
+/**
+ * CLOUDFLARE TURNSTILE CONFIGURATION
+ * Test sitekey that always passes: 1x00000000000000000000AA
+ * Replace with production sitekey created in Cloudflare dashboard
+ */
+const TURNSTILE_SITE_KEY = '1x00000000000000000000AA';
+
+// Global Turnstile state & onload handler for explicit rendering
+let turnstileWidgetId = null;
+let turnstileToken = null;
+let turnstileLoadFailed = false;
+
+window.onTurnstileLoad = function() {
+  initTurnstile();
+};
+
+function initTurnstile() {
+  const container = document.getElementById('turnstile-widget');
+  if (!container || !window.turnstile) return;
+  if (turnstileWidgetId !== null) return;
+
+  try {
+    turnstileWidgetId = window.turnstile.render(container, {
+      sitekey: TURNSTILE_SITE_KEY,
+      theme: 'light',
+      callback: function(token) {
+        turnstileToken = token;
+      },
+      'expired-callback': function() {
+        turnstileToken = null;
+      },
+      'error-callback': function() {
+        turnstileToken = null;
+        turnstileLoadFailed = true;
+      }
+    });
+  } catch (err) {
+    turnstileLoadFailed = true;
+  }
+}
 
 // ==========================================================================
 // 1. MOBILE NAVIGATION TOGGLE & ACCESSIBLE DROPDOWNS
 // ==========================================================================
 document.addEventListener('DOMContentLoaded', () => {
+  // Initialize Turnstile if API script already loaded
+  initTurnstile();
+
   const navToggle = document.querySelector('.nav-toggle');
   const mainNav = document.querySelector('.main-navigation');
   const dropdownParents = document.querySelectorAll('.has-dropdown');
@@ -204,6 +248,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const phone = (document.getElementById('form-phone')?.value || '').trim();
       const email = (document.getElementById('form-email')?.value || '').trim();
       const message = (document.getElementById('form-message')?.value || '').trim();
+      const website = (document.getElementById('form-website')?.value || '').trim();
 
       // Client-side validations
       if (!name) {
@@ -237,6 +282,23 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
+      // Turnstile verification token check
+      let activeToken = turnstileToken;
+      if (!activeToken && window.turnstile && turnstileWidgetId !== null) {
+        try {
+          activeToken = window.turnstile.getResponse(turnstileWidgetId);
+        } catch {}
+      }
+
+      if (!activeToken) {
+        if (turnstileLoadFailed || !window.turnstile) {
+          showStatus('error', 'Security verification failed to load. Please check your connection or disable ad-blockers and try again.');
+        } else {
+          showStatus('error', 'Please complete the security verification before submitting.');
+        }
+        return;
+      }
+
       // If FORM_ENDPOINT is configured:
       const submitBtn = consultationForm.querySelector('button[type="submit"]');
       const originalText = submitBtn ? submitBtn.textContent : 'Submit';
@@ -251,7 +313,9 @@ document.addEventListener('DOMContentLoaded', () => {
           company,
           phone: `${countryCode} ${phone}`,
           email,
-          message
+          message,
+          website,
+          turnstileToken: activeToken
         };
 
         const response = await fetch(FORM_ENDPOINT, {
@@ -263,8 +327,18 @@ document.addEventListener('DOMContentLoaded', () => {
           body: JSON.stringify(payload)
         });
 
-        if (response.ok) {
-          showStatus('success', 'Thank you! Your consultation request has been sent successfully.');
+        let responseData = null;
+        try {
+          responseData = await response.json();
+        } catch {}
+
+        if (response.ok && responseData && responseData.ok) {
+          if (responseData.delivered === false) {
+            // Neutral staging notice when email delivery is not yet configured (Stage A log mode)
+            showStatus('info', 'Thank you! Your consultation request has been received (staging notice: email delivery is not yet configured).');
+          } else {
+            showStatus('success', 'Thank you! Your consultation request has been sent successfully.');
+          }
           consultationForm.reset();
         } else {
           showStatus('error', 'There was an issue submitting your request. Please try again or reach out directly via email.');
@@ -272,6 +346,14 @@ document.addEventListener('DOMContentLoaded', () => {
       } catch (err) {
         showStatus('error', 'Network error encountered while sending request. Please contact us via email.');
       } finally {
+        // Reset Turnstile widget after each submit attempt
+        if (window.turnstile && turnstileWidgetId !== null) {
+          try {
+            window.turnstile.reset(turnstileWidgetId);
+          } catch {}
+        }
+        turnstileToken = null;
+
         if (submitBtn) {
           submitBtn.disabled = false;
           submitBtn.textContent = originalText;
@@ -287,3 +369,4 @@ document.addEventListener('DOMContentLoaded', () => {
     formStatus.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 });
+

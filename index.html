@@ -443,6 +443,17 @@
               <textarea id="form-message" name="message" class="form-textarea" placeholder="Message" required rows="4"></textarea>
             </div>
 
+            <!-- Anti-spam Honeypot Field (hidden from users) -->
+            <div style="position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden;" aria-hidden="true">
+              <label for="form-website">Website</label>
+              <input type="text" id="form-website" name="website" tabindex="-1" autocomplete="off">
+            </div>
+
+            <!-- Cloudflare Turnstile Security Verification -->
+            <div class="form-group turnstile-form-group">
+              <div id="turnstile-widget" class="turnstile-wrapper" data-sitekey="1x00000000000000000000AA"></div>
+            </div>
+
             <button type="submit" class="btn btn-primary" data-submit-text="Submit" data-alt-text="Sending...">
               Submit
             </button>
@@ -517,5 +528,6 @@
 
   <script src="js/countries.js"></script>
   <script src="js/main.js"></script>
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onTurnstileLoad&render=explicit" async defer></script>
 </body>
 </html>

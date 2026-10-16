@@ -967,6 +967,15 @@ img {
   gap: 0.5rem;
 }
 
+/* Turnstile Security Widget container */
+.turnstile-form-group {
+  margin-top: 0.25rem;
+}
+
+.turnstile-wrapper {
+  min-height: 65px;
+}
+
 .form-status {
   padding: 1rem;
   border-radius: var(--radius-md);
