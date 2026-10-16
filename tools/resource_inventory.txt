@@ -1,0 +1,103 @@
+=== LINK TAGS ===
+rel=profile href=http://gmpg.org/xfn/11 id=None
+rel=pingback href=https://hirehrconsultancy.com/xmlrpc.php id=None
+rel=alternate href=https://hirehrconsultancy.com/feed/ id=None
+rel=alternate href=https://hirehrconsultancy.com/comments/feed/ id=None
+rel=stylesheet href=https://hirehrconsultancy.com/wp-includes/css/dist/block-library/style.min.css?ver=6.6.2 id=wp-block-library-css
+rel=stylesheet href=https://hirehrconsultancy.com/wp-content/plugins/header-footer-elementor/assets/css/header-footer-elementor.css?ver=1.6.1 id=hfe-style-css
+rel=stylesheet href=https://hirehrconsultancy.com/wp-content/plugins/jet-blocks/assets/css/jet-blocks.css?ver=1.2.8 id=jet-blocks-css
+rel=stylesheet href=https://hirehrconsultancy.com/wp-content/plugins/jet-elements/assets/css/jet-elements.css?ver=2.5.8 id=jet-elements-css
+rel=stylesheet href=https://hirehrconsultancy.com/wp-content/plugins/jet-elements/assets/css/jet-elements-skin.css?ver=2.5.8 id=jet-elements-skin-css
+rel=stylesheet href=https://hirehrconsultancy.com/wp-content/plugins/elementor/assets/lib/eicons/css/elementor-icons.min.css?ver=5.11.0 id=elementor-icons-css
+rel=stylesheet href=https://hirehrconsultancy.com/wp-content/plugins/elementor/assets/lib/animations/animations.min.css?ver=3.1.4 id=elementor-animations-css
+rel=stylesheet href=https://hirehrconsultancy.com/wp-content/plugins/elementor/assets/css/frontend-legacy.min.css?ver=3.1.4 id=elementor-frontend-legacy-css
+rel=stylesheet href=https://hirehrconsultancy.com/wp-content/plugins/elementor/assets/css/frontend.min.css?ver=3.1.4 id=elementor-frontend-css
+rel=stylesheet href=https://hirehrconsultancy.com/wp-content/uploads/elementor/css/post-82.css?ver=1625115295 id=elementor-post-82-css
+rel=stylesheet href=https://hirehrconsultancy.com/wp-content/plugins/elementor-pro/assets/css/frontend.min.css?ver=3.2.0 id=elementor-pro-css
+rel=stylesheet href=https://hirehrconsultancy.com/wp-content/plugins/jet-tabs/assets/css/jet-tabs-frontend.css?ver=2.1.12 id=jet-tabs-frontend-css
+rel=stylesheet href=https://hirehrconsultancy.com/wp-content/plugins/jet-tricks/assets/css/jet-tricks-frontend.css?ver=1.3.5 id=jet-tricks-frontend-css
+rel=stylesheet href=https://hirehrconsultancy.com/wp-content/plugins/elementor/assets/lib/font-awesome/css/all.min.css?ver=3.1.4 id=font-awesome-5-all-css
+rel=stylesheet href=https://hirehrconsultancy.com/wp-content/plugins/elementor/assets/lib/font-awesome/css/v4-shims.min.css?ver=3.1.4 id=font-awesome-4-shim-css
+rel=stylesheet href=https://hirehrconsultancy.com/wp-content/plugins/elementskit-lite/modules/controls/assets/css/widgetarea-editor.css?ver=2.3.1.1 id=elementskit-css-widgetarea-control-editor-css
+rel=stylesheet href=https://hirehrconsultancy.com/wp-content/uploads/elementor/css/global.css?ver=1625116323 id=elementor-global-css
+rel=stylesheet href=https://hirehrconsultancy.com/wp-content/uploads/elementor/css/post-8.css?ver=1631956436 id=elementor-post-8-css
+rel=stylesheet href=https://hirehrconsultancy.com/wp-content/plugins/header-footer-elementor/inc/widgets-css/frontend.css?ver=1.6.1 id=hfe-widgets-style-css
+rel=stylesheet href=https://hirehrconsultancy.com/wp-content/uploads/elementor/css/post-141.css?ver=1626871630 id=elementor-post-141-css
+rel=stylesheet href=https://hirehrconsultancy.com/wp-content/uploads/elementor/css/post-142.css?ver=1626871630 id=elementor-post-142-css
+rel=stylesheet href=https://hirehrconsultancy.com/wp-content/themes/twentytwenty/style.css?ver=1.7 id=twentytwenty-style-css
+rel=stylesheet href=https://hirehrconsultancy.com/wp-content/themes/twentytwenty/print.css?ver=1.7 id=twentytwenty-print-style-css
+rel=stylesheet href=https://hirehrconsultancy.com/wp-content/plugins/elementskit-lite/modules/elementskit-icon-pack/assets/css/ekiticons.css?ver=2.3.1.1 id=elementor-icons-ekiticons-css
+rel=stylesheet href=https://hirehrconsultancy.com/wp-content/plugins/elementskit-lite/widgets/init/assets/css/widget-styles.css?ver=2.3.1.1 id=ekit-widget-styles-css
+rel=stylesheet href=https://hirehrconsultancy.com/wp-content/plugins/elementskit-lite/widgets/init/assets/css/responsive.css?ver=2.3.1.1 id=ekit-responsive-css
+rel=stylesheet href=https://fonts.googleapis.com/css?family=Roboto%3A100%2C100italic%2C200%2C200italic%2C300%2C300italic%2C400%2C400italic%2C500%2C500italic%2C600%2C600italic%2C700%2C700italic%2C800%2C800italic%2C900%2C900italic%7CRoboto+Slab%3A100%2C100italic%2C200%2C200italic%2C300%2C300italic%2C400%2C400italic%2C500%2C500italic%2C600%2C600italic%2C700%2C700italic%2C800%2C800italic%2C900%2C900italic%7CRaleway%3A100%2C100italic%2C200%2C200italic%2C300%2C300italic%2C400%2C400italic%2C500%2C500italic%2C600%2C600italic%2C700%2C700italic%2C800%2C800italic%2C900%2C900italic%7COpen+Sans%3A100%2C100italic%2C200%2C200italic%2C300%2C300italic%2C400%2C400italic%2C500%2C500italic%2C600%2C600italic%2C700%2C700italic%2C800%2C800italic%2C900%2C900italic&ver=6.6.2 id=google-fonts-1-css
+rel=stylesheet href=https://hirehrconsultancy.com/wp-content/plugins/elementor/assets/lib/font-awesome/css/fontawesome.min.css?ver=5.15.1 id=elementor-icons-shared-0-css
+rel=stylesheet href=https://hirehrconsultancy.com/wp-content/plugins/elementor/assets/lib/font-awesome/css/solid.min.css?ver=5.15.1 id=elementor-icons-fa-solid-css
+rel=stylesheet href=https://hirehrconsultancy.com/wp-content/plugins/elementor/assets/lib/font-awesome/css/regular.min.css?ver=5.15.1 id=elementor-icons-fa-regular-css
+rel=stylesheet href=https://hirehrconsultancy.com/wp-content/plugins/elementor/assets/lib/font-awesome/css/brands.min.css?ver=5.15.1 id=elementor-icons-fa-brands-css
+rel=https://api.w.org/ href=https://hirehrconsultancy.com/wp-json/ id=None
+rel=alternate href=https://hirehrconsultancy.com/wp-json/wp/v2/pages/8 id=None
+rel=EditURI href=https://hirehrconsultancy.com/xmlrpc.php?rsd id=None
+rel=canonical href=https://hirehrconsultancy.com/ id=None
+rel=shortlink href=https://hirehrconsultancy.com/ id=None
+rel=alternate href=https://hirehrconsultancy.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fhirehrconsultancy.com%2F id=None
+rel=alternate href=https://hirehrconsultancy.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fhirehrconsultancy.com%2F&format=xml id=None
+rel=icon href=https://hirehrconsultancy.com/wp-content/uploads/2021/07/cropped-Capture-32x32.png id=None
+rel=icon href=https://hirehrconsultancy.com/wp-content/uploads/2021/07/cropped-Capture-192x192.png id=None
+rel=apple-touch-icon href=https://hirehrconsultancy.com/wp-content/uploads/2021/07/cropped-Capture-180x180.png id=None
+rel=stylesheet href=https://hirehrconsultancy.com/wp-content/plugins/wpforms/pro/assets/css/vendor/intl-tel-input.min.css?ver=17.0.5 id=wpforms-smart-phone-field-css
+rel=stylesheet href=https://hirehrconsultancy.com/wp-content/plugins/wpforms/assets/css/wpforms-full.min.css?ver=1.6.5.1 id=wpforms-full-css
+
+=== SCRIPT TAGS ===
+src=None id=None
+src=https://hirehrconsultancy.com/wp-content/plugins/elementor/assets/lib/font-awesome/js/v4-shims.min.js?ver=3.1.4 id=font-awesome-4-shim-js
+src=https://hirehrconsultancy.com/wp-content/themes/twentytwenty/assets/js/index.js?ver=1.7 id=twentytwenty-js-js
+src=https://hirehrconsultancy.com/wp-includes/js/jquery/jquery.min.js?ver=3.7.1 id=jquery-core-js
+src=https://hirehrconsultancy.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.4.1 id=jquery-migrate-js
+src=None id=None
+src=https://hirehrconsultancy.com/wp-includes/js/wp-emoji-release.min.js?ver=6.6.2 id=None
+src=https://hirehrconsultancy.com/wp-content/plugins/elementskit-lite/libs/framework/assets/js/frontend-script.js?ver=2.3.1.1 id=elementskit-framework-js-frontend-js
+src=None id=elementskit-framework-js-frontend-js-after
+src=https://hirehrconsultancy.com/wp-content/plugins/elementskit-lite/widgets/init/assets/js/widget-scripts.js?ver=2.3.1.1 id=ekit-widget-scripts-js
+src=https://hirehrconsultancy.com/wp-content/plugins/elementor-pro/assets/lib/smartmenus/jquery.smartmenus.min.js?ver=1.0.1 id=smartmenus-js
+src=https://hirehrconsultancy.com/wp-includes/js/imagesloaded.min.js?ver=5.0.0 id=imagesloaded-js
+src=https://hirehrconsultancy.com/wp-content/plugins/jet-blocks/assets/js/lib/jsticky/jquery.jsticky.min.js?ver=1.1.0 id=jsticky-js
+src=https://hirehrconsultancy.com/wp-content/plugins/elementor-pro/assets/js/webpack-pro.runtime.min.js?ver=3.2.0 id=elementor-pro-webpack-runtime-js
+src=https://hirehrconsultancy.com/wp-content/plugins/elementor/assets/js/webpack.runtime.min.js?ver=3.1.4 id=elementor-webpack-runtime-js
+src=https://hirehrconsultancy.com/wp-content/plugins/elementor/assets/js/frontend-modules.min.js?ver=3.1.4 id=elementor-frontend-modules-js
+src=https://hirehrconsultancy.com/wp-content/plugins/elementor-pro/assets/lib/sticky/jquery.sticky.min.js?ver=3.2.0 id=elementor-sticky-js
+src=None id=elementor-pro-frontend-js-before
+src=https://hirehrconsultancy.com/wp-content/plugins/elementor-pro/assets/js/frontend.min.js?ver=3.2.0 id=elementor-pro-frontend-js
+src=https://hirehrconsultancy.com/wp-includes/js/jquery/ui/core.min.js?ver=1.13.3 id=jquery-ui-core-js
+src=https://hirehrconsultancy.com/wp-content/plugins/elementor/assets/lib/dialog/dialog.min.js?ver=4.8.1 id=elementor-dialog-js
+src=https://hirehrconsultancy.com/wp-content/plugins/elementor/assets/lib/waypoints/waypoints.min.js?ver=4.0.2 id=elementor-waypoints-js
+src=https://hirehrconsultancy.com/wp-content/plugins/elementor/assets/lib/share-link/share-link.min.js?ver=3.1.4 id=share-link-js
+src=https://hirehrconsultancy.com/wp-content/plugins/elementor/assets/lib/swiper/swiper.min.js?ver=5.3.6 id=swiper-js
+src=None id=elementor-frontend-js-before
+src=https://hirehrconsultancy.com/wp-content/plugins/elementor/assets/js/frontend.min.js?ver=3.1.4 id=elementor-frontend-js
+src=https://hirehrconsultancy.com/wp-content/plugins/elementor-pro/assets/js/preloaded-elements-handlers.min.js?ver=3.2.0 id=pro-preloaded-elements-handlers-js
+src=None id=jet-blocks-js-extra
+src=https://hirehrconsultancy.com/wp-content/plugins/jet-blocks/assets/js/jet-blocks.min.js?ver=1.2.8 id=jet-blocks-js
+src=None id=jet-elements-js-extra
+src=https://hirehrconsultancy.com/wp-content/plugins/jet-elements/assets/js/jet-elements.min.js?ver=2.5.8 id=jet-elements-js
+src=None id=jet-tabs-frontend-js-extra
+src=https://hirehrconsultancy.com/wp-content/plugins/jet-tabs/assets/js/jet-tabs-frontend.min.js?ver=2.1.12 id=jet-tabs-frontend-js
+src=None id=jet-tricks-frontend-js-extra
+src=https://hirehrconsultancy.com/wp-content/plugins/jet-tricks/assets/js/jet-tricks-frontend.js?ver=1.3.5 id=jet-tricks-frontend-js
+src=https://hirehrconsultancy.com/wp-content/plugins/elementskit-lite/widgets/init/assets/js/slick.min.js?ver=2.3.1.1 id=ekit-slick-js
+src=https://hirehrconsultancy.com/wp-content/plugins/elementskit-lite/widgets/init/assets/js/animate-circle.js?ver=2.3.1.1 id=animate-circle-js
+src=https://hirehrconsultancy.com/wp-content/plugins/elementskit-lite/widgets/init/assets/js/elementor.js?ver=2.3.1.1 id=elementskit-elementor-js
+src=https://hirehrconsultancy.com/wp-content/plugins/elementor/assets/js/preloaded-elements-handlers.min.js?ver=3.1.4 id=preloaded-elements-handlers-js
+src=https://hirehrconsultancy.com/wp-includes/js/underscore.min.js?ver=1.13.4 id=underscore-js
+src=None id=wp-util-js-extra
+src=https://hirehrconsultancy.com/wp-includes/js/wp-util.min.js?ver=6.6.2 id=wp-util-js
+src=None id=wpforms-elementor-js-extra
+src=https://hirehrconsultancy.com/wp-content/plugins/wpforms/assets/js/integrations/elementor/frontend.min.js?ver=1.6.5.1 id=wpforms-elementor-js
+src=https://hirehrconsultancy.com/wp-content/plugins/elementskit-lite/modules/controls/assets/js/widgetarea-editor.js?ver=2.3.1.1 id=elementskit-js-widgetarea-control-editor-js
+src=https://hirehrconsultancy.com/wp-content/plugins/wpforms/pro/assets/js/vendor/jquery.intl-tel-input.min.js?ver=17.0.5 id=wpforms-smart-phone-field-js
+src=https://hirehrconsultancy.com/wp-content/plugins/wpforms/assets/js/jquery.validate.min.js?ver=1.19.0 id=wpforms-validation-js
+src=https://hirehrconsultancy.com/wp-content/plugins/wpforms/assets/js/jquery.inputmask.min.js?ver=5.0.6 id=wpforms-maskedinput-js
+src=https://hirehrconsultancy.com/wp-content/plugins/wpforms/assets/js/mailcheck.min.js?ver=1.1.2 id=wpforms-mailcheck-js
+src=https://hirehrconsultancy.com/wp-content/plugins/wpforms/assets/js/wpforms.js?ver=1.6.5.1 id=wpforms-js
+src=None id=None
+src=None id=None
+src=https://hirehrconsultancy.com/wp-content/plugins/wpforms/pro/assets/js/vendor/jquery.intl-tel-input-utils.js id=None

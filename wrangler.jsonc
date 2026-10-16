@@ -1,0 +1,28 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "hirehr",
+  "main": "worker/index.js",
+  "compatibility_date": "2026-10-16",
+  "assets": {
+    "directory": "./",
+    "binding": "ASSETS",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page",
+    "run_worker_first": [
+      "/api/*"
+    ]
+  },
+  "send_email": [
+    {
+      "name": "EMAIL"
+    }
+  ],
+  "vars": {
+    "ALLOWED_ORIGINS": "https://hirehrservices.com,https://www.hirehrservices.com,http://localhost:8787",
+    "MAIL_MODE": "send",
+    "MAIL_FROM": "employer@hirehrservices.com"
+  },
+  "observability": {
+    "enabled": true
+  }
+}

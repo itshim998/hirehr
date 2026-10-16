@@ -1,0 +1,117 @@
+# HireHR — Reconcile GitHub Branches and Prepare `main` for Cloudflare Production
+
+You are working in the local Antigravity workspace for the repository `itshim998/HireHR`.
+
+## Objective
+
+Prepare `main` as the single production branch that we will connect to Cloudflare Workers Builds for deployment at `hirehrservices.com`.
+
+The completed HireHR implementation currently resides on `ready-site`. The `main` branch contains an older original snapshot and does not yet contain the complete Cloudflare Worker deployment configuration.
+
+Your task is to reconcile the Git repository so that:
+
+1. `main` contains the complete, deployment-ready HireHR website and contact-form backend currently developed on `ready-site`.
+2. All intended and already-developed deployment changes are committed and pushed to GitHub.
+3. `main` becomes the branch we can select as the Cloudflare production branch.
+4. Existing feature branches and original project material remain preserved.
+
+This task explicitly authorizes updating `main` to become the production-ready branch. Do not leave the deployment implementation exclusively on `ready-site`.
+
+## Known repository state
+
+Repository: `itshim998/hirehr`
+
+Known remote branches:
+
+- `main`
+- `ready-site`
+- `feature/contact-worker`
+- `feature/content`
+
+Known facts:
+
+- `ready-site` contains `worker/index.js` and `wrangler.jsonc`.
+- `feature/contact-worker` is one commit behind `ready-site`.
+- `feature/content` is twenty commits behind `ready-site`.
+- GitHub's compare API previously reported no common ancestor between `main` and `ready-site`. Confirm this against the actual fetched Git history before selecting an integration method.
+- The current `ready-site/wrangler.jsonc` configures the Worker name as `hirehr`, static assets, the `EMAIL` binding, `MAIL_MODE: "send"`, the production allowed origins, and `MAIL_FROM: "employer@hirehrservices.com"`.
+
+Treat `ready-site` as the source of the current deployment implementation, but inspect the actual remote and local state before making changes.
+
+## Phase 1 — Inspect and preserve the existing repository
+
+1. Fetch the latest remote state using `git fetch origin`.
+2. Inspect:
+   - `git status --short --branch`
+   - `git branch -avv`
+   - `git remote -v`
+   - `git log --graph --oneline --decorate --all -40`
+   - The commit SHAs and ancestry of `origin/main` and `origin/ready-site`.
+3. Inspect the differences between the active deployment implementation and `origin/main`, including the website files, CSS, JavaScript, images/assets, `worker/`, `wrangler.jsonc`, tests and deployment-related files.
+4. Confirm that `ready-site` includes all intended changes from the contact Worker implementation and the latest Wrangler configuration change.
+5. Before modifying `main`, create and push a backup branch pointing to the current remote `main` commit. Use a descriptive name such as `backup/main-before-production-20261016`. If that name already exists, use a unique alternative.
+6. Do not discard uncommitted local work. Preserve any relevant changes and establish a safe working state before continuing.
+
+## Phase 2 — Integrate the completed implementation into `main`
+
+Use the least destructive Git strategy that produces the correct final tree and preserves the existing history.
+
+### If the branches share an ancestor
+
+Integrate the changes from `origin/ready-site` into a branch based on the latest `origin/main`. Resolve any conflicts deliberately, preserving main-only material where appropriate and retaining the current deployment implementation.
+
+### If the branches have unrelated histories
+
+Do not force-push, reset `main` to `ready-site`, or rewrite either branch's history.
+
+First attempt a normal Git merge using `--allow-unrelated-histories` on a safe integration branch created from the latest `origin/main`. Resolve conflicts deliberately.
+
+For conflicts involving active deployment files, use the completed implementation from `origin/ready-site` as the source of truth, unless inspection establishes that a different version is necessary to retain a newer intended change. Preserve unrelated `main`-only project material.
+
+If a merge cannot safely retain the necessary content, use a controlled integration branch based on `origin/main` and migrate the required deployment files from `origin/ready-site`, keeping the original `main` history intact. Do not blindly replace the entire repository tree.
+
+In either case, the final result must contain the complete working deployment implementation.
+
+### Required preservation rules
+
+- Preserve `prompt.txt`.
+- Preserve `original/index.original.html`.
+- Preserve other relevant main-only files and assets.
+- Do not delete or rewrite `ready-site`, `feature/contact-worker`, or `feature/content`.
+- Do not force-push or rewrite published Git history.
+- Do not commit `.dev.vars`, API keys, Turnstile secrets, email credentials, or any other secrets.
+- Do not introduce a paid provider or paid service.
+- Do not redesign the website or expand the scope into new features.
+
+## Phase 3 — Make `main` the final production branch
+
+1. Ensure the integration branch is based on the latest `origin/main`.
+2. Complete the integration and resolve all necessary conflicts.
+3. Run the existing project checks once, if source files were changed:
+   - `python tools/test_backend.py`
+   - `python tools/verify_content.py`
+   - `python tools/verify_site.py`
+   - `git diff --check`
+4. Do not start another open-ended audit-and-fix cycle. If a check fails, report the exact failure and stop rather than making unrelated changes.
+5. Once the integration is complete, merge the integration commit into `main` and push `main` to GitHub using a normal, non-force push.
+6. If branch protection prevents a direct push, push the integration branch and open a pull request targeting `main`. Do not bypass branch protection.
+7. Fetch the remote state again and verify that `origin/main` points to the intended completed integration commit and contains the deployment files.
+
+The final production branch must include, at minimum, the active website files, `worker/index.js`, `wrangler.jsonc`, required static assets, and the existing test/verification tools.
+
+## Phase 4 — Final report
+
+Provide a concise, factual report with:
+
+- The final production branch: `main`.
+- The backup branch created.
+- The integration strategy used, including whether histories were unrelated.
+- The final `main` commit SHA on GitHub.
+- Confirmation that the final `main` tree contains the completed website, Worker and Wrangler configuration.
+- The results of the checks run.
+- Whether the changes have been pushed directly or await merging through a pull request.
+- Any remaining Cloudflare configuration step required before deployment.
+
+Do not connect Cloudflare or deploy the website as part of this task. We will connect the GitHub repository to Cloudflare separately and select `main` as the production branch after synchronization is complete.
+
+**Success condition:** `main` on GitHub contains the completed HireHR implementation and is ready to be selected as the Cloudflare production branch, with existing history and project material preserved.

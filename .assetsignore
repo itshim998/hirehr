@@ -1,0 +1,38 @@
+# Worker source and configuration
+worker
+worker/**
+wrangler.jsonc
+wrangler.json
+wrangler.toml
+.dev.vars
+.dev.vars*
+.dev.vars.example
+.wrangler
+.wrangler/**
+
+# Dependencies and packages
+node_modules
+node_modules/**
+package.json
+package-lock.json
+
+# Git and GitHub
+.git
+.git/**
+.github
+.github/**
+.gitignore
+
+# Internal documentation and prompts
+docs
+docs/**
+prompt.txt
+README.md
+
+# Non-public source assets and tools
+content
+content/**
+original
+original/**
+tools
+tools/**
