@@ -483,6 +483,8 @@ def main():
             sys.exit(1)
 
     proc = None
+    cleanup_ok = True
+    cleanup_error = None
     try:
         # Phase 1: Configuration A (Pass Secret)
         print(f"\n[Orchestrator] Configuring {dev_vars_path} with Pass Secret ({CF_PASS_SECRET})...")
@@ -541,18 +543,25 @@ def main():
                 if original_mode is not None:
                     try:
                         os.chmod(dev_vars_path, original_mode)
-                    except Exception:
-                        pass
-                print(f"[Orchestrator] Successfully restored original {dev_vars_path} state.")
+                    except Exception as perm_err:
+                        cleanup_ok = False
+                        cleanup_error = f"Failed to restore permissions on {dev_vars_path}: {type(perm_err).__name__}"
+                        print(f"\n[CRITICAL CLEANUP FAILURE] {cleanup_error}")
+                if cleanup_ok:
+                    print(f"[Orchestrator] Successfully restored original {dev_vars_path} state.")
             except Exception as e:
-                print(f"ERROR: Failed to restore original {dev_vars_path}: {e}")
+                cleanup_ok = False
+                cleanup_error = f"Failed to restore original {dev_vars_path}: {type(e).__name__}"
+                print(f"\n[CRITICAL CLEANUP FAILURE] {cleanup_error}")
         else:
             if os.path.exists(dev_vars_path):
                 try:
                     os.remove(dev_vars_path)
                     print(f"[Orchestrator] Successfully removed test-created {dev_vars_path}.")
                 except Exception as e:
-                    print(f"ERROR: Failed to remove test {dev_vars_path}: {e}")
+                    cleanup_ok = False
+                    cleanup_error = f"Failed to remove test-created {dev_vars_path}: {type(e).__name__}"
+                    print(f"\n[CRITICAL CLEANUP FAILURE] {cleanup_error}")
 
     # Summary
     total = len(results)
@@ -563,7 +572,18 @@ def main():
     print(f"PASSED: {passed}")
     print(f"FAILED: {failed}")
     print(f"PASS RATE: {((passed / total) * 100):.1f}%" if total > 0 else "N/A")
-    print(f"==========================================")
+    if not cleanup_ok:
+        print(f"CLEANUP STATUS: FAILED ({cleanup_error})")
+        print(f"OVERALL STATUS: FAILED (Test environment cleanup failed)")
+        print(f"==========================================")
+        return False
+    else:
+        print(f"CLEANUP STATUS: SUCCESS (Pre-test state restored)")
+        if failed == 0:
+            print(f"OVERALL STATUS: SUCCESS")
+        else:
+            print(f"OVERALL STATUS: FAILED ({failed} test failures)")
+        print(f"==========================================")
 
     return failed == 0
 
