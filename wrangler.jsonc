@@ -12,18 +12,15 @@
       "/api/*"
     ]
   },
-  // Stage B Email Sending Binding:
-  // Declaring send_email requires an active domain with Cloudflare Email Routing.
-  // Uncomment the send_email block below in Stage B after activating the custom domain.
-  // "send_email": [
-  //   {
-  //     "name": "EMAIL"
-  //   }
-  // ],
+  "send_email": [
+    {
+      "name": "EMAIL"
+    }
+  ],
   "vars": {
-    "ALLOWED_ORIGINS": "http://localhost:8787",
-    "MAIL_MODE": "log",
-    "MAIL_FROM": ""
+    "ALLOWED_ORIGINS": "https://hirehrservices.com,https://www.hirehrservices.com,http://localhost:8787",
+    "MAIL_MODE": "send",
+    "MAIL_FROM": "employer@hirehrservices.com"
   },
   "observability": {
     "enabled": true
