@@ -99,6 +99,13 @@ export default {
       return jsonResponse({ ok: false, error: 'Forbidden origin' }, 403);
     }
 
+    // Enforce JSON-only content type contract (RFC 8259 media type, allowing parameters e.g. charset=utf-8)
+    const contentType = request.headers.get('content-type') || '';
+    const mimeType = contentType.split(';')[0].trim().toLowerCase();
+    if (mimeType !== 'application/json') {
+      return jsonResponse({ ok: false, error: 'Unsupported media type' }, 415, origin);
+    }
+
     // Validate Content-Length header if provided
     const contentLength = request.headers.get('content-length');
     if (contentLength && parseInt(contentLength, 10) > MAX_BODY_BYTES) {
