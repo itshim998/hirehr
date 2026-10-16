@@ -1,6 +1,6 @@
 # Content and Site Verification Suite (docs/VERIFY_CONTENT.md)
 
-This document aggregates the comprehensive verification outputs from both 	ools/verify_content.py (Refined Content, Forbidden Terms, Placeholder Integrity) and 	ools/verify_site.py (No-loss original text verification, link resolution, dead domain references, and original snapshot integrity).
+This document aggregates the comprehensive verification outputs from both `tools/verify_content.py` (Refined Content, Forbidden Terms, Placeholder Integrity) and `tools/verify_site.py` (No-loss original text verification, link resolution, dead domain references, and original snapshot integrity).
 
 ---
 
