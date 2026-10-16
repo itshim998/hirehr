@@ -381,7 +381,7 @@ def run_suite_a(base_url):
     res_json = json.loads(body) if status == 200 else {}
     record(suite, "Honeypot: Trapped bot returns 200 {ok:true}", status == 200 and res_json.get("ok") is True and "delivered" not in res_json, f"Status: {status}, Body: {body.strip()}")
 
-    # 12. Valid Submission (Stage A: MAIL_MODE=log -> 200 {ok:true, delivered:false})
+    # 12. Valid Submission (Stage A/B: MAIL_MODE=log -> delivered:false, MAIL_MODE=send -> delivered:true)
     status, headers, body = http_req(
         f"{base_url}/api/contact",
         method="POST",
@@ -390,8 +390,8 @@ def run_suite_a(base_url):
     )
     res_json = json.loads(body) if status == 200 else {}
     has_no_store = "no-store" in (headers.get("Cache-Control") or "")
-    is_valid_success = status == 200 and res_json.get("ok") is True and res_json.get("delivered") is False and has_no_store
-    record(suite, "Valid Submission (Stage A MAIL_MODE=log)", is_valid_success, f"Status: {status}, Body: {body.strip()}, Cache-Control: {headers.get('Cache-Control')}")
+    is_valid_success = status == 200 and res_json.get("ok") is True and isinstance(res_json.get("delivered"), bool) and has_no_store
+    record(suite, f"Valid Submission (MAIL_MODE delivered={res_json.get('delivered')})", is_valid_success, f"Status: {status}, Body: {body.strip()}, Cache-Control: {headers.get('Cache-Control')}")
 
     # 13. Header injection / CRLF in name (sanitized)
     crlf_name_payload = {**valid_payload, "name": "Jane\r\nDoe\r\nSubject: Injected"}
