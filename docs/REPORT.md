@@ -501,5 +501,58 @@ All 7 required fixes and regression assertions executed and verified:
 - No Facebook/Twitter URLs in site copy.
 - `.assetsignore` verified excluding all 12 non-public paths (each returns HTTP 404 under `wrangler dev`).
 
+---
+
+## Final Stage A Verification Fixes (Branch `feature/contact-worker`)
+
+Addressed remaining verification harness, fixture consistency, configuration safety, and HTTP contract items:
+
+### 1. Cloudflare Official Turnstile Test Fixtures (Deliverable 1)
+- Replaced synthetic arbitrary tokens with Cloudflare's officially documented dummy test token: `XXXX.DUMMY.TOKEN.XXXX` per [Cloudflare Turnstile Testing Documentation](https://developers.cloudflare.com/turnstile/troubleshooting/testing/).
+- Used `XXXX.DUMMY.TOKEN.XXXX` across all test cases (synthetic pass verification with secret `1x...AA`, synthetic fail verification with secret `2x...AA`, honeypot, valid submission, header injection, origin tests, and content type tests).
+- Worker remains dependent strictly and exclusively on `env.TURNSTILE_SECRET` without content-sniffing or test-key bypasses.
+
+### 2. Configuration Safety & Server Lifecycle Orchestration (Deliverable 2)
+- Implemented robust `.dev.vars` state preservation in `tools/test_backend.py`:
+  - Detects if `.dev.vars` existed before test execution.
+  - Preserves exact raw file contents and filesystem permissions (`st_mode`).
+  - Restores `.dev.vars` state byte-for-byte in a `finally:` block (or cleans up test-created file if it did not exist initially).
+- Implemented deterministic server lifecycle management:
+  - Fails cleanly before modifying any files if the target port (8787) is already occupied.
+  - Spawns isolated `wrangler dev` processes per configuration (Config A: Pass Secret, Config B: Fail Secret).
+  - Confirms server responsiveness before running suites, and verifies process exit and port closure between runs.
+
+### 3. JSON-Only Worker Contract Enforcement (Deliverable 3)
+- In `worker/index.js`, enforced strict request Content-Type validation:
+  - Accepts `application/json` and parameterized variants (e.g. `application/json; charset=utf-8`).
+  - Rejects missing Content-Type or unsupported media types (e.g. `text/plain`, `application/x-www-form-urlencoded`) with `HTTP 415 Unsupported Media Type` in standard JSON error format (`{"ok":false,"error":"Unsupported media type"}`) with `Cache-Control: no-store`.
+- Updated test helper `http_req()` in `tools/test_backend.py` to allow sending requests without automatic Content-Type header injection (`content_type=None`).
+- Added automated test cases for Content-Type contract enforcement.
+
+### 4. Verification Suite Results (Deliverable 4)
+- **API Test Suite (`tools/test_backend.py`)**: **53/53 automated checks passed (100% pass rate)**:
+  - Static asset serving (4/4): Passed
+  - Excluded paths hidden / HTTP 404 (12/12): Passed
+  - Security headers & CSP (4/4): Passed
+  - HTTP method check / GET 405 (1/1): Passed
+  - Strict Origin policy checks (7/7): Passed
+  - JSON-Only Content-Type contract (4/4): Passed
+  - Request size limits / >20 KB 413 (1/1): Passed
+  - Server-side field validation (13/13): Passed
+  - Honeypot anti-spam (1/1): Passed
+  - Header injection sanitization (1/1): Passed
+  - Configuration A documented dummy token verification (2/2): Passed
+  - Configuration B documented dummy token rejection with 2x secret (2/2): Passed
+- **Content & Site Verification**:
+  - `python3 tools/verify_content.py`: 33/33 checks passed (100%).
+  - `python3 tools/verify_site.py`: Passed (100% no-loss, 0 requests to dead domain).
+  - `git diff --check`: 0 whitespace or formatting errors.
+- **Git State**:
+  - `prompt.txt` confirmed byte-for-byte identical to `origin/ready-site:prompt.txt`.
+  - `original/index.original.html` confirmed identical to `origin/ready-site`.
+  - Archived Stage A prompt marked as historical/superseded without rewriting its body.
+  - `docs/DEPLOY.md` prohibits selecting `main` and retains Stage B single test-send stop rule.
+
+
 
 

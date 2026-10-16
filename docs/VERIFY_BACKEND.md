@@ -10,9 +10,9 @@ Static asset target: `http://127.0.0.1:8787/`
 
 ## 1. Automated API & Security Verification Suite (`tools/test_backend.py`)
 
-48 of 48 automated checks passed (100% pass rate) across two distinct `wrangler dev` configurations with realistic tokens and production Turnstile verification.
+53 of 53 automated checks passed (100% pass rate) across two distinct, server-managed `wrangler dev` configurations using Cloudflare's official documented testing fixtures (`XXXX.DUMMY.TOKEN.XXXX`) and production Turnstile verification.
 
-### Configuration A: Cloudflare Always-Pass Test Secret (`TURNSTILE_SECRET=1x0000000000000000000000000000000AA`)
+### Configuration A: Cloudflare Documented Always-Pass Test Secret (`TURNSTILE_SECRET=1x0000000000000000000000000000000AA`)
 
 #### A. Static Asset Serving & Routing
 - [PASS] `GET /` -> HTTP 200 (serves static homepage `index.html`)
@@ -42,7 +42,7 @@ Verifies security headers applied to responses:
 - [PASS] `X-Frame-Options: DENY`
 - [PASS] `Content-Security-Policy: default-src 'self'; script-src 'self' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; frame-src https://challenges.cloudflare.com; connect-src 'self' https://challenges.cloudflare.com; base-uri 'self'; form-action 'self'; frame-ancestors 'none'`
 
-#### D. HTTP Method & Strict Origin Policy (Fix 3)
+#### D. HTTP Method & Strict Origin Policy
 - [PASS] `GET /api/contact` -> HTTP 405 Method Not Allowed (`Allow: POST`, JSON error response)
 - [PASS] Origin Policy: No Origin & No Sec-Fetch-Site -> HTTP 403 Forbidden
 - [PASS] Origin Policy: Wrong Cross-Site Origin (`https://malicious-site.example.com`) -> HTTP 403 Forbidden
@@ -52,10 +52,16 @@ Verifies security headers applied to responses:
 - [PASS] Origin Policy: Request URL Own Origin (`http://127.0.0.1:8787`) -> Passes Origin Stage (HTTP 200 `{ok: true, delivered: false}`)
 - [PASS] Origin Policy: `ALLOWED_ORIGINS` Header (`http://localhost:8787`) -> Passes Origin Stage (HTTP 200 `{ok: true, delivered: false}`)
 
-#### E. Request Size Limits
+#### E. JSON-Only Content-Type Contract (RFC 8259 Media Type Validation)
+- [PASS] Content-Type Contract: `application/json` Accepted -> HTTP 200 `{ok: true, delivered: false}`
+- [PASS] Content-Type Contract: `application/json; charset=utf-8` Accepted -> HTTP 200 `{ok: true, delivered: false}`
+- [PASS] Content-Type Contract: `text/plain` Rejected -> HTTP 415 (`{"ok":false,"error":"Unsupported media type"}`)
+- [PASS] Content-Type Contract: Missing Content-Type Rejected -> HTTP 415 (`{"ok":false,"error":"Unsupported media type"}`)
+
+#### F. Request Size Limits
 - [PASS] Request body > 20 KB (21,000 bytes) -> HTTP 413 Payload Too Large
 
-#### F. Server-Side Validation (Mirroring Client Validation)
+#### G. Server-Side Validation (Mirroring Client Validation)
 - [PASS] Missing name -> HTTP 400 (`Invalid name`)
 - [PASS] Oversized name (>100 characters) -> HTTP 400 (`Invalid name`)
 - [PASS] Oversized company (>150 characters) -> HTTP 400 (`Invalid company`)
@@ -70,26 +76,27 @@ Verifies security headers applied to responses:
 - [PASS] Oversized message (>5000 characters) -> HTTP 400 (`Invalid message`)
 - [PASS] Unknown fields in JSON payload (`unexpectedField: illegal`) -> HTTP 400 (`Invalid request payload`)
 
-#### G. Cloudflare Turnstile Verification (Configuration A)
+#### H. Cloudflare Turnstile Synthetic Verification (Configuration A)
 - [PASS] Missing Turnstile token -> HTTP 400 (`Security token required`)
+- [PASS] Documented dummy token (`XXXX.DUMMY.TOKEN.XXXX`) with Pass Secret -> HTTP 200 (Cloudflare siteverify succeeds)
 
-#### H. Honeypot Anti-Spam
+#### I. Honeypot Anti-Spam
 - [PASS] Populated `website` field -> HTTP 200 `{ok: true}` returned immediately without email delivery or lead logging
 
-#### I. Valid Submission & Staging Delivery
-- [PASS] Valid submission payload with realistic non-empty token string -> HTTP 200 `{ok: true, delivered: false}`
+#### J. Valid Submission & Staging Delivery
+- [PASS] Valid submission payload with documented dummy token -> HTTP 200 `{ok: true, delivered: false}`
 - [PASS] Response header `Cache-Control: no-store` verified
 
-#### J. Header Injection Defense
+#### K. Header Injection Defense
 - [PASS] CRLF in name (`Jane\r\nDoe\r\nSubject: Injected`) sanitized cleanly to single line, preventing email header manipulation
 
 ---
 
-### Configuration B: Cloudflare Always-Fail Test Secret (`TURNSTILE_SECRET=2x0000000000000000000000000000000AA`)
+### Configuration B: Cloudflare Documented Always-Fail Test Secret (`TURNSTILE_SECRET=2x0000000000000000000000000000000AA`)
 
-#### K. Turnstile Token Rejection (Fix 2)
+#### L. Turnstile Token Rejection
 - [PASS] Missing Turnstile token -> HTTP 400 (`Security token required`)
-- [PASS] Realistic token string (`0.test-realistic-turnstile-token-sample-string-67890`) verified via Cloudflare siteverify with always-fail secret -> HTTP 400 (`Security verification failed`)
+- [PASS] Documented dummy token (`XXXX.DUMMY.TOKEN.XXXX`) verified via Cloudflare siteverify with always-fail secret -> HTTP 400 (`Security verification failed`)
 
 ---
 
