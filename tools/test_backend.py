@@ -2,9 +2,14 @@
 """
 HireHR Backend Verification Suite
 Tests Cloudflare Workers Static Assets & /api/contact endpoint under wrangler dev.
-Supports running against two wrangler dev configurations:
-  (a) TURNSTILE_SECRET=1x0000000000000000000000000000000AA (always-pass test secret)
-  (b) TURNSTILE_SECRET=2x0000000000000000000000000000000AA (always-fail test secret)
+Follows Cloudflare's official Turnstile testing documentation:
+  https://developers.cloudflare.com/turnstile/troubleshooting/testing/
+
+Supports two isolated, server-managed wrangler dev configurations:
+  (a) TURNSTILE_SECRET=1x0000000000000000000000000000000AA (documented always-pass test secret)
+  (b) TURNSTILE_SECRET=2x0000000000000000000000000000000AA (documented always-fail test secret)
+Uses Cloudflare's documented dummy token: XXXX.DUMMY.TOKEN.XXXX
+Preserves and restores existing .dev.vars state exactly.
 """
 
 import urllib.request
@@ -18,13 +23,14 @@ import subprocess
 import socket
 import argparse
 
-DEFAULT_BASE_URL = "http://127.0.0.1:8787"
-ALLOWED_DEV_ORIGIN = "http://localhost:8787"
-REALISTIC_PASS_TOKEN = "0.test-realistic-turnstile-token-sample-string-12345"
-REALISTIC_FAIL_TOKEN = "0.test-realistic-turnstile-token-sample-string-67890"
+DEFAULT_PORT = 8787
+DEFAULT_BASE_URL = f"http://127.0.0.1:{DEFAULT_PORT}"
+ALLOWED_DEV_ORIGIN = f"http://localhost:{DEFAULT_PORT}"
 
-SECRET_PASS = "1x0000000000000000000000000000000AA"
-SECRET_FAIL = "2x0000000000000000000000000000000AA"
+# Cloudflare official dummy test fixtures (per documentation)
+CF_DUMMY_TOKEN = "XXXX.DUMMY.TOKEN.XXXX"
+CF_PASS_SECRET = "1x0000000000000000000000000000000AA"
+CF_FAIL_SECRET = "2x0000000000000000000000000000000AA"
 
 results = []
 
@@ -33,21 +39,29 @@ def record(suite, name, passed, detail):
     print(f"[{status}] [{suite}] {name} - {detail}")
     results.append({"suite": suite, "name": name, "passed": passed, "detail": detail})
 
-def http_req(url, method="GET", headers=None, data=None):
-    if headers is None:
-        headers = {}
-    req = urllib.request.Request(url, method=method, headers=headers)
+def http_req(url, method="GET", headers=None, data=None, content_type="application/json"):
+    """
+    HTTP request helper.
+    Allows testing Content-Type enforcement by supporting:
+      - custom Content-Type in headers
+      - content_type=None to omit the header entirely
+    """
+    req_headers = dict(headers) if headers else {}
+
     if data is not None:
         if isinstance(data, (dict, list)):
             body = json.dumps(data).encode("utf-8")
-            if "Content-Type" not in headers:
-                req.add_header("Content-Type", "application/json")
         elif isinstance(data, str):
             body = data.encode("utf-8")
         else:
             body = data
+
+        if content_type is not None and "Content-Type" not in req_headers:
+            req_headers["Content-Type"] = content_type
     else:
         body = None
+
+    req = urllib.request.Request(url, method=method, headers=req_headers)
 
     try:
         with urllib.request.urlopen(req, data=body, timeout=10) as resp:
@@ -59,18 +73,6 @@ def http_req(url, method="GET", headers=None, data=None):
     except Exception as e:
         return 0, {}, str(e)
 
-def wait_for_server(base_url, timeout=20):
-    start = time.time()
-    while time.time() - start < timeout:
-        try:
-            status, _, _ = http_req(f"{base_url}/")
-            if status == 200:
-                return True
-        except Exception:
-            pass
-        time.sleep(0.5)
-    return False
-
 def is_port_open(port):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
@@ -80,16 +82,39 @@ def is_port_open(port):
     finally:
         s.close()
 
+def wait_for_port_closed(port, timeout=10):
+    start = time.time()
+    while time.time() - start < timeout:
+        if not is_port_open(port):
+            return True
+        time.sleep(0.3)
+    return False
+
+def wait_for_server(base_url, proc, timeout=25):
+    start = time.time()
+    while time.time() - start < timeout:
+        if proc.poll() is not None:
+            print(f"[Orchestrator] Server process exited unexpectedly with code {proc.poll()}.")
+            return False
+        try:
+            status, _, _ = http_req(f"{base_url}/")
+            if status == 200:
+                return True
+        except Exception:
+            pass
+        time.sleep(0.4)
+    return False
+
 def write_dev_vars(turnstile_secret, notify_to="owner@example.com"):
     content = (
-        f"# Local development secrets\n"
+        f"# Local development secrets (managed by test suite)\n"
         f"TURNSTILE_SECRET={turnstile_secret}\n"
         f"NOTIFY_TO={notify_to}\n"
     )
     with open(".dev.vars", "w", encoding="utf-8") as f:
         f.write(content)
 
-def spawn_wrangler(port=8787):
+def spawn_wrangler(port=DEFAULT_PORT):
     is_windows = os.name == "nt"
     cmd = ["npx.cmd" if is_windows else "npx", "wrangler", "dev", "--port", str(port)]
     proc = subprocess.Popen(
@@ -104,10 +129,17 @@ def kill_proc(proc):
         return
     try:
         if os.name == "nt":
-            subprocess.run(["taskkill", "/F", "/T", "/PID", str(proc.pid)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            subprocess.run(
+                ["taskkill", "/F", "/T", "/PID", str(proc.pid)],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL
+            )
         else:
             proc.terminate()
-            proc.wait(timeout=5)
+            try:
+                proc.wait(timeout=5)
+            except subprocess.TimeoutExpired:
+                proc.kill()
     except Exception:
         pass
 
@@ -167,7 +199,7 @@ def run_suite_a(base_url):
         "phone": "+1 555-0199",
         "email": "jane@example.com",
         "message": "Looking for permanent hiring solutions.",
-        "turnstileToken": REALISTIC_PASS_TOKEN
+        "turnstileToken": CF_DUMMY_TOKEN
     }
 
     # 5. Strict Origin Policy Tests (OPTIONS and POST)
@@ -236,13 +268,53 @@ def run_suite_a(base_url):
     res_json = json.loads(body) if status == 200 else {}
     record(suite, "Origin Policy: ALLOWED_ORIGINS Header -> Passes Origin (200)", status == 200 and res_json.get("ok") is True, f"Status: {status}, Body: {body.strip()}")
 
-    # 6. Payload size limit (> 20 KB -> 413)
+    # 6. JSON-Only Content-Type Contract Tests (Deliverable 3)
+    # 6a. application/json accepted
+    status, headers, body = http_req(
+        f"{base_url}/api/contact",
+        method="POST",
+        headers={"Origin": ALLOWED_DEV_ORIGIN, "Content-Type": "application/json"},
+        data=valid_payload
+    )
+    res_json = json.loads(body) if status == 200 else {}
+    record(suite, "Content-Type Contract: application/json Accepted", status == 200 and res_json.get("ok") is True, f"Status: {status}, Body: {body.strip()}")
+
+    # 6b. application/json; charset=utf-8 accepted
+    status, headers, body = http_req(
+        f"{base_url}/api/contact",
+        method="POST",
+        headers={"Origin": ALLOWED_DEV_ORIGIN, "Content-Type": "application/json; charset=utf-8"},
+        data=valid_payload
+    )
+    res_json = json.loads(body) if status == 200 else {}
+    record(suite, "Content-Type Contract: application/json; charset=utf-8 Accepted", status == 200 and res_json.get("ok") is True, f"Status: {status}, Body: {body.strip()}")
+
+    # 6c. text/plain rejected with 415
+    status, headers, body = http_req(
+        f"{base_url}/api/contact",
+        method="POST",
+        headers={"Origin": ALLOWED_DEV_ORIGIN, "Content-Type": "text/plain"},
+        data=valid_payload
+    )
+    record(suite, "Content-Type Contract: text/plain Rejected (415)", status == 415, f"Status: {status}, Body: {body.strip()}")
+
+    # 6d. missing Content-Type rejected with 415
+    status, headers, body = http_req(
+        f"{base_url}/api/contact",
+        method="POST",
+        headers={"Origin": ALLOWED_DEV_ORIGIN},
+        data=valid_payload,
+        content_type=None
+    )
+    record(suite, "Content-Type Contract: Missing Content-Type Rejected (415)", status == 415, f"Status: {status}, Body: {body.strip()}")
+
+    # 7. Payload size limit (> 20 KB -> 413)
     oversized_data = {
         "name": "Jane Doe",
         "phone": "+1 555-0199",
         "email": "jane@example.com",
         "message": "A" * 21000,
-        "turnstileToken": REALISTIC_PASS_TOKEN
+        "turnstileToken": CF_DUMMY_TOKEN
     }
     status, headers, body = http_req(
         f"{base_url}/api/contact",
@@ -252,7 +324,7 @@ def run_suite_a(base_url):
     )
     record(suite, "Payload Size Limit (>20 KB -> 413)", status == 413, f"Status: {status}")
 
-    # 7. Field validation tests (each missing/oversize/invalid field -> 400)
+    # 8. Field validation tests (each missing/oversize/invalid field -> 400)
     validation_cases = [
         ("Missing Name", {**valid_payload, "name": ""}),
         ("Oversize Name (>100)", {**valid_payload, "name": "A" * 101}),
@@ -278,7 +350,7 @@ def run_suite_a(base_url):
         )
         record(suite, f"Validation: {test_label} -> 400", status == 400, f"Status: {status}, Body: {body.strip()}")
 
-    # 8. Turnstile test: Missing token -> 400
+    # 9. Turnstile test: Missing token -> 400
     no_token_payload = {**valid_payload, "turnstileToken": ""}
     status, headers, body = http_req(
         f"{base_url}/api/contact",
@@ -288,7 +360,17 @@ def run_suite_a(base_url):
     )
     record(suite, "Turnstile: Missing Token -> 400", status == 400, f"Status: {status}, Body: {body.strip()}")
 
-    # 9. Honeypot check (website filled -> 200 without email or lead logging)
+    # 10. Turnstile test: Documented dummy token with pass secret -> 200
+    status, headers, body = http_req(
+        f"{base_url}/api/contact",
+        method="POST",
+        headers={"Origin": ALLOWED_DEV_ORIGIN},
+        data=valid_payload
+    )
+    res_json = json.loads(body) if status == 200 else {}
+    record(suite, "Turnstile: Documented Dummy Token with Pass Secret -> 200", status == 200 and res_json.get("ok") is True, f"Status: {status}, Body: {body.strip()}")
+
+    # 11. Honeypot check (website filled -> 200 without email or lead logging)
     honeypot_payload = {**valid_payload, "website": "https://spammer-bot.example.com"}
     status, headers, body = http_req(
         f"{base_url}/api/contact",
@@ -299,7 +381,7 @@ def run_suite_a(base_url):
     res_json = json.loads(body) if status == 200 else {}
     record(suite, "Honeypot: Trapped bot returns 200 {ok:true}", status == 200 and res_json.get("ok") is True and "delivered" not in res_json, f"Status: {status}, Body: {body.strip()}")
 
-    # 10. Valid Submission (Stage A: MAIL_MODE=log -> 200 {ok:true, delivered:false})
+    # 12. Valid Submission (Stage A: MAIL_MODE=log -> 200 {ok:true, delivered:false})
     status, headers, body = http_req(
         f"{base_url}/api/contact",
         method="POST",
@@ -311,7 +393,7 @@ def run_suite_a(base_url):
     is_valid_success = status == 200 and res_json.get("ok") is True and res_json.get("delivered") is False and has_no_store
     record(suite, "Valid Submission (Stage A MAIL_MODE=log)", is_valid_success, f"Status: {status}, Body: {body.strip()}, Cache-Control: {headers.get('Cache-Control')}")
 
-    # 11. Header injection / CRLF in name (sanitized)
+    # 13. Header injection / CRLF in name (sanitized)
     crlf_name_payload = {**valid_payload, "name": "Jane\r\nDoe\r\nSubject: Injected"}
     status, headers, body = http_req(
         f"{base_url}/api/contact",
@@ -332,7 +414,7 @@ def run_suite_b(base_url):
         "phone": "+1 555-0199",
         "email": "jane@example.com",
         "message": "Looking for permanent hiring solutions.",
-        "turnstileToken": REALISTIC_FAIL_TOKEN
+        "turnstileToken": CF_DUMMY_TOKEN
     }
 
     # 1. Missing token -> 400
@@ -345,14 +427,14 @@ def run_suite_b(base_url):
     )
     record(suite, "Turnstile: Missing Token -> 400", status == 400, f"Status: {status}, Body: {body.strip()}")
 
-    # 2. Invalid token / verification failure with 2x secret -> 400
+    # 2. Documented dummy token verified with 2x always-fail secret -> 400
     status, headers, body = http_req(
         f"{base_url}/api/contact",
         method="POST",
         headers={"Origin": ALLOWED_DEV_ORIGIN},
         data=valid_payload
     )
-    record(suite, "Turnstile: Invalid Token (Always-Fail Secret) -> 400", status == 400, f"Status: {status}, Body: {body.strip()}")
+    record(suite, "Turnstile: Documented Dummy Token with Always-Fail Secret -> 400", status == 400, f"Status: {status}, Body: {body.strip()}")
 
 def main():
     parser = argparse.ArgumentParser(description="HireHR Backend Verification Suite")
@@ -361,57 +443,116 @@ def main():
     parser.add_argument("--base-url", default=DEFAULT_BASE_URL, help="Base URL of running server")
     args = parser.parse_args()
 
-    port = int(urllib.parse.urlsplit(args.base_url).port or 8787)
+    port = int(urllib.parse.urlsplit(args.base_url).port or DEFAULT_PORT)
 
     if args.suite_a_only:
         run_suite_a(args.base_url)
+        total = len(results)
+        passed = sum(1 for r in results if r["passed"])
+        return (total - passed) == 0
     elif args.suite_b_only:
         run_suite_b(args.base_url)
-    else:
-        # Full automated run covering both wrangler dev configurations
-        print("Starting dual-configuration backend verification suite...")
+        total = len(results)
+        passed = sum(1 for r in results if r["passed"])
+        return (total - passed) == 0
 
-        # If a server is already on port 8787, we run Suite A, then restart with Config B, then restore Config A
-        proc = None
+    # Full automated test run managing dual-server lifecycle
+    print("Starting dual-configuration backend verification suite...")
+
+    # Guard: Fail clearly before touching files if required port is occupied
+    if is_port_open(port):
+        print(f"\n[FAIL] Port {port} is already in use by an existing process.")
+        print("To ensure deterministic verification and clean server isolation,")
+        print(f"please terminate the process listening on port {port} before running this suite.")
+        sys.exit(1)
+
+    # State preservation for .dev.vars
+    dev_vars_path = ".dev.vars"
+    dev_vars_existed = os.path.exists(dev_vars_path)
+    original_dev_vars_bytes = None
+    original_mode = None
+
+    if dev_vars_existed:
         try:
-            # 1. Setup Configuration A
-            print(f"\n[Orchestrator] Setting up Configuration A (Pass Secret: {SECRET_PASS})...")
-            write_dev_vars(SECRET_PASS)
-            if not is_port_open(port):
-                proc = spawn_wrangler(port)
-                if not wait_for_server(args.base_url):
-                    print("Failed to start wrangler dev for Configuration A.")
-                    sys.exit(1)
-            else:
-                print(f"[Orchestrator] Using already running server on port {port} for Suite A.")
+            with open(dev_vars_path, "rb") as f:
+                original_dev_vars_bytes = f.read()
+            original_mode = os.stat(dev_vars_path).st_mode
+            print(f"[Orchestrator] Preserved existing {dev_vars_path} ({len(original_dev_vars_bytes)} bytes).")
+        except Exception as e:
+            print(f"BLOCKER: Unable to safely preserve existing {dev_vars_path}: {e}")
+            sys.exit(1)
 
-            run_suite_a(args.base_url)
+    proc = None
+    try:
+        # Phase 1: Configuration A (Pass Secret)
+        print(f"\n[Orchestrator] Configuring {dev_vars_path} with Pass Secret ({CF_PASS_SECRET})...")
+        write_dev_vars(CF_PASS_SECRET)
 
-            # Shut down server A if spawned
-            if proc:
-                print("[Orchestrator] Stopping Configuration A server...")
-                kill_proc(proc)
-                proc = None
-                time.sleep(2)
+        print(f"[Orchestrator] Spawning fresh wrangler dev server on port {port}...")
+        proc = spawn_wrangler(port)
+        if not wait_for_server(args.base_url, proc):
+            print("[FAIL] Failed to start wrangler dev server for Configuration A.")
+            sys.exit(1)
 
-            # 2. Setup Configuration B
-            print(f"\n[Orchestrator] Setting up Configuration B (Fail Secret: {SECRET_FAIL})...")
-            write_dev_vars(SECRET_FAIL)
-            proc = spawn_wrangler(port)
-            if not wait_for_server(args.base_url):
-                print("Failed to start wrangler dev for Configuration B.")
-                sys.exit(1)
+        print(f"[Orchestrator] Server verified responsive on {args.base_url}. Running Suite A...")
+        run_suite_a(args.base_url)
 
-            run_suite_b(args.base_url)
+        print("[Orchestrator] Terminating Configuration A server...")
+        kill_proc(proc)
+        proc = None
+        if not wait_for_port_closed(port, timeout=10):
+            print(f"[FAIL] Port {port} did not close cleanly after stopping Configuration A server.")
+            sys.exit(1)
+        print(f"[Orchestrator] Confirmed port {port} closed.")
 
-        finally:
-            if proc:
-                print("\n[Orchestrator] Stopping Configuration B server...")
-                kill_proc(proc)
-                time.sleep(1)
-            # Restore default Configuration A .dev.vars
-            write_dev_vars(SECRET_PASS)
-            print("[Orchestrator] Restored .dev.vars to default (Config A Pass Secret).")
+        # Phase 2: Configuration B (Fail Secret)
+        print(f"\n[Orchestrator] Configuring {dev_vars_path} with Fail Secret ({CF_FAIL_SECRET})...")
+        write_dev_vars(CF_FAIL_SECRET)
+
+        print(f"[Orchestrator] Spawning fresh wrangler dev server on port {port}...")
+        proc = spawn_wrangler(port)
+        if not wait_for_server(args.base_url, proc):
+            print("[FAIL] Failed to start wrangler dev server for Configuration B.")
+            sys.exit(1)
+
+        print(f"[Orchestrator] Server verified responsive on {args.base_url}. Running Suite B...")
+        run_suite_b(args.base_url)
+
+        print("[Orchestrator] Terminating Configuration B server...")
+        kill_proc(proc)
+        proc = None
+        if not wait_for_port_closed(port, timeout=10):
+            print(f"[FAIL] Port {port} did not close cleanly after stopping Configuration B server.")
+            sys.exit(1)
+        print(f"[Orchestrator] Confirmed port {port} closed.")
+
+    finally:
+        # Cleanup server process if still running
+        if proc:
+            print("\n[Orchestrator] Cleaning up running server process...")
+            kill_proc(proc)
+            wait_for_port_closed(port)
+
+        # Restore .dev.vars to exact pre-test state
+        if dev_vars_existed:
+            try:
+                with open(dev_vars_path, "wb") as f:
+                    f.write(original_dev_vars_bytes)
+                if original_mode is not None:
+                    try:
+                        os.chmod(dev_vars_path, original_mode)
+                    except Exception:
+                        pass
+                print(f"[Orchestrator] Successfully restored original {dev_vars_path} state.")
+            except Exception as e:
+                print(f"ERROR: Failed to restore original {dev_vars_path}: {e}")
+        else:
+            if os.path.exists(dev_vars_path):
+                try:
+                    os.remove(dev_vars_path)
+                    print(f"[Orchestrator] Successfully removed test-created {dev_vars_path}.")
+                except Exception as e:
+                    print(f"ERROR: Failed to remove test {dev_vars_path}: {e}")
 
     # Summary
     total = len(results)
