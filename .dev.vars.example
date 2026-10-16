@@ -1,0 +1,10 @@
+# Local Development Secrets Template
+# Copy this file to .dev.vars for local testing with `wrangler dev`
+# DO NOT COMMIT REAL SECRETS TO VERSION CONTROL
+
+# Cloudflare Turnstile Secret Key
+# Documented test secret that always passes validation:
+TURNSTILE_SECRET=1x0000000000000000000000000000000AA
+
+# Destination email for notifications (used in Stage B with MAIL_MODE=send)
+NOTIFY_TO=owner@example.com
