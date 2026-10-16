@@ -19,7 +19,7 @@ const FORM_ENDPOINT = '/api/contact';
  * Test sitekey that always passes: 1x00000000000000000000AA
  * Replace with production sitekey created in Cloudflare dashboard
  */
-const TURNSTILE_SITE_KEY = '1x00000000000000000000AA';
+const TURNSTILE_SITE_KEY = '0x4AAAAAAFYJ5FLwmd03vH67';
 
 // Global Turnstile state & onload handler for explicit rendering
 let turnstileWidgetId = null;
