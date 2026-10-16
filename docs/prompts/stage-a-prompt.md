@@ -1,3 +1,7 @@
+> [!NOTE]
+> **HISTORICAL / SUPERSEDED TASK PROMPT**
+> This file preserves the original historical prompt from Stage A verbatim for reference. It is superseded by subsequent review and verification tasks. Do not re-run or execute directly.
+
 # TASK: Add a free Cloudflare backend for the contact form (Stage A: works on *.workers.dev, no domain yet)
 
 Repo: itshim998/HireHR. Create a new branch `feature/contact-worker` from the latest `ready-site` and work there. Small commits; push with `git push -u origin feature/contact-worker` and confirm with `git ls-remote --heads origin feature/contact-worker`.
