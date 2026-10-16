@@ -438,4 +438,68 @@ All headings, navigation links, hero slider slides/controls, service links, cons
 - **Email Routing Activity Log "Dropped" Label**: Noted in `docs/DEPLOY.md` that Cloudflare Email Routing logs Worker-sent outbound mail as "dropped" in the activity log (as it tracks inbound forwarding), which is normal and does not indicate delivery failure.
 - **Addendum 3 Compliance**: `send_email` binding is commented out in `wrangler.jsonc` to ensure Stage A deploy and local `wrangler dev` execute seamlessly without requiring pre-existing domain email routing.
 
+---
+
+## Stage A Review Fixes (Branch `feature/contact-worker`)
+
+All 7 required fixes and regression assertions executed and verified:
+
+### 1. Fix 1: Restore `prompt.txt`
+- Created directory `docs/prompts/` and archived the Stage A task prompt to `docs/prompts/stage-a-prompt.md`.
+- Restored `prompt.txt` from `origin/ready-site:prompt.txt`.
+- Verified `git diff origin/ready-site -- prompt.txt` is completely empty.
+- Committed separately: commit `aabfbdf`.
+
+### 2. Fix 2: Remove Test Logic from Production Worker & Dual Wrangler Dev Configurations
+- In `worker/index.js`, the Turnstile secret is strictly `env.TURNSTILE_SECRET`. Deleted the branch swapping in an always-fail secret when token starts with `2x` or equals `fail`.
+- Rewrote `tools/test_backend.py` to use realistic token strings (e.g. `0.test-realistic-turnstile-token-sample-string-...`, never site keys).
+- Implemented automated dual `wrangler dev` testing:
+  - **Configuration A** (`TURNSTILE_SECRET=1x0000000000000000000000000000000AA`): tests success path and full endpoint suite.
+  - **Configuration B** (`TURNSTILE_SECRET=2x0000000000000000000000000000000AA`): tests token rejection via Cloudflare siteverify (`400 {"ok":false,"error":"Security verification failed"}`). Missing token (`400 {"ok":false,"error":"Security token required"}`) verified in both suites.
+- Updated `docs/VERIFY_BACKEND.md` with honest real results: **48/48 automated tests passed (100%)**.
+- Added note to `docs/DEPLOY.md` clarifying that tokens from dummy test site keys verify only against dummy test secrets.
+- Committed separately: commits `90d20d6` and `ec236e0`.
+
+### 3. Fix 3: Strict Origin Policy
+- In `worker/index.js`, enforced strict Origin policy for both OPTIONS and POST requests:
+  - If `Origin` is present: allowed only if equal to request URL's own origin (`url.origin`) or listed in `env.ALLOWED_ORIGINS`.
+  - If `Origin` is absent: allowed only when header `Sec-Fetch-Site` is `same-origin`; otherwise returns HTTP 403 Forbidden.
+  - Removed `!origin` shortcut.
+- Added comprehensive tests covering all origin conditions:
+  - Missing Origin + missing Sec-Fetch-Site -> HTTP 403
+  - Wrong Origin -> HTTP 403
+  - OPTIONS wrong Origin -> HTTP 403
+  - OPTIONS allowed Origin -> HTTP 204
+  - Missing Origin + `Sec-Fetch-Site: same-origin` -> HTTP 200 (passes origin stage)
+  - Request URL own origin (`http://127.0.0.1:8787`) -> HTTP 200 (passes origin stage)
+  - Allowed origin in `ALLOWED_ORIGINS` (`http://localhost:8787`) -> HTTP 200 (passes origin stage)
+- Verified real browser form submission on `http://localhost:8787` (browsers send Origin on JSON POST requests), with 0 console errors and proper status feedback.
+- Committed separately: commits `90d20d6` and `ec236e0`.
+
+### 4. Fix 4: `docs/DEPLOY.md` Corrections
+- Stage A: specified deploying branch `feature/contact-worker` (or `ready-site` after merge). Removed all suggestions to pick `main` (which only holds the pre-migration snapshot) and noted production branch choice is undecided.
+- Stage B warning added: *"Do NOT onboard a Cloudflare Email Sending domain. It is not needed to send to your own verified destination address, and general Email Sending requires the paid Workers plan. Only Email Routing + a verified destination address + the `send_email` binding are used."*
+- First Stage B step after enabling binding established as a single test send to verified destination address; if it fails with plan, permission, or availability error, STOP immediately and report as a blocker without upgrading.
+- Committed separately: commit `4c535a6`.
+
+### 5. Fix 5: `wrangler.jsonc` Compatibility Date
+- Updated `compatibility_date` to `"2026-10-16"` (current date supported by installed Wrangler v4.151.0 / workerd v1.20261012.1 runtime; no future dates).
+- Re-tested with `npx wrangler deploy --dry-run` and live server verification.
+- Committed separately: commit `285b883`.
+
+### 6. Fix 6: Single Source for Turnstile Site Key
+- Removed duplicate `data-sitekey` attribute from `#turnstile-widget` container in `index.html`.
+- Maintained `TURNSTILE_SITE_KEY` constant in `js/main.js` with "replace with real key" comment as the single source of truth.
+- Updated `docs/DEPLOY.md` to reference `js/main.js` exclusively.
+- Committed separately: commit `c3ab233`.
+
+### 7. Fix 7: Regression Checks
+- `python3 tools/verify_content.py`: 33/33 checks passed (100%).
+- `python3 tools/verify_site.py`: Passed (100% no-loss, 0 requests to dead domain).
+- LinkedIn URL unchanged (`https://www.linkedin.com/in/hirehr-consultancy-services-3149a4206/`) across all 11 pages (22 occurrences).
+- No "consultancy" in site copy (0 instances).
+- No Facebook/Twitter URLs in site copy.
+- `.assetsignore` verified excluding all 12 non-public paths (each returns HTTP 404 under `wrangler dev`).
+
+
 
