@@ -66,34 +66,68 @@ document.addEventListener('DOMContentLoaded', () => {
   const mainNav = document.querySelector('.main-navigation');
   const dropdownParents = document.querySelectorAll('.has-dropdown');
 
+  function closeMobileNav() {
+    if (!mainNav || !navToggle) return;
+    mainNav.classList.remove('is-active');
+    navToggle.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+  }
+
+  function openMobileNav() {
+    if (!mainNav || !navToggle) return;
+    mainNav.classList.add('is-active');
+    navToggle.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+  }
+
   if (navToggle && mainNav) {
+    // Stagger indices for mobile overlay items
+    const navItems = mainNav.querySelectorAll('.nav-item');
+    navItems.forEach((item, idx) => {
+      item.style.setProperty('--nav-idx', idx);
+    });
+
     navToggle.addEventListener('click', () => {
       const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
-      navToggle.setAttribute('aria-expanded', !isExpanded);
-      mainNav.classList.toggle('is-active', !isExpanded);
+      if (isExpanded) {
+        closeMobileNav();
+      } else {
+        openMobileNav();
+      }
     });
 
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && mainNav.classList.contains('is-active')) {
-        mainNav.classList.remove('is-active');
-        navToggle.setAttribute('aria-expanded', 'false');
+        closeMobileNav();
         navToggle.focus();
       }
     });
+
+    // Close mobile nav when clicking normal links
+    mainNav.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        if (link.getAttribute('href') !== '#' && mainNav.classList.contains('is-active')) {
+          closeMobileNav();
+        }
+      });
+    });
   }
 
-  // Mobile / keyboard handling for dropdown menus
+  // Mobile / keyboard handling for dropdown menus (<1024px accordion)
   dropdownParents.forEach(item => {
     const link = item.querySelector('.nav-link');
     if (link) {
       link.addEventListener('click', (e) => {
-        // On touch screens or small viewport, toggle dropdown
-        if (window.innerWidth < 992) {
+        if (window.innerWidth < 1024) {
           e.preventDefault();
           const isOpen = item.classList.contains('is-open');
           // Close other open dropdowns
           dropdownParents.forEach(other => {
-            if (other !== item) other.classList.remove('is-open');
+            if (other !== item) {
+              other.classList.remove('is-open');
+              const otherLink = other.querySelector('.nav-link');
+              if (otherLink) otherLink.setAttribute('aria-expanded', 'false');
+            }
           });
           item.classList.toggle('is-open', !isOpen);
           link.setAttribute('aria-expanded', !isOpen);
