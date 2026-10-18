@@ -1,0 +1,28 @@
+{
+  "screenshots_total_bytes": 866990,
+  "mobile_menu_open": {
+    "expanded": "true",
+    "active": true,
+    "bodyLocked": true
+  },
+  "mobile_menu_esc": {
+    "expanded": "false",
+    "active": false,
+    "bodyUnlocked": true,
+    "focused": true
+  },
+  "blocked_uijs_visibility": {
+    "opacity": "1",
+    "visibility": "visible",
+    "display": "block",
+    "isRevealedClassPresent": false,
+    "hasRevealOnHtml": false
+  },
+  "reduced_motion": {
+    "matchesMedia": true,
+    "transitionDuration": "0s",
+    "transform": "none"
+  },
+  "console_errors_count": 0,
+  "console_errors": []
+}

@@ -553,6 +553,150 @@ Addressed remaining verification harness, fixture consistency, configuration saf
   - Archived Stage A prompt marked as historical/superseded without rewriting its body.
   - `docs/DEPLOY.md` prohibits selecting `main` and retains Stage B single test-send stop rule.
 
+---
 
+## 14. Design Upgrade: Foundation (Task 1 of 2)
 
+**Branch:** `feature/design-upgrade` (branched from `origin/main` at `42f4686`)  
+**Design Vision:** "Quiet Authority" — Boutique Professional-Services Advisory Firm  
+**Scope:** Foundation (Design tokens, self-hosted OFL fonts, base CSS rewrite, header architecture, footer, editorial inner pages, 404, motion infrastructure, content-freeze guard).  
+**Rules Compliance:** STRICT ZERO-CONTENT-CHANGE ENFORCED (Not one word, heading, link, placeholder, number, or contact detail altered).
 
+---
+
+### 1. What Was Built
+1. **Self-Hosted Variable Fonts (`assets/fonts/`)**:
+   - Downloaded and installed `Newsreader` (OFL, weights 400–600, serif for headings/wordmark) and `Hanken Grotesk` (OFL, weights 400–700, sans for body/UI).
+   - Saved latin subset `.woff2` files with their official SIL Open Font License 1.1 texts (`OFL-Newsreader.txt`, `OFL-HankenGrotesk.txt`). Total font budget: 90.6 KB (under 100 KB limit).
+   - Added critical font preloads in `<head>` across all 12 site pages.
+2. **Base CSS Rewrite (`css/style.css`)**:
+   - Reorganized into clearly structured sections: Design Tokens, Fonts, Reset & Base, Typography Scale, Layout, Buttons & Links, Header, Footer, Inner Pages (Editorial), Motion & Utilities, and Legacy Homepage Sections.
+   - Replaced WordPress crimson default (`#cd2653`) with deep ink (`#0A1624`), warm architectural paper (`#F6F4EF`), crisp white (`#FFFFFF`), high-contrast body text (`#1B2733`), subtle lines (`#D9D5CC`), and teal accents (`#22D3CF` on dark, `#0A6B6F` on light).
+   - Completely eliminated all `box-shadow` styles across the stylesheet (`grep -c "box-shadow"` = 0).
+   - Removed rounded card containers and pink pill badges.
+   - Primary button wipe effect implemented with GPU-accelerated `transform: scaleX(1)` transition.
+   - Text links styled with 350ms animated underline sweep.
+3. **Site Header**:
+   - **Top bar (36px):** Dark ink, hairline divider (`rgba(255,255,255,.14)`), contact emails and bare LinkedIn icon turning `--accent` on hover. Collapses away on scroll past 24px.
+   - **Main bar (76px desktop / 64px mobile):**
+     - Homepage (`body.page-home`): Transparent over hero at scroll < 24px with white wordmark and navigation links. On scroll, transitions to frosted paper (`rgba(246,244,239,.92)`, `backdrop-filter: blur(12px)`), hairline bottom, and dark ink typography.
+     - Inner pages (`.site-header.is-solid`): Solid paper background from initial load with subtle hairline.
+     - Wordmark: Flame logo + "HireHR services" in Newsreader 500 (`1.35rem`).
+     - Navigation: UPPERCASE sans links with 2px teal underline sweep. Current page has permanent underline (no pink pill). Desktop dropdown is sharp with `1px var(--line)` border, no shadow, and 8px fade/slide-in.
+     - Mobile menu (<1024px): Full-viewport ink overlay (`#0A1624`) with large serif links (`2rem`), 40ms staggered entrance, accordion submenus, scroll-lock while open, and Escape key dismissal with focus returned to toggle.
+4. **Site Footer**:
+   - Ink background (`#0A1624`) with 3 clean columns: Brand + Contact Info, Quick Links (2-column grid), and Follow Us.
+   - Column titles in uppercase eyebrow style in cyan-teal (`--accent`). Crimson underline bars removed.
+   - Larger 44px logo. Hairline above centered, muted copyright line. Decorative contact icons thin and muted.
+5. **Inner Pages & 404 (Generator + `404.html`)**:
+   - Replaced dark centered banner with an editorial layout: warm paper background, top clearance for sticky header, left-aligned Newsreader `h1` with an architectural `56px x 2px` `--accent-ink` rule underneath.
+   - Body copy formatted in a left-aligned reading column (`max-width: 68ch`, line height 1.8).
+   - Section `h2` elements styled in serif with `1px var(--line)` divider above.
+   - Contact Us placeholder styled as clean muted text (dashed box removed).
+   - Updated `tools/build_inner_pages.py` and regenerated all 10 inner pages.
+6. **Motion Infrastructure (`js/ui.js`)**:
+   - Lightweight (< 3 KB) vanilla script loaded with `defer`.
+   - rAF-throttled passive scroll listener toggling `.is-scrolled` on header.
+   - `IntersectionObserver` reveal-on-scroll with sibling stagger (70ms steps via `--reveal-index`, max 5).
+   - Bulletproof progressive enhancement: content is hidden only under `@media (scripting: enabled)` AND when `html.has-reveal` is present. If `ui.js` is blocked, all content remains 100% visible immediately.
+   - View transitions enabled via `@view-transition { navigation: auto; }`.
+   - `prefers-reduced-motion: reduce` fully respected (reveal offsets zeroed out, animations instant).
+7. **Content-Freeze Guard (`tools/verify_text_unchanged.py`)**:
+   - Automated script comparing HTML from `origin/main` against working tree.
+   - Compares ordered text token sequence, `<title>`, `<meta name="description">`, and asserts all base `href`s are preserved. Exits non-zero on any difference.
+
+---
+
+### 2. Files Changed
+
+| File | Status | Description |
+|:---|:---:|:---|
+| `assets/fonts/newsreader-latin.woff2` | Added | Self-hosted variable heading font (58,084 B) |
+| `assets/fonts/hanken-grotesk-latin.woff2` | Added | Self-hosted variable body/UI font (34,704 B) |
+| `assets/fonts/OFL-Newsreader.txt` | Added | SIL Open Font License 1.1 for Newsreader |
+| `assets/fonts/OFL-HankenGrotesk.txt` | Added | SIL Open Font License 1.1 for Hanken Grotesk |
+| `css/style.css` | Modified | Complete rewrite to Quiet Authority design tokens; 0 box-shadows, 0 crimson |
+| `js/ui.js` | Added | Motion infrastructure script (2,635 B, < 4 KB budget) |
+| `js/main.js` | Modified | Mobile menu scroll-lock, 1024px accordion, Escape key focus return |
+| `tools/build_inner_pages.py` | Modified | Generator updated with preloads, #0A1624 theme-color, is-solid header, data-reveal, ui.js |
+| `about-us/index.html` | Regenerated | Editorial layout, font preloads, data-reveal, ui.js |
+| `permanent-hiring-solutions/index.html` | Regenerated | Editorial layout, font preloads, data-reveal, ui.js |
+| `contract-hiring-solutions/index.html` | Regenerated | Editorial layout, font preloads, data-reveal, ui.js |
+| `contract-to-hire-solutions/index.html` | Regenerated | Editorial layout, font preloads, data-reveal, ui.js |
+| `recruitment-process-outsourcing/index.html` | Regenerated | Editorial layout, font preloads, data-reveal, ui.js |
+| `background-verification-service/index.html` | Regenerated | Editorial layout, font preloads, data-reveal, ui.js |
+| `our-specialty/index.html` | Regenerated | Editorial layout, font preloads, data-reveal, ui.js |
+| `career-advice/index.html` | Regenerated | Editorial layout, font preloads, data-reveal, ui.js |
+| `job-seekers/index.html` | Regenerated | Editorial layout, font preloads, data-reveal, ui.js |
+| `contact-us/index.html` | Regenerated | Editorial layout, font preloads, data-reveal, ui.js |
+| `404.html` | Modified | Editorial layout, font preloads, #0A1624 theme-color, is-solid header, data-reveal, ui.js |
+| `index.html` | Modified | Font preloads, #0A1624 theme-color, body.page-home, data-reveal footer, ui.js |
+| `tools/verify_text_unchanged.py` | Added | Automated content-freeze guard test script |
+| `tools/verify_contrast.py` | Added | Automated WCAG AA contrast ratio verification tool |
+| `tools/capture_design_screenshots.py` | Added | Automated CDP screenshot and responsive a11y test tool |
+| `tools/run_lighthouse.py` | Added | Automated mobile Lighthouse audit tool |
+| `docs/DESIGN_SYSTEM.md` | Added | Design system specification |
+| `docs/VERIFY_DESIGN.md` | Added | Design upgrade verification report |
+| `docs/test_results.json` | Added | Automation test run metrics |
+| `docs/lighthouse_summary.json` | Added | Mobile Lighthouse audit scores summary |
+| `docs/screenshots/design/*.webp` | Added | 20 responsive screenshots across 5 pages at 4 viewports (0.83 MB total) |
+
+---
+
+### 3. Fonts Used, Sizes & Licences
+
+| Font Family | File | Format / Subset | Size | License |
+|:---|:---|:---:|:---:|:---:|
+| **Newsreader** (Variable, 400–600) | `assets/fonts/newsreader-latin.woff2` | WOFF2 / Latin | 58,084 bytes (~56.7 KB) | SIL Open Font License 1.1 (`OFL-Newsreader.txt`) |
+| **Hanken Grotesk** (Variable, 400–700) | `assets/fonts/hanken-grotesk-latin.woff2` | WOFF2 / Latin | 34,704 bytes (~33.9 KB) | SIL Open Font License 1.1 (`OFL-HankenGrotesk.txt`) |
+| **Total Font Payload** | — | — | **92,788 bytes (~90.6 KB)** | Both 100% Free / OFL compliant |
+
+---
+
+### 4. Verification Results Summary
+
+1. **Content-Freeze Guard (`tools/verify_text_unchanged.py --base origin/main`)**:
+   - **PASS (12/12 pages passed)**: `index.html`, `404.html`, and all 10 inner pages verified byte-for-byte in ordered text sequences, `<title>`, and `<meta name="description">`. Zero base `href`s missing.
+2. **Content & Site Verification Suites**:
+   - `python tools/verify_content.py`: **PASS** (33/33 refined copy strings verbatim, zero forbidden words, zero `emloyer` typos, `data-placeholder` strictly on `contact-us`).
+   - `python tools/verify_site.py`: **PASS** (100% no-loss test passed, all internal links resolve, 0 requests to dead domain).
+3. **Contrast Compliance (`tools/verify_contrast.py`)**:
+   - **17/17 pairs passed WCAG AA** (all normal body text pairs exceed 5.2:1 against 4.5:1 requirement).
+4. **Code Quality Audits**:
+   - `grep -c "box-shadow" css/style.css`: **0** matches.
+   - `grep -ci "cd2653"` outside `original/` and `docs/`: **0** matches.
+5. **Interactive & Accessibility Audits**:
+   - Console errors: **0** exceptions or console errors across all pages.
+   - Mobile navigation: Toggle opens overlay, locks body scroll; Escape dismisses, unlocks scroll, and returns focus to toggle.
+   - Fallback with `ui.js` blocked: Body text opacity = 1, visibility = visible, display = block. 100% readable.
+   - Reduced motion: Animations and transforms disabled under `prefers-reduced-motion: reduce`.
+6. **Lighthouse Mobile Scores**:
+   - Homepage: **Performance: 100**, **Accessibility: 89**, **Best Practices: 100**, **SEO: 92**.
+   - About Us: **Performance: 100**, **Accessibility: 94**, **Best Practices: 100**, **SEO: 100**.
+7. **Cloudflare Wrangler Local Preview**:
+   - Tested under `wrangler dev` (version 4.151.1): Static asset serving confirmed (`GET / 200 OK`, 34ms). `TURNSTILE_SITE_KEY` verified completely unchanged.
+
+---
+
+### 5. Screenshots Location
+All 20 screenshots are stored in `docs/screenshots/design/` as compressed WebP:
+- Folder path: `docs/screenshots/design/`
+- Total folder size: **0.83 MB** (strictly within < 3.0 MB limit).
+- Pages captured: `home`, `about_us`, `our_speciality`, `contact_us`, `404`.
+- Breakpoints captured: `375px`, `768px`, `1280px`, `1920px`.
+
+---
+
+### 6. Git Commits & Push Confirmation
+Commits made on branch `feature/design-upgrade`:
+- **Branch:** `feature/design-upgrade`
+- **Pushed to Remote:** `origin/feature/design-upgrade`
+- **Head SHA:** Verified via `git ls-remote --heads origin feature/design-upgrade`.
+- **Note:** Never merged into `main` (preserving production branch `main` at `42f4686`).
+
+---
+
+### 7. Anything That Could Not Be Done & Open Questions
+- **None.** All deliverables specified for Task 1 were completed and verified 100% without blockers.
+- **Open Questions for Task 2:**
+  - In Task 2, the homepage body sections (Category Cards, Who We Are, Services, Why Choose Us, Consultation Form) will be completely redesigned to match the Quiet Authority aesthetic, replacing the temporary legacy styling kept working during Task 1.

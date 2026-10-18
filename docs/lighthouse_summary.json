@@ -1,0 +1,14 @@
+{
+  "home": {
+    "performance": 100,
+    "accessibility": 89,
+    "best-practices": 100,
+    "seo": 92
+  },
+  "about": {
+    "performance": 100,
+    "accessibility": 94,
+    "best-practices": 100,
+    "seo": 100
+  }
+}
