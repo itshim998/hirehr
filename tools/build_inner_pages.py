@@ -73,17 +73,17 @@ def generate_inner_page(page_info):
         meta_desc = pages_data[target_dir]['meta_description']
 
     if target_dir == 'contact-us':
-        main_content = """        <div class="pending-card">
+        main_content = """        <div class="pending-card" data-reveal>
           <p data-placeholder="content-pending">Content pending from site owner.</p>
         </div>"""
     elif target_dir in pages_data and 'content_html' in pages_data[target_dir]:
         raw_html = pages_data[target_dir]['content_html']
         indented_html = '\n'.join('          ' + line if line.strip() else '' for line in raw_html.splitlines())
-        main_content = f"""        <div class=\"page-body\">
+        main_content = f"""        <div class=\"page-body\" data-reveal>
 {indented_html}
         </div>"""
     else:
-        main_content = """        <div class="pending-card">
+        main_content = """        <div class="pending-card" data-reveal>
           <p data-placeholder="content-pending">Content pending from site owner.</p>
         </div>"""
     
@@ -95,8 +95,10 @@ def generate_inner_page(page_info):
   <title>{heading} - HireHR services</title>
   <link rel="canonical" href="https://hirehrservices.com/{target_dir}/">
   <meta name="robots" content="max-image-preview:large">
-  <meta name="theme-color" content="#cd2653">
+  <meta name="theme-color" content="#0A1624">
   <meta name="description" content="{meta_desc}">
+  <link rel="preload" href="../assets/fonts/newsreader-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../assets/fonts/hanken-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="icon" type="image/png" sizes="32x32" href="../assets/cropped-Capture-32x32.png">
   <link rel="stylesheet" href="../css/style.css">
 
@@ -115,7 +117,7 @@ def generate_inner_page(page_info):
   <a href="#site-content" class="skip-link">Skip to the content</a>
 
   <!-- Header -->
-  <header class="site-header">
+  <header class="site-header is-solid">
     <!-- Top Bar -->
     <div class="top-bar">
       <div class="container">
@@ -200,7 +202,7 @@ def generate_inner_page(page_info):
   <main id="site-content">
     <section class="page-hero">
       <div class="container">
-        <h1>{heading}</h1>
+        <h1 data-reveal>{heading}</h1>
       </div>
     </section>
 
@@ -216,7 +218,7 @@ def generate_inner_page(page_info):
     <div class="container">
       <div class="footer-grid">
         <!-- Footer Column 1: Contact Info -->
-        <div class="footer-col footer-brand">
+        <div class="footer-col footer-brand" data-reveal>
           <!-- DISABLED (image unrecoverable from dead domain/archive): <img src="wp-content/uploads/2021/07/Logo-Edited-1.png" alt="HireHR services" width="389" height="156"> -->
           <a href="../index.html" class="brand-wordmark" style="color: var(--color-white); margin-bottom: 1rem;"><img src="../assets/logo/hirehr-logo.png" srcset="../assets/logo/hirehr-logo.png 1x, ../assets/logo/hirehr-logo-2x.png 2x" alt="" width="22" height="44">HireHR services</a>
           <ul class="footer-contact-list">
@@ -240,7 +242,7 @@ def generate_inner_page(page_info):
         </div>
 
         <!-- Footer Column 2: Quick Links -->
-        <div class="footer-col">
+        <div class="footer-col" data-reveal>
           <h3 class="footer-col-title">Quick Links</h3>
           <div class="footer-links-grid">
             <a href="../index.html">Home</a>
@@ -257,7 +259,7 @@ def generate_inner_page(page_info):
         </div>
 
         <!-- Footer Column 3: Follow Us -->
-        <div class="footer-col">
+        <div class="footer-col" data-reveal>
           <h3 class="footer-col-title">Follow Us</h3>
           <div class="social-links" style="margin-top: 0.5rem;">
             <a href="https://www.linkedin.com/in/hirehr-consultancy-services-3149a4206/" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
@@ -274,6 +276,7 @@ def generate_inner_page(page_info):
     </div>
   </footer>
 
+  <script src="../js/ui.js" defer></script>
   <script src="../js/main.js"></script>
 </body>
 </html>
