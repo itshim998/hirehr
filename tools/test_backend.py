@@ -155,7 +155,7 @@ def run_suite_a(base_url):
     record(suite, "Static Inner Page (/about-us/)", status == 200 and "About Us" in body, f"Status: {status}")
 
     status, headers, body = http_req(f"{base_url}/css/style.css")
-    record(suite, "Static Asset (/css/style.css)", status == 200 and "--color-primary" in body, f"Status: {status}")
+    record(suite, "Static Asset (/css/style.css)", status == 200 and "--accent-ink" in body, f"Status: {status}")
 
     status, headers, body = http_req(f"{base_url}/js/main.js")
     record(suite, "Static Asset (/js/main.js)", status == 200 and "FORM_ENDPOINT" in body, f"Status: {status}")

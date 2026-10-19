@@ -53,36 +53,6 @@
   --radius-none: 0px;
   --radius-btn: 2px;
   --radius-input: 2px;
-
-  /* Legacy Variable Aliases (Kept working for homepage sections until Task 2) */
-  --color-primary: var(--accent-ink);
-  --color-primary-dark: var(--accent-ink-hover);
-  --color-primary-light: var(--accent-ink);
-  --color-primary-subtle: rgba(10, 107, 111, 0.08);
-  --color-dark: var(--ink);
-  --color-dark-surface: var(--ink-2);
-  --color-gray-900: var(--ink);
-  --color-gray-800: var(--text);
-  --color-gray-700: #2C3A47;
-  --color-gray-600: var(--muted);
-  --color-gray-500: var(--muted);
-  --color-gray-400: #8C97A1;
-  --color-gray-300: var(--line);
-  --color-gray-200: #E6E3DC;
-  --color-gray-100: #EFECE6;
-  --color-gray-50: var(--paper);
-  --color-white: var(--white);
-  --font-family: var(--font-sans);
-  --transition-fast: 180ms var(--ease);
-  --transition-medium: 350ms var(--ease);
-  --radius-sm: 2px;
-  --radius-md: 2px;
-  --radius-lg: 2px;
-  --radius-xl: 2px;
-  --shadow-sm: none;
-  --shadow-md: none;
-  --shadow-lg: none;
-  --shadow-xl: none;
 }
 
 /* ==========================================================================
