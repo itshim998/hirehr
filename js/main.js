@@ -70,6 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!mainNav || !navToggle) return;
     mainNav.classList.remove('is-active');
     navToggle.setAttribute('aria-expanded', 'false');
+    document.body.classList.remove('nav-open');
     document.body.style.overflow = '';
   }
 
@@ -77,6 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!mainNav || !navToggle) return;
     mainNav.classList.add('is-active');
     navToggle.setAttribute('aria-expanded', 'true');
+    document.body.classList.add('nav-open');
     document.body.style.overflow = 'hidden';
   }
 
