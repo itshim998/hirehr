@@ -169,3 +169,90 @@ npx wrangler dev --port 8787
 - **Startup Result:** `Ready on http://127.0.0.1:8787`
 - **Assets Binding:** Verified serving `index.html` (HTTP 200 OK, 34ms).
 - **Turnstile Verification:** Verified that `TURNSTILE_SITE_KEY` (`0x4AAAAAAFYJ5FLwmd03vH67`) remains completely unchanged.
+
+---
+
+## 9. Task 2: Homepage Redesign & Motion Verification
+
+Completed per Task 2 specifications on branch `feature/design-upgrade`.
+
+### 9.1 Part 0 Review Findings Resolution
+1. **Mobile Menu Closability & Icon Morph:**
+   - Wordmark and `.nav-toggle` given high stacking order (`z-index: 10002`) above `#primary-nav` overlay (`z-index: 10000`).
+   - `#primary-nav.is-active` given `padding-top: calc(var(--header-h) + 16px)` so links never collide with the header bar.
+   - `body.nav-open` class toggled in `js/main.js` ensures wordmark and toggle remain crisp white on ink on all pages.
+   - CSS-only SVG morph into 'X' implemented on `.nav-toggle svg`.
+   - Automated CDP test (`tools/test_mobile_nav.py`) verified 12/12 conditions passing across 360, 390, and 768px viewports at scroll 0 and 900 on both home and inner pages (`elementFromPoint` at toggle center reliably returns `.nav-toggle`).
+2. **Footer Contrast:**
+   - Added token `--muted-on-dark: #9AA7B4` (contrast 7.42:1 on `--ink` and 6.57:1 on `--ink-2`, exceeding WCAG AAA).
+   - Applied to copyright line, top-bar contact details, and footer SVG icons.
+   - Extended `tools/verify_contrast.py` to cover all 28 foreground/background pairs in the CSS (100% passing).
+3. **Accessible Names & Headings:**
+   - Removed redundant `aria-label="Toggle navigation"` from `.nav-toggle` across all pages and generator (`tools/build_inner_pages.py`), setting accessible name to visible text "Menu".
+   - Converted footer column titles from `h3` to `h2` across all 12 pages.
+4. **Lighthouse Audit Failures Logging:**
+   - Updated `tools/run_lighthouse.py` to inspect audits and output failing audit IDs with offending element snippets to `docs/lighthouse_failures.md`.
+
+### 9.2 Section Deliverables Implementation
+1. **Hero Slider (`.hero-slider-section`):**
+   - Height set to `clamp(560px, 82svh, 780px)`; content cleared below header with `padding-top: calc(var(--header-h) + 48px)`.
+   - Dual linear gradients on desktop (`rgba(10,22,36,.86)` left to `.10` right + `.55` bottom); uniform `.62` overlay on mobile.
+   - Image crossfade 900ms with 6s settle-zoom (`scale(1.06)` to `1`).
+   - Text transitions: outgoing text fades in 300ms; incoming text waits 300ms delay, then rises 24px and fades over 800ms with 100ms stagger (no simultaneous text).
+   - Controls: Dots converted to 44px x 2px progress lines (`role="group"` on `.slider-dots`), active line fills with `--accent` over `--slide-duration: 4000ms`, pauses on hover/focus/touch, restarts on navigation, static under reduced motion. Bare chevrons turning `--accent` on hover.
+2. **Three Categories (`.categories-section`):**
+   - Paper background, open 3-column layout separated by vertical hairlines (`1px solid var(--line)`), stacked with horizontal hairlines on mobile.
+   - Removed `.category-icon` tiles. Staggered reveal with `data-reveal`.
+3. **Who We Are (`.about-preview-section`):**
+   - Asymmetric 7:5 split (text left, figure right).
+   - `.about-badge` visually hidden with `.sr-only` (retaining DOM text "Who we are ?").
+   - Lead paragraph typography. Text link with arrow via CSS `::after` and underline sweep.
+   - Photo figure using `slide-2-permanent-hiring-2400.webp` + `.jpg` with `<figcaption>HireHR services</figcaption>`.
+   - Added `id="about-link"` and `aria-labelledby="about-link about-heading"`.
+4. **Our Services (`.services-section`):**
+   - Section header left-aligned.
+   - Six service items rendered as high-density editorial rows (`.service-row`, height 88-96px) with 1px hairlines.
+   - Removed `.service-icon` tiles.
+   - Stretched link (`.service-link::after`) makes full row clickable with visible focus outline.
+   - Hover/focus: title translates +10px, arrow translates +6px, bottom hairline sweeps left to right with `--accent-ink`.
+   - Added descriptive `aria-labelledby="svc-link-N svc-title-N"`.
+5. **Why Choose Us (`.why-us-section`):**
+   - Paper background. Two-column layout with left title sticky at `top: calc(var(--header-h) + 32px)`.
+   - Six items arranged in 2-column grid on desktop (single column on mobile) with 1px top hairlines.
+   - Removed `.why-bullet` icons.
+6. **Consultation Form (`.consultation-section`):**
+   - Deep ink background (`--ink`), transparent `.consultation-wrapper` (`max-width: 920px`, left-aligned).
+   - Underline-only inputs (`border: 0; border-bottom: 1px solid rgba(255,255,255,.35); background: transparent; padding: 14px 0; color: #fff`).
+   - Animated focus state: 2px `--accent` bottom rule expands via `transform: scaleX(1)` on `.form-group:focus-within::after`.
+   - Country select and phone input share a single continuous underline row; custom chevron SVG data-URI.
+   - Labels in eyebrow uppercase style (`rgba(255,255,255,.75)`), required asterisks in `--accent`.
+   - Submit button styled as dark primary button (`.btn-primary` on ink: accent fill, ink text, white wipe on hover).
+   - Form status messages: 2px left border (accent for success/info, `--danger-on-dark` for errors), transparent background, no boxes.
+   - Turnstile: theme set to `'dark'` in `js/main.js`; `#turnstile-widget` reserved `min-height: 65px`.
+7. **Cleanup:**
+   - Removed legacy variable aliases (`--color-primary`, `--color-gray-*`, `--shadow-*`, etc.) from `css/style.css`.
+   - Verified `box-shadow` count in `css/style.css` is `0` (apart from focus rings).
+   - Verified `cd2653` count in repository is `0` (excluding `original/` and `docs/`).
+
+### 9.3 Verification Summary Table
+
+| Verification Step | Script / Check | Result | Details |
+|:---|:---|:---:|:---|
+| **Text Unchanged** | `tools/verify_text_unchanged.py` | **PASS (100%)** | All 12 pages identical in visible text and hrefs to `origin/main` |
+| **Content Copy** | `tools/verify_content.py` | **PASS (100%)** | 33 verbatim copy assertions pass, zero forbidden words/em dashes |
+| **Site Verification** | `tools/verify_site.py` | **PASS (100%)** | 100% required original visible text strings preserved, all links resolve |
+| **Contrast Ratios** | `tools/verify_contrast.py` | **PASS (100%)** | All 28 actual CSS color pairs pass WCAG AA/AAA (>= 4.5:1) |
+| **Box Shadows** | Grep in `css/style.css` | **0** | Zero card/container shadows |
+| **Crimson Hex** | Grep outside `original/`, `docs/` | **0** | No `#cd2653` in active codebase |
+| **Turnstile Key** | Git diff check | **Unchanged** | `TURNSTILE_SITE_KEY` identical to `origin/main` |
+| **Mobile Nav** | `tools/test_mobile_nav.py` | **PASS (12/12)** | Closable toggle across 360/390/768px at scroll 0 & 900 |
+| **JS-Blocked Visibility**| CDP evaluation | **PASS** | `opacity: 1`, `display: block`, all content accessible |
+| **Reduced Motion** | CDP media emulation | **PASS** | `transitionDuration: 0s`, `transform: none` |
+| **Screenshots Budget** | `tools/capture_design_screenshots.py` | **1.53 MB** | 44 WebP screenshots in `docs/screenshots/design/` (< 3.0 MB) |
+| **Lighthouse Home** | `tools/run_lighthouse.py` | **P: 100, A: 100, BP: 100, SEO: 92** | CLS: 0.00 |
+| **Lighthouse About**| `tools/run_lighthouse.py` | **P: 100, A: 100, BP: 100, SEO: 100** | CLS: 0.00 |
+| **Added JS Size** | Git diff stat | **< 1 KB** | 34 lines changed in `js/main.js` (budget <= 4 KB) |
+
+> [!NOTE]
+> **Lighthouse SEO Audit Note:** The 8-point SEO difference on `index.html` (score: 92) is caused exclusively by the single audit `link-text` targeting the "Who we are" link (`about-us/index.html`) whose original visible text in `origin/main` is verbatim `"Read More"`. Lighthouse evaluates `node.innerText` and matches `"read more"` in its blocklist. Because Rule 1 prohibits changing any visible text in the DOM, this is preserved exactly as required. Full accessibility compliance for this link was achieved via `aria-labelledby="about-link about-heading"` (Lighthouse Accessibility score: **100/100**).
+

@@ -120,6 +120,66 @@ async def run_automation():
                         img.save(out_path, "WEBP", quality=82, method=6)
                         print(f"  [SAVED] {out_path} ({os.path.getsize(out_path):,} bytes)")
 
+            print("\n1b. Capturing homepage section screenshots at 4 viewports...")
+            HOME_SECTIONS = [
+                ("home_section_hero", ".hero-slider-section"),
+                ("home_section_categories", ".categories-section"),
+                ("home_section_who_we_are", ".about-preview-section"),
+                ("home_section_services", ".services-section"),
+                ("home_section_why_choose_us", ".why-us-section"),
+                ("home_section_consultation", ".consultation-section"),
+            ]
+            await send("Page.navigate", {"url": f"{base_url}/index.html"})
+            await asyncio.sleep(1.0)
+
+            for width, height, is_mobile in VIEWPORTS:
+                await send("Emulation.setDeviceMetricsOverride", {
+                    "width": width,
+                    "height": height,
+                    "deviceScaleFactor": 1,
+                    "mobile": is_mobile
+                })
+                await send("Emulation.setVisibleSize", {"width": width, "height": height})
+                await asyncio.sleep(0.4)
+                await send("Runtime.evaluate", {
+                    "expression": "document.querySelectorAll('[data-reveal]').forEach(el => el.classList.add('is-revealed'));"
+                })
+                await asyncio.sleep(0.2)
+
+                for sec_name, sec_sel in HOME_SECTIONS:
+                    rect_res = (await send("Runtime.evaluate", {
+                        "expression": f"""
+                        (() => {{
+                            const el = document.querySelector('{sec_sel}');
+                            if (!el) return null;
+                            const r = el.getBoundingClientRect();
+                            return {{
+                                x: Math.max(0, r.left + window.scrollX),
+                                y: Math.max(0, r.top + window.scrollY),
+                                width: r.width,
+                                height: r.height
+                            }};
+                        }})()
+                        """,
+                        "returnByValue": True
+                    })).get("result", {}).get("value")
+
+                    if rect_res and rect_res["width"] > 0 and rect_res["height"] > 0:
+                        clip_param = {
+                            "x": rect_res["x"],
+                            "y": rect_res["y"],
+                            "width": rect_res["width"],
+                            "height": min(rect_res["height"], 3000),
+                            "scale": 1
+                        }
+                        shot = await send("Page.captureScreenshot", {"format": "png", "clip": clip_param, "captureBeyondViewport": True})
+                        if shot and "data" in shot:
+                            raw_bytes = base64.b64decode(shot["data"])
+                            img = Image.open(io.BytesIO(raw_bytes))
+                            out_path = os.path.join(OUTPUT_DIR, f"{sec_name}_{width}px.webp")
+                            img.save(out_path, "WEBP", quality=80, method=6)
+                            print(f"  [SAVED] {out_path} ({os.path.getsize(out_path):,} bytes)")
+
             # Total folder size
             total_size = sum(os.path.getsize(os.path.join(OUTPUT_DIR, f)) for f in os.listdir(OUTPUT_DIR))
             test_results["screenshots_total_bytes"] = total_size

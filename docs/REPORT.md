@@ -700,3 +700,146 @@ Commits made on branch `feature/design-upgrade`:
 - **None.** All deliverables specified for Task 1 were completed and verified 100% without blockers.
 - **Open Questions for Task 2:**
   - In Task 2, the homepage body sections (Category Cards, Who We Are, Services, Why Choose Us, Consultation Form) will be completely redesigned to match the Quiet Authority aesthetic, replacing the temporary legacy styling kept working during Task 1.
+
+---
+
+## TASK 2 FINAL REPORT: Homepage Redesign, Hero Motion & Form Styling
+
+### 1. Overview & What Was Built
+Task 2 of the design upgrade for HireHR services (`itshim998/HireHR`) has been fully completed on branch `feature/design-upgrade` with **ZERO content changes** and **ZERO new runtime dependencies/CDNs**.
+
+1. **Part 0 Review Findings (Task 1 Follow-ups):**
+   - **Mobile Menu Closability & Icon Morph:** Raised stacking order (`z-index: 10002`) for brand and `.nav-toggle` above the `#primary-nav` overlay (`z-index: 10000`). Added `padding-top: calc(var(--header-h) + 16px)` on the active overlay. Added `body.nav-open` state in `js/main.js` to ensure the wordmark and toggle remain crisp white on ink across all pages. Created CSS-only SVG morph into an 'X'. Verified 12/12 conditions in headless Chrome across 360, 390, and 768px viewports at scrolls 0 and 900 on home and inner pages (`tools/test_mobile_nav.py`).
+   - **Footer Contrast:** Added token `--muted-on-dark: #9AA7B4` (contrast 7.42:1 on `--ink` and 6.57:1 on `--ink-2`, WCAG AAA). Applied to copyright line, top-bar contact items, and footer SVG icons. Extended `tools/verify_contrast.py` to cover all 28 real pairs in the CSS (100% passing).
+   - **Accessible Names & Headings:** Removed redundant `aria-label="Toggle navigation"` from `.nav-toggle` across all 12 pages and `tools/build_inner_pages.py`. Converted footer column titles from `h3` to `h2` on all 12 pages to fix heading order.
+   - **Lighthouse Failures Logging:** Updated `tools/run_lighthouse.py` to output failing audit IDs and element snippets to `docs/lighthouse_failures.md`.
+
+2. **Homepage Hero Slider Section:**
+   - Height set to `clamp(560px, 82svh, 780px)`; content cleared below header with `padding-top: calc(var(--header-h) + 48px)`.
+   - Dual linear gradients on desktop (`rgba(10,22,36,.86)` left to `.10` right + `.55` bottom); uniform `.62` overlay on mobile.
+   - Image crossfade 900ms with a 6s settle-zoom (`scale(1.06)` to `1`).
+   - Text transitions: outgoing text fades in 300ms; incoming text waits 300ms delay, then rises 24px and fades in over 800ms with 100ms stagger (eliminating simultaneous text).
+   - Controls: Dots converted to 44px x 2px progress lines (`role="group"` on `.slider-dots`), active line fills with `--accent` over `--slide-duration: 4000ms`, pauses on hover/focus/touch, restarts on navigation, static under reduced motion. Bare chevrons turning `--accent` on hover.
+
+3. **Three Hiring Categories:**
+   - Paper background, open 3-column layout separated by vertical hairlines (`1px solid var(--line)`), stacked with horizontal hairlines on mobile.
+   - Removed `.category-icon` tiles. Staggered reveal with `data-reveal`.
+
+4. **Who We Are Section:**
+   - Asymmetric 7:5 split (text left, figure right).
+   - `.about-badge` visually hidden with `.sr-only` (preserving DOM text "Who we are ?").
+   - Lead paragraph typography. Text link with arrow via CSS `::after` and underline sweep.
+   - Photo figure using `slide-2-permanent-hiring-2400.webp` + `.jpg` with `<figcaption>HireHR services</figcaption>`.
+   - Added `id="about-link"` and `aria-labelledby="about-link about-heading"`.
+
+5. **Our Services Section:**
+   - Section header left-aligned.
+   - Six service items rendered as high-density editorial rows (`.service-row`, height 88-96px) with 1px hairlines.
+   - Removed `.service-icon` tiles.
+   - Stretched link (`.service-link::after`) makes full row clickable with visible focus outline.
+   - Hover/focus: title translates +10px, arrow translates +6px, bottom hairline sweeps left to right with `--accent-ink`.
+   - Added descriptive `aria-labelledby="svc-link-N svc-title-N"`.
+
+6. **Why Choose Us Section:**
+   - Paper background. Two-column layout with left title sticky at `top: calc(var(--header-h) + 32px)`.
+   - Six items arranged in 2-column grid on desktop (single column on mobile) with 1px top hairlines.
+   - Removed `.why-bullet` icons.
+
+7. **Consultation Form Section:**
+   - Deep ink background (`--ink`), transparent `.consultation-wrapper` (`max-width: 920px`, left-aligned).
+   - Underline-only inputs (`border: 0; border-bottom: 1px solid rgba(255,255,255,.35); background: transparent; padding: 14px 0; color: #fff`).
+   - Animated focus state: 2px `--accent` bottom rule expands via `transform: scaleX(1)` on `.form-group:focus-within::after`.
+   - Country select and phone input share a single continuous underline row; custom chevron SVG data-URI.
+   - Labels in eyebrow uppercase style (`rgba(255,255,255,.75)`), required asterisks in `--accent`.
+   - Submit button styled as dark primary button (`.btn-primary` on ink: accent fill, ink text, white wipe on hover).
+   - Form status messages: 2px left border (accent for success/info, `--danger-on-dark` for errors), transparent background, no boxes.
+   - Turnstile: theme set to `'dark'` in `js/main.js`; `#turnstile-widget` reserved `min-height: 65px`.
+
+8. **Cleanup & Consistency:**
+   - Removed legacy variable aliases (`--color-primary`, `--color-gray-*`, `--shadow-*`, etc.) from `css/style.css`.
+   - Verified `box-shadow` count in `css/style.css` is `0` (apart from focus rings).
+   - Verified `cd2653` count in repository is `0` (excluding `original/` and `docs/`).
+
+---
+
+### 2. Files Changed in Task 2
+- `index.html`: Restyled sections (Hero, Categories, Who We Are, Services, Why Choose Us, Consultation Form); added `data-reveal` and descriptive ARIA labelling.
+- `css/style.css`: Implemented Quiet Authority editorial styles; removed legacy variable aliases; removed all container boxes and shadows.
+- `js/main.js`: Added `body.nav-open` toggle; exposed `--slide-duration` CSS variable; updated Turnstile theme to `'dark'`.
+- `about-us/index.html` + 9 other inner pages: Updated footer headings to `h2` and removed redundant `aria-label` from `.nav-toggle`.
+- `404.html`: Updated footer headings to `h2` and removed redundant `aria-label` from `.nav-toggle`.
+- `tools/build_inner_pages.py`: Aligned generator with `h2` footer headings, accessible nav toggle, and `var(--white)` token.
+- `tools/verify_contrast.py`: Extended contrast matrix to all 28 real foreground/background pairs in the CSS.
+- `tools/test_mobile_nav.py`: Created automated CDP test suite for mobile nav closability and icon morph.
+- `tools/capture_design_screenshots.py`: Extended screenshot capture to all homepage sections at 4 viewports.
+- `tools/run_lighthouse.py`: Added detailed audit failures logging to `docs/lighthouse_failures.md`.
+- `docs/VERIFY_DESIGN.md`: Documented Part 0 and Task 2 verification results.
+
+---
+
+### 3. Verification Results Summary
+
+| Verification Suite | Command | Result | Notes |
+|:---|:---|:---:|:---|
+| **Content-Freeze Guard** | `python tools/verify_text_unchanged.py --base origin/main` | **PASS (12/12)** | Zero text, title, or base href divergence from `origin/main` across all 12 pages |
+| **Content Verification** | `python tools/verify_content.py` | **PASS (100%)** | 33/33 refined copy strings verbatim, zero forbidden words, zero em dashes |
+| **Site Verification** | `python tools/verify_site.py` | **PASS (100%)** | 100% no-loss test passed, all internal links resolve |
+| **Contrast Compliance** | `python tools/verify_contrast.py` | **PASS (28/28)** | All pairs meet WCAG AA/AAA (>= 4.5:1) |
+| **Box Shadows** | Grep in `css/style.css` | **0** | Zero card/container shadows |
+| **Crimson Elimination** | Grep outside `original/`, `docs/` | **0** | Zero `#cd2653` occurrences |
+| **Turnstile Site Key** | Git diff check | **Unchanged** | `TURNSTILE_SITE_KEY` preserved verbatim |
+| **Mobile Navigation** | `python tools/test_mobile_nav.py` | **PASS (12/12)** | Closable toggle across 360/390/768px at scroll 0 & 900 |
+| **JS-Blocked Visibility** | CDP evaluation | **PASS** | `opacity: 1`, `display: block`, all content accessible |
+| **Reduced Motion** | CDP media emulation | **PASS** | `transitionDuration: 0s`, `transform: none` |
+| **Added JS Size** | Git diff stat | **< 1 KB** | 34 lines changed in `js/main.js` (budget <= 4 KB) |
+
+---
+
+### 4. Screenshots Location
+All screenshots are saved in `docs/screenshots/design/` as optimized WebP:
+- **Total folder size:** **1.53 MB** (strictly within < 3.0 MB budget).
+- **Homepage Section Screenshots (24 files):**
+  - `home_section_hero_{375,768,1280,1920}px.webp`
+  - `home_section_categories_{375,768,1280,1920}px.webp`
+  - `home_section_who_we_are_{375,768,1280,1920}px.webp`
+  - `home_section_services_{375,768,1280,1920}px.webp`
+  - `home_section_why_choose_us_{375,768,1280,1920}px.webp`
+  - `home_section_consultation_{375,768,1280,1920}px.webp`
+- **Full Page Screenshots (20 files):**
+  - `home_{375,768,1280,1920}px.webp`
+  - `about_us_{375,768,1280,1920}px.webp`
+  - `our_speciality_{375,768,1280,1920}px.webp`
+  - `contact_us_{375,768,1280,1920}px.webp`
+  - `404_{375,768,1280,1920}px.webp`
+
+---
+
+### 5. Google Lighthouse Mobile Scores
+
+| Page | Performance | Accessibility | Best Practices | SEO | CLS |
+|:---|:---:|:---:|:---:|:---:|:---:|
+| **Homepage (`index.html`)** | **100 / 100** | **100 / 100** | **100 / 100** | **92 / 100** | **0.00** |
+| **About Us (`about-us/`)** | **100 / 100** | **100 / 100** | **100 / 100** | **100 / 100** | **0.00** |
+
+> [!NOTE]
+> **SEO Score Explanation:** The 8-point difference on `index.html` (score: 92) is caused exclusively by Lighthouse's `link-text` SEO audit inspecting `node.innerText` on the "Who we are" link (`about-us/index.html`), which is verbatim `"Read More"` from `origin/main`. Lighthouse flags `"read more"` in its hardcoded generic blocklist. Because Rule 1 prohibits changing any visible text in the DOM, this text was kept identical to original. Full accessibility compliance was achieved via `aria-labelledby="about-link about-heading"`, resulting in a **100/100 Accessibility score**.
+
+---
+
+### 6. Git Commits & Push Confirmation
+Branch `feature/design-upgrade` is pushed to remote:
+- `0aa5b0a` fix(nav): ensure mobile menu toggle stays clickable and morphs to X when open
+- `0f96a18` feat(tokens): add --muted-on-dark token, enhance footer contrast, and extend verify_contrast.py
+- `48f5ab5` fix(a11y): remove redundant aria-label on nav toggle and promote footer titles to h2
+- `1d122b3` chore(audit): update run_lighthouse.py to record failing audits to lighthouse_failures.md
+- `8ae44b4` feat(hero): restyle hero slider with Quiet Authority typography, progress lines, and settle-zoom
+- `315dad8` feat(home): restyle categories, who we are, services list, and why-choose-us sections
+- `268a6ea` feat(home): style consultation form with underline fields and dark theme Turnstile
+- `fba4537` chore(cleanup): remove legacy variable aliases and update footer wordmark variable
+
+---
+
+### 7. Deviations & Open Questions
+- **Deviations:** None. All rules, constraints, and deliverables executed strictly as specified.
+- **Open Questions:** None. Branch is pushed to `origin/feature/design-upgrade` and awaiting owner review. Never merged into `main`.
+
