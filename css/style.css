@@ -1593,7 +1593,7 @@ body.nav-open .nav-toggle {
   width: 100%;
   aspect-ratio: 4 / 3;
   object-fit: cover;
-  object-position: center;
+  object-position: 62% center;
   display: block;
 }
 
@@ -1730,7 +1730,7 @@ body.nav-open .nav-toggle {
 
 @media (min-width: 1024px) {
   .why-us-layout {
-    grid-template-columns: 1fr 2fr;
+    grid-template-columns: minmax(340px, 1.1fr) 2fr;
     gap: 4.5rem;
   }
 }
@@ -1743,6 +1743,11 @@ body.nav-open .nav-toggle {
   .why-us-sticky-header {
     position: sticky;
     top: calc(var(--header-h) + 32px);
+  }
+
+  .why-us-sticky-header .section-title {
+    white-space: nowrap;
+    letter-spacing: 0.04em;
   }
 }
 
@@ -1928,8 +1933,15 @@ body.nav-open .nav-toggle {
   background-repeat: no-repeat;
   background-position: right 6px center;
   background-size: 10px 6px;
-  flex: 0 0 135px;
-  max-width: 140px;
+  flex: 0 0 185px;
+  max-width: 210px;
+}
+
+@media (min-width: 640px) {
+  .phone-input-group .form-select {
+    flex: 0 0 200px;
+    max-width: 220px;
+  }
 }
 
 .phone-input-group .form-select option {
