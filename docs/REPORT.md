@@ -841,5 +841,72 @@ Branch `feature/design-upgrade` is pushed to remote:
 
 ### 7. Deviations & Open Questions
 - **Deviations:** None. All rules, constraints, and deliverables executed strictly as specified.
-- **Open Questions:** None. Branch is pushed to `origin/feature/design-upgrade` and awaiting owner review. Never merged into `main`.
+- **Open Questions:** None.
+
+---
+
+## 11. Design Upgrade Merge & Production Deployment (Stage 2)
+
+**Execution Date:** 2026-10-19  
+**Approval Trigger:** Owner explicitly approved merge in thread (`"MERGE APPROVED"`).  
+**Baseline Production Commit:** `42f4686866a000eff6b5a0c185be5658475d4502` (`42f4686`)  
+**New Production Head:** `47105fd6a6f6976165d2ba160d47f42d3a191652` (`47105fd`)  
+
+### 11.1 Pre-Merge Backup & Fast-Forward Reconciliation
+1. **Ancestry & Baseline Check:**
+   - Confirmed `origin/main` was pinned at `42f4686`.
+   - Verified `git merge-base --is-ancestor origin/main origin/feature/design-upgrade` returned 0 (pure fast-forward lineage).
+2. **Pre-Merge Backup Branch:**
+   - Created and pushed: `backup/main-before-design-upgrade` pointing to `42f4686`.
+   - Verified on remote via `git ls-remote --heads origin backup/*`.
+   - Preserved existing `backup/main-before-production-20261016` (`acf835e`) intact.
+3. **Fast-Forward Merge:**
+   - Executed `git checkout main && git pull --ff-only origin main && git merge --ff-only feature/design-upgrade`.
+   - Reconciled cleanly with zero conflicts and zero merge commits (`42f4686..47105fd`).
+4. **Pre-Push Content-Freeze Verification:**
+   - `python tools/verify_text_unchanged.py --base backup/main-before-design-upgrade`: **12/12 Pages Pass**.
+   - `python tools/verify_content.py`: **100% Pass** (33 verbatim copy items, zero forbidden words).
+   - `python tools/verify_site.py`: **100% Pass** (100% required original strings preserved).
+5. **Production Push:**
+   - Pushed `main` to `origin main` (`42f4686..47105fd`), triggering Cloudflare Workers static asset deployment.
+6. **Older Branch Alignment:**
+   - Fast-forwarded `ready-site` via `git push origin main:ready-site` (`1577b6f..47105fd`).
+   - Retained `feature/design-upgrade`, `ready-site`, and all backup branches.
+
+---
+
+### 11.2 Live Production Verification Table (`https://hirehrservices.com`)
+
+Live polling of `https://hirehrservices.com/css/style.css` detected the new `--accent-ink` build immediately. Comprehensive read-only automated checks were performed:
+
+| Check Target | URL / Path | Expected Status / Value | Actual Live Result | Status |
+|:---|:---|:---:|:---:|:---:|
+| **Homepage** | `https://hirehrservices.com/` | `200 OK`, `text/html` | Status 200, Content-Type: `text/html` | **PASS** |
+| **About Us** | `https://hirehrservices.com/about-us/` | `200 OK`, `text/html` | Status 200, Content-Type: `text/html` | **PASS** |
+| **Our Specialty** | `https://hirehrservices.com/our-specialty/` | `200 OK`, `text/html` | Status 200, Content-Type: `text/html` | **PASS** |
+| **Contact Us** | `https://hirehrservices.com/contact-us/` | `200 OK`, `text/html` | Status 200, Content-Type: `text/html` | **PASS** |
+| **Styles** | `https://hirehrservices.com/css/style.css` | `200 OK`, `text/css` | Status 200, contains `--accent-ink` | **PASS** |
+| **UI Motion Script** | `https://hirehrservices.com/js/ui.js` | `200 OK`, `javascript` | Status 200, Content-Type: `text/javascript` | **PASS** |
+| **Main Script** | `https://hirehrservices.com/js/main.js` | `200 OK`, `javascript` | Status 200, Content-Type: `text/javascript` | **PASS** |
+| **Newsreader Font** | `https://hirehrservices.com/assets/fonts/newsreader-latin.woff2` | `200 OK`, `font/woff2` | Status 200, Content-Type: `font/woff2` | **PASS** |
+| **Hanken Grotesk Font** | `https://hirehrservices.com/assets/fonts/hanken-grotesk-latin.woff2` | `200 OK`, `font/woff2` | Status 200, Content-Type: `font/woff2` | **PASS** |
+| **Hero Slide Image** | `https://hirehrservices.com/assets/slides/slide-1-welcome-2400.webp` | `200 OK`, `image/webp` | Status 200, Content-Type: `image/webp` | **PASS** |
+| **Excluded Prompt** | `https://hirehrservices.com/prompt.txt` | `404 Not Found` | Status 404 | **PASS** |
+| **Excluded Docs** | `https://hirehrservices.com/docs/REPORT.md` | `404 Not Found` | Status 404 | **PASS** |
+| **Excluded Worker Code** | `https://hirehrservices.com/worker/index.js` | `404 Not Found` | Status 404 | **PASS** |
+| **Excluded Config** | `https://hirehrservices.com/wrangler.jsonc` | `404 Not Found` | Status 404 | **PASS** |
+| **Excluded Content Source** | `https://hirehrservices.com/content/pages.json` | `404 Not Found` | Status 404 | **PASS** |
+| **Excluded Tools** | `https://hirehrservices.com/tools/` | `404 Not Found` | Status 404 | **PASS** |
+| **Excluded Original HTML** | `https://hirehrservices.com/original/index.original.html` | `404 Not Found` | Status 404 | **PASS** |
+| **Content Security Policy**| Response Header on `/` | CSP from `_headers` | `default-src 'self'; script-src 'self' ...` | **PASS** |
+| **Security Headers** | Response Headers on `/` | XFO, XCTO, Referrer-Policy | `XFO: DENY`, `XCTO: nosniff`, `RP: strict-origin...` | **PASS** |
+| **Homepage Markup** | `class="page-home"` | Present in HTML | Verified present | **PASS** |
+| **LinkedIn URL** | `hirehr-consultancy-services-3149a4206` | Present in HTML | Verified present | **PASS** |
+| **Copyright String** | `Copyright © 2021` | Present in HTML | Verified present | **PASS** |
+| **Social Links Cleanup** | No Facebook / Twitter links | Not present in HTML | Verified absent | **PASS** |
+| **Forbidden Words** | No "consultancy" in visible copy | Not present in copy | Verified absent | **PASS** |
+| **Contact API Endpoint** | `POST https://hirehrservices.com/api/contact` | JSON `400 Bad Request` | Status 400 `{"ok":false,"error":"Invalid name"}` | **PASS** |
+
+*All live checks passed with 100% compliance. Zero emails were dispatched during read-only verification.*
+
 

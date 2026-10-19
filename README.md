@@ -10,6 +10,7 @@ Rebuilt from a WordPress/Elementor snapshot into a clean static website without 
 - **Exact Content Fidelity**: 100% of visible copy, structure, links, form fields, and attributes preserved from the original snapshot.
 - **Responsive & Mobile-First**: Tested across viewport widths (375px, 768px, 1280px) with custom mobile navigation.
 - **Accessible (WCAG AA compliant)**: Skip link, ARIA landmarks and states, explicit form labels, visible focus indicators, and prefers-reduced-motion support.
+- **Design System ("Quiet Authority")**: Built with bespoke typography (self-hosted Newsreader & Hanken Grotesk OFL variable fonts), zero container drop shadows, editorial hairlines, and 100% WCAG AA color tokens. See [`docs/DESIGN_SYSTEM.md`](docs/DESIGN_SYSTEM.md) for full design system guidelines.
 - **Hero Slider**: Lightweight vanilla JavaScript slider with 4s autoplay, infinite looping, smooth transitions, and interaction pause.
 - **International Consultation Form**: WPForms #308 recreated with 5 required fields, 243-country code selector defaulting to United States (+1), client validation, and configurable endpoint.
 
@@ -51,8 +52,12 @@ hirehr/
 │
 ├── docs/
 │   ├── AUDIT.md                        # Phase 1 comprehensive audit inventory
-│   ├── REPORT.md                       # Comprehensive status report
-│   └── VERIFY.md                       # Phase 4 verification test logs
+│   ├── DEPLOY.md                       # Deployment guide for Cloudflare Workers
+│   ├── DESIGN_SYSTEM.md                # Quiet Authority design system specifications
+│   ├── REPORT.md                       # Comprehensive project status report
+│   ├── ROLLBACK.md                     # Production emergency rollback procedure
+│   ├── VERIFY.md                       # Phase 4 verification test logs
+│   └── VERIFY_DESIGN.md                # Design upgrade verification & final gates
 │
 └── tools/
     ├── extract_text.py                 # Text extraction verification script

@@ -4,6 +4,10 @@ This guide provides exact, step-by-step instructions for deploying and maintaini
 
 The architecture uses **Cloudflare Workers with Static Assets** (a single unified deployment where static HTML/CSS/assets and the `/api/contact` Worker run under the same origin at zero cost).
 
+- **Production Branch:** `main` is the designated production branch. A push to `main` automatically triggers a live production deployment to `https://hirehrservices.com`.
+- **Design System Location:** The design system is documented in full in [`docs/DESIGN_SYSTEM.md`](DESIGN_SYSTEM.md), with tokens and rules implemented in [`css/style.css`](../css/style.css) and motion infrastructure in [`js/ui.js`](../js/ui.js).
+- **Rollback Procedure:** Refer to [`docs/ROLLBACK.md`](ROLLBACK.md) for instructions on reverting production commits if needed.
+
 ---
 
 ## Stage A: Free Staging Deployment (*.workers.dev)
@@ -19,7 +23,7 @@ The architecture uses **Cloudflare Workers with Static Assets** (a single unifie
 1. In the Cloudflare Dashboard, navigate to **Compute (Workers) > Workers & Pages**.
 2. Click **Create** > **Import a repository** (Workers Builds).
 3. Connect your GitHub account and authorize access to `itshim998/HireHR`.
-4. Select the repository and branch: Select `feature/contact-worker` (or `ready-site` after it is merged). Do NOT select `main` (it only holds the old snapshot from before migration); the production-branch choice is still undecided.
+4. Select the repository and production branch (`main`).
 5. Configure the build settings:
    - **Framework preset**: None
    - **Build command**: (Leave empty, pure static site)
