@@ -141,12 +141,18 @@ document.addEventListener('DOMContentLoaded', () => {
   // ==========================================================================
   // 2. HERO SLIDER IMPLEMENTATION
   // ==========================================================================
+  const SLIDE_DURATION = 4000;
   const sliderTrack = document.querySelector('.slider-track');
   const slides = document.querySelectorAll('.slider-slide');
   const bgItems = document.querySelectorAll('.hero-bg-item');
   const prevBtn = document.querySelector('.slider-prev');
   const nextBtn = document.querySelector('.slider-next');
   const dotsContainer = document.querySelector('.slider-dots');
+  const sliderSection = document.querySelector('.hero-slider-section');
+
+  if (sliderSection) {
+    sliderSection.style.setProperty('--slide-duration', `${SLIDE_DURATION}ms`);
+  }
 
   if (slides.length > 1) {
     let currentSlide = 0;
@@ -155,7 +161,14 @@ document.addEventListener('DOMContentLoaded', () => {
     let isPaused = false;
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // Create pagination dots
+    function setPaused(paused) {
+      isPaused = paused;
+      if (sliderSection) {
+        sliderSection.classList.toggle('is-paused', paused);
+      }
+    }
+
+    // Create pagination progress lines
     if (dotsContainer) {
       dotsContainer.innerHTML = '';
       slides.forEach((_, idx) => {
@@ -174,7 +187,13 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!dotsContainer) return;
       const dots = dotsContainer.querySelectorAll('.slider-dot');
       dots.forEach((dot, idx) => {
-        dot.classList.toggle('is-active', idx === currentSlide);
+        const isActive = idx === currentSlide;
+        dot.classList.remove('is-active');
+        if (isActive) {
+          // Force reflow so CSS progress animation cleanly restarts
+          void dot.offsetWidth;
+          dot.classList.add('is-active');
+        }
       });
     };
 
@@ -186,6 +205,8 @@ document.addEventListener('DOMContentLoaded', () => {
       currentSlide = (index + totalSlides) % totalSlides;
       slides[currentSlide].classList.add('is-active');
       if (bgItems[currentSlide]) {
+        const img = bgItems[currentSlide].querySelector('img');
+        if (img) void img.offsetWidth;
         bgItems[currentSlide].classList.add('is-active');
       }
       updateDots();
@@ -208,7 +229,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
-    // Autoplay logic (4000ms autoplay interval per original specification)
+    // Autoplay logic (4000ms autoplay interval per specification)
     const startAutoplay = () => {
       if (prefersReducedMotion) return;
       stopAutoplay();
@@ -216,7 +237,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!isPaused) {
           nextSlide();
         }
-      }, 4000);
+      }, SLIDE_DURATION);
     };
 
     const stopAutoplay = () => {
@@ -232,14 +253,13 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // Pause on hover or focus
-    const sliderSection = document.querySelector('.hero-slider-section');
     if (sliderSection) {
-      sliderSection.addEventListener('mouseenter', () => { isPaused = true; });
-      sliderSection.addEventListener('mouseleave', () => { isPaused = false; });
-      sliderSection.addEventListener('focusin', () => { isPaused = true; });
-      sliderSection.addEventListener('focusout', () => { isPaused = false; });
-      sliderSection.addEventListener('touchstart', () => { isPaused = true; }, { passive: true });
-      sliderSection.addEventListener('touchend', () => { isPaused = false; }, { passive: true });
+      sliderSection.addEventListener('mouseenter', () => { setPaused(true); });
+      sliderSection.addEventListener('mouseleave', () => { setPaused(false); });
+      sliderSection.addEventListener('focusin', () => { setPaused(true); });
+      sliderSection.addEventListener('focusout', () => { setPaused(false); });
+      sliderSection.addEventListener('touchstart', () => { setPaused(true); }, { passive: true });
+      sliderSection.addEventListener('touchend', () => { setPaused(false); }, { passive: true });
     }
 
     startAutoplay();
