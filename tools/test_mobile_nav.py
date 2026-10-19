@@ -118,28 +118,48 @@ async def run_tests():
 
                         await asyncio.sleep(0.2)
 
-                        # Check elementFromPoint at center of .nav-toggle
+                        # Check elementFromPoint and bounding-box overlap
                         hit_test = await send("Runtime.evaluate", {
                             "expression": """
                             (() => {
                                 const toggle = document.querySelector('.nav-toggle');
-                                const rect = toggle.getBoundingClientRect();
-                                const cx = rect.left + rect.width / 2;
-                                const cy = rect.top + rect.height / 2;
+                                const wordmark = document.querySelector('.site-header .brand-wordmark');
+                                const firstLink = document.querySelector('.main-navigation.is-active .nav-link');
+
+                                const tRect = toggle ? toggle.getBoundingClientRect() : null;
+                                const wRect = wordmark ? wordmark.getBoundingClientRect() : null;
+                                const lRect = firstLink ? firstLink.getBoundingClientRect() : null;
+
+                                function checkOverlap(r1, r2) {
+                                    if (!r1 || !r2) return false;
+                                    return !(r1.right <= r2.left || r1.left >= r2.right || r1.bottom <= r2.top || r1.top >= r2.bottom);
+                                }
+
+                                const toggleOverlapsLink = checkOverlap(tRect, lRect);
+                                const wordmarkOverlapsLink = checkOverlap(wRect, lRect);
+                                const hasOverlap = toggleOverlapsLink || wordmarkOverlapsLink;
+
+                                const cx = tRect ? tRect.left + tRect.width / 2 : 0;
+                                const cy = tRect ? tRect.top + tRect.height / 2 : 0;
                                 const elAtPoint = document.elementFromPoint(cx, cy);
-                                const isToggle = elAtPoint === toggle || elAtPoint.closest('.nav-toggle') === toggle;
-                                
-                                const wordmark = document.querySelector('.brand-wordmark');
-                                const toggleColor = window.getComputedStyle(toggle).color;
+                                const isToggle = elAtPoint === toggle || (elAtPoint && elAtPoint.closest('.nav-toggle') === toggle);
+
+                                const toggleColor = toggle ? window.getComputedStyle(toggle).color : '';
                                 const wordmarkColor = wordmark ? window.getComputedStyle(wordmark).color : '';
-                                
+
                                 return {
                                     cx, cy,
                                     elTag: elAtPoint ? elAtPoint.tagName : null,
                                     elClass: elAtPoint ? elAtPoint.className : null,
                                     isToggle,
                                     toggleColor,
-                                    wordmarkColor
+                                    wordmarkColor,
+                                    toggleRect: tRect ? {top: tRect.top, bottom: tRect.bottom} : null,
+                                    wordmarkRect: wRect ? {top: wRect.top, bottom: wRect.bottom} : null,
+                                    firstLinkRect: lRect ? {top: lRect.top, bottom: lRect.bottom, text: firstLink ? firstLink.textContent.trim() : ''} : null,
+                                    toggleOverlapsLink,
+                                    wordmarkOverlapsLink,
+                                    hasOverlap
                                 };
                             })()
                             """,
@@ -149,8 +169,11 @@ async def run_tests():
                         if not hit_val.get("isToggle"):
                             print(f"[FAIL] {page_name} @ {w}px, scroll {s}: elementFromPoint returned {hit_val.get('elTag')}.{hit_val.get('elClass')} instead of .nav-toggle")
                             all_passed = False
+                        elif hit_val.get("hasOverlap"):
+                            print(f"[FAIL] {page_name} @ {w}px, scroll {s}: Overlap detected! toggleOverlapsLink={hit_val.get('toggleOverlapsLink')}, wordmarkOverlapsLink={hit_val.get('wordmarkOverlapsLink')}, brand_bottom={hit_val.get('wordmarkRect', {}).get('bottom')}, link_top={hit_val.get('firstLinkRect', {}).get('top')}")
+                            all_passed = False
                         else:
-                            print(f"[PASS] {page_name} @ {w}px, scroll {s}: elementFromPoint => {hit_val.get('elTag')}.{hit_val.get('elClass')} (isToggle=True), wordmark={hit_val.get('wordmarkColor')}, toggle={hit_val.get('toggleColor')}")
+                            print(f"[PASS] {page_name} @ {w}px, scroll {s}: elementFromPoint => {hit_val.get('elTag')}.{hit_val.get('elClass')} (isToggle=True, no overlap, link_top={hit_val.get('firstLinkRect', {}).get('top')} > brand_bottom={hit_val.get('wordmarkRect', {}).get('bottom')}), wordmark={hit_val.get('wordmarkColor')}, toggle={hit_val.get('toggleColor')}")
 
                         # Click again to close
                         close_res = await send("Runtime.evaluate", {
