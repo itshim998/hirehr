@@ -38,7 +38,7 @@ function initTurnstile() {
   try {
     turnstileWidgetId = window.turnstile.render(container, {
       sitekey: TURNSTILE_SITE_KEY,
-      theme: 'light',
+      theme: 'dark',
       callback: function(token) {
         turnstileToken = token;
       },
