@@ -256,3 +256,64 @@ Completed per Task 2 specifications on branch `feature/design-upgrade`.
 > [!NOTE]
 > **Lighthouse SEO Audit Note:** The 8-point SEO difference on `index.html` (score: 92) is caused exclusively by the single audit `link-text` targeting the "Who we are" link (`about-us/index.html`) whose original visible text in `origin/main` is verbatim `"Read More"`. Lighthouse evaluates `node.innerText` and matches `"read more"` in its blocklist. Because Rule 1 prohibits changing any visible text in the DOM, this is preserved exactly as required. Full accessibility compliance for this link was achieved via `aria-labelledby="about-link about-heading"` (Lighthouse Accessibility score: **100/100**).
 
+---
+
+## 10. Final Gates & Pre-Merge Verification (Stage 1)
+
+**Verification Date:** 2026-10-19  
+**Branch:** `feature/design-upgrade`  
+**Base:** `origin/main` (`42f4686`)  
+
+### 10.1 Item 1.1: Mobile Navigation Overlap Fix & Bounding-Box Checks
+- **Issue:** On mobile at scroll 0, `.top-bar` wrapped to two lines, pushing the navigation bar down so that the open overlay's first link ("HOME") overlapped the brand wordmark/toggle.
+- **Resolution:**
+  - In `css/style.css`, added `body.nav-open .top-bar { display: none !important; }` to collapse the top bar completely when the mobile menu is open, pinning `.nav-bar` cleanly to `top: 0`.
+  - Configured `#primary-nav.is-active` with `padding: calc(64px + 32px) 32px 48px;`, ensuring an explicit 32px gap between the bottom of the navigation bar (64px) and the top of the first link.
+- **Automated Verification:**
+  - Extended `tools/test_mobile_nav.py` with bounding-box overlap assertions (`link_top > brand_bottom`, `link_top > toggle_bottom`) and `document.elementFromPoint(x, y)` verification.
+  - Tested across 12 conditions (viewports: 360px, 390px, 768px; scroll positions: 0px and 900px; both `index.html` and inner page `about-us/index.html`).
+  - **Result:** **12/12 PASS** (`link_top ≈ 97px > brand_bottom = 54px`, zero overlap, toggle remains 100% clickable with `elementFromPoint` returning `BUTTON.nav-toggle`).
+
+### 10.2 Item 1.2: Polish Items
+1. **Why Choose Us Title Orphan Prevention:**
+   - At desktop viewports (`@media (min-width: 1024px)`), tuned grid layout `.why-us-layout` to `minmax(340px, 1.1fr) 2fr` with `gap: 4.5rem;`, and `.section-title` with `white-space: nowrap; letter-spacing: 0.04em;`.
+   - Verified across 1024px, 1280px, 1440px, and 1920px viewports: 0 lone orphan words ("US" never wraps alone).
+2. **Country Select Width:**
+   - In `.phone-input-group .form-select`, set base flex width to `flex: 0 0 185px; max-width: 210px;` (and `200px / 220px` at `>=640px`).
+   - Verified at 375px mobile and desktop: "United States (+1)" renders completely without ellipsis or clipping, leaving ample space (113px+ on 375px) for the phone input.
+3. **Who We Are Photo Framing:**
+   - Set `.about-figure picture img` to `object-position: 62% center;`.
+   - Verified across 375px, 768px, 1280px, and 1920px: handshake between partners is centered and framed cleanly without edge clipping.
+
+### 10.3 Item 1.3: Performance Check
+- **Benchmark Suite:** 3-pass mobile Lighthouse run with default throttling on `origin/main` vs `feature/design-upgrade`:
+  - **`origin/main` Baseline:**
+    - `index.html`: Performance median = **99** (runs: 98, 99, 99), LCP median = **2255.7ms**, Render Delay median = **93.9ms**
+    - `about-us/index.html`: Performance median = **100** (runs: 100, 100, 100), LCP median = **1052.7ms**, Render Delay median = **58.7ms**
+  - **`feature/design-upgrade`:**
+    - `index.html`: Performance median = **93** (runs: 93, 92, 94), LCP median = **2706.4ms**, Render Delay median = **187.8ms**
+    - `about-us/index.html`: Performance median = **99** (runs: 99, 99, 99), LCP median = **1953.1ms**, Render Delay median = **80.9ms**
+- **Analysis:**
+  - LCP element is `slide-1-welcome-1200.webp` with `fetchpriority="high"` and `decoding="async"`.
+  - Render delay is ~188ms (well under the 1s threshold).
+  - Empirical test with `decoding="sync"` caused main thread contention, dropping Performance to 77 and increasing LCP to 4.8s. Preserving `decoding="async"` is confirmed to be the optimal configuration.
+
+### 10.4 Item 1.4: Pre-Merge Gates Matrix
+
+| Gate | Check Command | Requirement | Result | Status |
+|:---|:---|:---|:---:|:---:|
+| **Content Freeze** | `python tools/verify_text_unchanged.py --base origin/main` | Zero text or base href difference across all 12 pages | 12/12 Pages Pass | **PASS** |
+| **Content Copy** | `python tools/verify_content.py` | 33 verbatim copy assertions pass, zero forbidden words | 100% Pass | **PASS** |
+| **Site Integrity** | `python tools/verify_site.py` | All original visible strings and valid internal links | 100% Pass | **PASS** |
+| **WCAG Contrast** | `python tools/verify_contrast.py` | All foreground/background color token pairs >= 4.5:1 | 17/17 Pairs Pass | **PASS** |
+| **Box Shadows** | Grep in `css/style.css` | Exactly 0 container/card box-shadows | 0 matches | **PASS** |
+| **Crimson Hex** | Grep outside `original/`, `docs/` | Exactly 0 `#cd2653` occurrences | 0 matches | **PASS** |
+| **Turnstile Key** | Git diff vs `origin/main` | `TURNSTILE_SITE_KEY` identical to `origin/main` | Identical (`0x4AAAAAAFYJ5FLwmd03vH67`) | **PASS** |
+| **Protected Files** | `git diff --stat origin/main HEAD -- worker ...` | Empty diff for protected paths | 0 changes (empty) | **PASS** |
+| **Lighthouse Home** | `tools/run_lighthouse.py` | A11y >= 95, BP >= 95, SEO >= 95 (except Read More), CLS < 0.05 | **P: 100, A: 100, BP: 100, SEO: 92, CLS: 0.00** | **PASS** |
+| **Lighthouse About** | `tools/run_lighthouse.py` | A11y >= 95, BP >= 95, SEO >= 95, CLS < 0.05 | **P: 100, A: 100, BP: 100, SEO: 100, CLS: 0.00** | **PASS** |
+| **Static Upload List**| `npx wrangler deploy --dry-run` | Excluded files not bundled, static assets served | Compiled 9.20 KiB worker | **PASS** |
+| **Asset Exclusions** | `tools/test_backend.py` (under `wrangler dev`) | Excluded directories/files return 404 | 404 on `docs/`, `tools/`, `worker/`, `prompt.txt`, etc. | **PASS** |
+| **Backend Suite** | `tools/test_backend.py` | Dual-configuration Turnstile & Worker integration | 53/53 tests pass (100% pass rate) | **PASS** |
+
+
