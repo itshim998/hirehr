@@ -15,6 +15,7 @@
   --white: #FFFFFF;
   --text: #1B2733;
   --muted: #5B6773;
+  --muted-on-dark: #9AA7B4;   /* WCAG AAA muted text on dark ink (>7:1) */
   --line: #D9D5CC;
   --line-dark: rgba(255, 255, 255, 0.14);
   --accent: #22D3CF;          /* On dark surfaces only */
@@ -418,7 +419,7 @@ a {
 /* Top Bar: 36px, ink background, hairline bottom */
 .top-bar {
   background-color: var(--ink);
-  color: rgba(255, 255, 255, 0.72);
+  color: var(--muted-on-dark);
   font-size: 0.8125rem;
   min-height: 36px;
   border-bottom: 1px solid var(--line-dark);
@@ -467,7 +468,7 @@ a {
 
 .top-bar-social span {
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--muted-on-dark);
   font-size: 0.8125rem;
 }
 
@@ -1014,8 +1015,8 @@ body.nav-open .nav-toggle {
 .footer-contact-list svg {
   flex-shrink: 0;
   margin-top: 3px;
-  color: var(--muted);
-  opacity: 0.85;
+  color: var(--muted-on-dark);
+  opacity: 1;
 }
 
 .footer-contact-list a {
@@ -1049,7 +1050,7 @@ body.nav-open .nav-toggle {
   border-top: 1px solid var(--line-dark);
   text-align: center;
   font-size: 0.8125rem;
-  color: var(--muted);
+  color: var(--muted-on-dark);
 }
 
 /* ==========================================================================
