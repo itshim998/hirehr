@@ -1311,7 +1311,7 @@ body.nav-open .nav-toggle {
 
 .slide-title {
   font-family: var(--font-serif);
-  font-size: clamp(2.75rem, 5.4vw, 4.75rem);
+  font-size: clamp(30px, 3.65vw, 56px);
   font-weight: 500;
   line-height: 1.04;
   letter-spacing: -0.015em;
