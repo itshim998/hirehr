@@ -157,7 +157,7 @@ def run_content_verification():
     em_dash_fails = []
     # c) No 'emloyer'
     emloyer_fails = []
-    # d) data-placeholder only on contact-us
+    # d) No data-placeholder on any site page
     placeholder_fails = []
 
     for p in sorted(site_pages):
@@ -178,14 +178,10 @@ def run_content_verification():
         if 'emloyer' in raw.lower():
             emloyer_fails.append(rel)
 
-        # data-placeholder check
+        # data-placeholder check: no site page should have data-placeholder
         has_placeholder = 'data-placeholder' in raw
-        if rel == 'contact-us/index.html':
-            if not has_placeholder:
-                placeholder_fails.append(f"{rel} missing expected data-placeholder")
-        else:
-            if has_placeholder:
-                placeholder_fails.append(f"{rel} has unexpected data-placeholder")
+        if has_placeholder:
+            placeholder_fails.append(f"{rel} has unexpected data-placeholder")
 
     if not consultancy_fails:
         report.append("- [PASS] **No `consultancy` (case-insensitive)** found in site copy on any site page.")
@@ -206,7 +202,7 @@ def run_content_verification():
         report.append(f"- [FAIL] `emloyer` found on: {emloyer_fails}")
 
     if not placeholder_fails:
-        report.append("- [PASS] **`data-placeholder` remains ONLY on `contact-us`**.")
+        report.append("- [PASS] **No `data-placeholder` found on any site page (all pages complete)**.")
     else:
         all_passed = False
         report.append(f"- [FAIL] `data-placeholder` check failed: {placeholder_fails}")

@@ -72,14 +72,10 @@ def generate_inner_page(page_info):
     if target_dir in pages_data and 'meta_description' in pages_data[target_dir]:
         meta_desc = pages_data[target_dir]['meta_description']
 
-    if target_dir == 'contact-us':
-        main_content = """        <div class="pending-card" data-reveal>
-          <p data-placeholder="content-pending">Content pending from site owner.</p>
-        </div>"""
-    elif target_dir in pages_data and 'content_html' in pages_data[target_dir]:
+    if target_dir in pages_data and 'content_html' in pages_data[target_dir]:
         raw_html = pages_data[target_dir]['content_html']
         indented_html = '\n'.join('          ' + line if line.strip() else '' for line in raw_html.splitlines())
-        main_content = f"""        <div class=\"page-body\" data-reveal>
+        main_content = f"""        <div class="page-body" data-reveal>
 {indented_html}
         </div>"""
     else:

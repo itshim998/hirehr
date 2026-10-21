@@ -1,55 +1,84 @@
-# TASK (continue in a fresh thread): Finalize the design upgrade, then reconcile it with `main`
+# HireHR — Replace Contact Page Placeholder with Real Contact Information
 
-## CONTEXT
-- Repo `itshim998/HireHR`. Production = branch `main` (head `42f4686`), live at https://hirehrservices.com on Cloudflare Workers static assets. **A push to `main` triggers a production deploy.**
-- Branch `feature/design-upgrade` (head `09f686a`) holds the finished design upgrade (self-hosted Newsreader + Hanken Grotesk fonts, tokens in `css/style.css`, `js/ui.js`, redesigned header/footer/inner pages/homepage). It is 16 commits ahead of `main`, and `main` has NO commits that the branch lacks. `ready-site`, `feature/contact-worker` and `feature/content` are already contained in `main`.
-- Review found one real bug and a few polish items (Stage 1). After they are fixed and gated, `main` is fast-forwarded (Stage 2). **Stage 2 starts ONLY after the owner replies exactly "MERGE APPROVED" in this thread.**
+## Repository
+- GitHub repository: `itshim998/hirehr`
+- Branch: `main`
+- Website: https://hirehrservices.com/
 
-## RULES (non-negotiable)
-1. **NO CONTENT CHANGES** (no text, link, label, case, contact detail changes). `python3 tools/verify_text_unchanged.py --base origin/main` must pass at every step.
-2. Do not touch: `worker/`, `wrangler.jsonc`, `.assetsignore`, `_headers`, `js/countries.js`, `original/`, `prompt.txt`, `docs/prompts/`, form field names/ids, the API contract, the Turnstile site key (`TURNSTILE_SITE_KEY`). **Never write this prompt or any task prompt into the repo (especially `prompt.txt`).**
-3. CSP stays: `script-src 'self' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:`. Self-hosted only. No `box-shadow` (except focus rings), no crimson, only `opacity`/`transform` animated, `prefers-reduced-motion` respected, works with JS disabled.
-4. **Never force-push. Never delete a branch. Never rewrite history.** No secrets in the repo. Do NOT submit the live contact form (it would send a real email).
-5. **Serious blockers: stop immediately and report:** `BLOCKER / What / Where / Why it's serious / Options (with your recommendation) / I have stopped and am waiting for your decision.` Serious includes: `main` has moved or the merge is not a fast-forward; any conflict; a verifier fails; push rejected (for example branch protection); a Cloudflare build or a live check fails after the push; anything requiring a content change or a secret.
+## Objective
+On the Contact Us page, replace the placeholder text:
 
-## STAGE 1: fixes and gates (on `feature/design-upgrade`; do NOT touch `main` yet)
-Start with `git fetch origin && git checkout feature/design-upgrade && git pull --ff-only`. Separate commits per item; push to `origin/feature/design-upgrade` and verify with `git ls-remote --heads origin feature/design-upgrade`.
+`Content pending from site owner.`
 
-**1.1 Mobile menu overlap (must fix).** At scroll 0 on the homepage at 390px the open overlay's first item ("HOME") overlaps the logo/wordmark and Menu button (the bar sits below a tall two-line top bar, while the overlay starts at the top). Fix: while the menu is open (`body.nav-open`), collapse/hide the top bar and pin the header bar to `top: 0`, with the overlay's `padding-top` at least bar height + 24px, so the brand, the toggle and the first item never overlap. Keep the toggle closable, the X morph, white brand/toggle on ink, Esc closes and returns focus, body scroll lock. Extend `tools/test_mobile_nav.py` with a **bounding-box overlap check** between brand, toggle and the first overlay link, and run it at widths 360, 390 and 768, at scroll 0 and 900, on the homepage and an inner page. All must pass.
+with a polished, professional contact section containing the actual contact details provided below.
 
-**1.2 Polish (CSS only; no text changes):**
-- "WHY CHOOSE US" must not leave a lone word ("US") on its own line at any width from 1024 to 1920px (adjust column width, `text-wrap: balance` or letter-spacing).
-- The country select must show the whole selected value (for example "United States (+1)") without truncation at 375px and at desktop widths; widen it as needed without breaking the phone field layout.
-- Who we are photo: adjust `object-position` (or choose `slide-4-rpo-2400.*` if it frames better) so the handshake is not cut at the edge; check at 375, 768, 1280 and 1920px.
+### Official contact information
+- **Phone:** +91 8296558406
+- **Email:** info@hirehrservices.com
 
-**1.3 Performance check (measure first; change only what measurably helps, with no visual change).** A reviewer's Lighthouse run (mobile, default throttling) gave `index.html` Performance 79 with LCP about 3.1s (LCP element = `slide-1-welcome-1200.webp`, about 2.7s render delay) while `about-us/` scored 99. Reproduce with the same command three times and record the median, ALSO for current `origin/main` as a baseline (use `git worktree add /tmp/main-wt origin/main`). If home LCP render delay is above 1s, find the cause (candidates: opacity/transform entrance transition on the first active slide, `decoding="async"` on the LCP image, JS adding `is-active` late, font swap) and fix it so the first slide's image and text are painted without waiting for JS or an entrance animation. Report before/after medians. If your environment cannot reproduce the problem, say so and do not change anything.
+Do not display a physical address. The address is not required.
 
-**1.4 Pre-merge gates (all must pass; record in `docs/VERIFY_DESIGN.md` under "Final gates"):**
-- `python3 tools/verify_text_unchanged.py --base origin/main`, `python3 tools/verify_content.py`, `python3 tools/verify_site.py`, `python3 tools/verify_contrast.py` (every pair AA).
-- `grep -c box-shadow css/style.css` = 0; no `cd2653` outside `original/` and `docs/`; `TURNSTILE_SITE_KEY` constant unchanged vs `origin/main`.
-- Protected files unchanged: `git diff --stat origin/main HEAD -- worker wrangler.jsonc .assetsignore _headers js/countries.js original prompt.txt docs/prompts` prints nothing.
-- Lighthouse (mobile) on `index.html` and `about-us/`: Accessibility >= 95, Best Practices >= 95 (a console error caused only by blocked network access to Cloudflare Turnstile in a sandbox is acceptable; say so), SEO >= 95 except the documented "Read More" `link-text` audit on the Who we are link, CLS < 0.05. Report all four scores.
-- `npx wrangler deploy --dry-run --outdir /tmp/dry` (no login needed): the uploaded static asset list contains `css/style.css`, `js/ui.js`, `js/main.js`, `js/countries.js`, `assets/fonts/*.woff2`, `assets/slides/*`, `assets/logo/*`, all HTML pages, and contains NONE of: `docs/`, `tools/`, `content/`, `original/`, `worker/`, `prompt.txt`, `README.md`, `wrangler.jsonc`, `.git`. If the dry run cannot work offline, serve the repo with `npx wrangler dev` and request those paths instead (expected: 404 for the excluded ones).
-- `tools/test_backend.py` and its stated expectations still pass under `wrangler dev` (only the Worker-side tests that can run offline).
+## Implementation requirements
 
-**1.5 STOP HERE.** Push, then report in chat: commit hashes, every gate result, before/after numbers from 1.3, screenshots folder, and the exact line `READY FOR MERGE APPROVAL`. Do NOT start Stage 2. Wait for the owner's message "MERGE APPROVED".
+### 1. Inspect before editing
+- Inspect the current Contact Us page and identify exactly where the placeholder is rendered.
+- Examine the existing design system and styles in `css/style.css`.
+- Check other pages to understand the established typography, spacing, colours, links, and layout conventions.
+- Verify the actual local Git branch and working-tree status before making changes. Do not overwrite unrelated uncommitted work.
 
-## STAGE 2: reconcile with `main` (only after "MERGE APPROVED")
-1. `git fetch origin`. Confirm `origin/main` is still `42f4686`, and that `git merge-base --is-ancestor origin/main origin/feature/design-upgrade` succeeds. If not, STOP (blocker).
-2. **Backup first:** `git branch backup/main-before-design-upgrade origin/main && git push origin backup/main-before-design-upgrade` (do not overwrite the existing `backup/main-before-production-20261016`). Verify with `git ls-remote`.
-3. **Fast-forward merge:** `git checkout main && git pull --ff-only origin main && git merge --ff-only feature/design-upgrade`. If `--ff-only` fails or anything conflicts, STOP (blocker). No merge commit, no squash, no rebase.
-4. Before pushing, re-run `verify_text_unchanged.py --base backup/main-before-design-upgrade` (must pass), `verify_content.py`, `verify_site.py`.
-5. `git push origin main`. This triggers the Cloudflare deploy. Do not push anything else to `main` afterwards without the owner's approval.
-6. **Live verification (read-only; do NOT submit the contact form).** Poll `https://hirehrservices.com/css/style.css` every 30s for up to 10 minutes until it contains `--accent-ink` (that means the new build is live), then check with `curl -sI`/`curl -s`:
-   - 200: `/`, `/about-us/`, `/our-specialty/`, `/contact-us/`, `/css/style.css`, `/js/ui.js`, `/js/main.js`, `/assets/fonts/newsreader-latin.woff2` and `/assets/fonts/hanken-grotesk-latin.woff2` (Content-Type `font/woff2`), a hero image such as `/assets/slides/slide-1-welcome-2400.webp`.
-   - 404: `/prompt.txt`, `/docs/REPORT.md`, `/worker/index.js`, `/wrangler.jsonc`, `/content/pages.json`, `/tools/`, `/original/index.original.html`.
-   - The CSP and security headers from `_headers` are present on `/`.
-   - The homepage HTML contains `class="page-home"`, the LinkedIn URL with `hirehr-consultancy-services-3149a4206`, `Copyright © 2021`, and no Facebook/Twitter links; the visible text contains no "consultancy".
-   - `POST https://hirehrservices.com/api/contact` with an empty body returns a JSON 4xx (not a 5xx or HTML), proving the Worker is still wired (this sends no email).
-   If any check fails or the build does not go live within 10 minutes, STOP and report. Do not force-push or revert on your own.
-7. **Align the older branch:** try `git push origin main:ready-site` (fast-forward only). If it is rejected, skip it and report; never force.
-8. **Docs (commit on `main` after the live checks pass, push, and re-verify the deploy once more):** `docs/ROLLBACK.md` (a revert-based procedure: `git revert --no-commit 42f4686..HEAD` then one revert commit, plus the location of `backup/main-before-design-upgrade`; do NOT execute it), `docs/DEPLOY.md` (production branch is `main`, deploys on push; where the design system lives), `README.md` (pointer to `docs/DESIGN_SYSTEM.md`), `docs/REPORT.md` ("Design upgrade merge" section with hashes and results).
-9. Keep `feature/design-upgrade` and every other branch.
+### 2. Replace the placeholder with a professional contact section
+Design a clean, elegant, responsive contact section that fits HireHR's existing visual identity and its “Quiet Authority” design system.
 
-## FINAL REPORT (in chat)
-Stage 1: fixes, gate results, performance before/after, `READY FOR MERGE APPROVAL`. After approval, Stage 2: backup branch, merge result, new `main` head, live check table (URL, status, expected), deploy timing, anything unexpected.
+Include:
+
+**Phone**
+- Display: `+91 8296558406`
+- Make the number clickable using `tel:+918296558406`.
+
+**Email**
+- Display: `info@hirehrservices.com`
+- Make the address clickable using `mailto:info@hirehrservices.com`.
+
+Use small, elegant phone and email icons where appropriate. Keep the information easy to scan, clearly visible, and properly spaced.
+
+You may include a brief introduction, such as:
+
+“Have a hiring requirement or a career-related enquiry? Get in touch with HireHR Services.”
+
+Use this copy only if it fits the page naturally.
+
+### 3. Preserve the existing design
+- Match the current serif heading typography, dark navy and teal colour palette, spacing, and restrained visual style.
+- Keep the existing header, navigation, logo, footer, and page structure intact.
+- Reuse existing CSS classes and components where appropriate.
+- If additional CSS is necessary, keep it scoped to the Contact Us section rather than changing global styles.
+- Ensure the section works on mobile, tablet, and desktop.
+- Maintain semantic HTML, accessible link labels, keyboard usability, and visible focus indicators.
+- Avoid unnecessary animations, oversized cards, decorative clutter, or generic template-like design.
+
+### 4. Scope restrictions
+- Do not display any physical address.
+- Do not invent additional phone numbers, email addresses, office hours, or social media accounts.
+- Do not introduce a third-party contact form or external dependencies.
+- Do not alter the working contact-form backend, SMTP configuration, Cloudflare DNS, email routing, or Turnstile integration.
+- Do not reintroduce `employer@hirehrservices.com` or `jobseeker@hirehrservices.com`.
+- Do not make unrelated design or content changes.
+
+### 5. Verification
+After implementing the change:
+
+1. Confirm that `Content pending from site owner.` no longer appears on the Contact Us page.
+2. Verify that the displayed phone number opens the phone handler through the correct `tel:` link.
+3. Verify that the email address opens a new message through the correct `mailto:` link.
+4. Check layout and readability at approximately 375px, 768px, and 1280px viewport widths.
+5. Run the relevant available tests and report their actual results.
+6. Inspect the final diff to confirm that only the intended files were changed and no unrelated content was affected.
+
+### 6. Final report
+Provide:
+- Files changed.
+- A concise explanation of the implementation.
+- Tests executed and their results.
+- Any outstanding issues.
+
+**Do not commit, push, or deploy automatically.** Complete and verify the local changes first, then wait for my approval.

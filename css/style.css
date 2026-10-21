@@ -1133,6 +1133,92 @@ body.nav-open .nav-toggle {
   color: var(--ink);
 }
 
+/* Contact Page Channels */
+.contact-channels {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--line);
+}
+
+@media (min-width: 640px) {
+  .contact-channels {
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+}
+
+.contact-channel-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+  padding: 1.5rem;
+  background-color: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-btn);
+  transition: border-color var(--duration-hover) var(--ease);
+}
+
+.contact-channel-card:hover {
+  border-color: var(--accent-ink);
+}
+
+.contact-channel-card:hover .contact-channel-icon {
+  border-color: var(--accent-ink);
+}
+
+.contact-channel-icon {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--paper);
+  border: 1px solid var(--line);
+  color: var(--accent-ink);
+  flex-shrink: 0;
+  transition: border-color var(--duration-hover) var(--ease);
+}
+
+.contact-channel-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.contact-channel-label {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.25rem;
+}
+
+.contact-channel-link {
+  font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  font-weight: 500;
+  color: var(--accent-ink);
+  word-break: break-all;
+  display: inline-block;
+  text-decoration: none;
+  background-image: linear-gradient(var(--accent-ink), var(--accent-ink));
+  background-repeat: no-repeat;
+  background-position: left bottom;
+  background-size: 0% 1.5px;
+  transition: background-size var(--duration-hover) var(--ease), color var(--duration-micro) var(--ease);
+}
+
+.contact-channel-link:hover,
+.contact-channel-link:focus-visible {
+  color: var(--accent-ink-hover);
+  background-size: 100% 1.5px;
+}
+
 /* ==========================================================================
    10. MOTION & UTILITIES
    ========================================================================== */
