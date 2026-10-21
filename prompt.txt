@@ -1,117 +1,55 @@
-# HireHR — Reconcile GitHub Branches and Prepare `main` for Cloudflare Production
+# TASK (continue in a fresh thread): Finalize the design upgrade, then reconcile it with `main`
 
-You are working in the local Antigravity workspace for the repository `itshim998/HireHR`.
+## CONTEXT
+- Repo `itshim998/HireHR`. Production = branch `main` (head `42f4686`), live at https://hirehrservices.com on Cloudflare Workers static assets. **A push to `main` triggers a production deploy.**
+- Branch `feature/design-upgrade` (head `09f686a`) holds the finished design upgrade (self-hosted Newsreader + Hanken Grotesk fonts, tokens in `css/style.css`, `js/ui.js`, redesigned header/footer/inner pages/homepage). It is 16 commits ahead of `main`, and `main` has NO commits that the branch lacks. `ready-site`, `feature/contact-worker` and `feature/content` are already contained in `main`.
+- Review found one real bug and a few polish items (Stage 1). After they are fixed and gated, `main` is fast-forwarded (Stage 2). **Stage 2 starts ONLY after the owner replies exactly "MERGE APPROVED" in this thread.**
 
-## Objective
+## RULES (non-negotiable)
+1. **NO CONTENT CHANGES** (no text, link, label, case, contact detail changes). `python3 tools/verify_text_unchanged.py --base origin/main` must pass at every step.
+2. Do not touch: `worker/`, `wrangler.jsonc`, `.assetsignore`, `_headers`, `js/countries.js`, `original/`, `prompt.txt`, `docs/prompts/`, form field names/ids, the API contract, the Turnstile site key (`TURNSTILE_SITE_KEY`). **Never write this prompt or any task prompt into the repo (especially `prompt.txt`).**
+3. CSP stays: `script-src 'self' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:`. Self-hosted only. No `box-shadow` (except focus rings), no crimson, only `opacity`/`transform` animated, `prefers-reduced-motion` respected, works with JS disabled.
+4. **Never force-push. Never delete a branch. Never rewrite history.** No secrets in the repo. Do NOT submit the live contact form (it would send a real email).
+5. **Serious blockers: stop immediately and report:** `BLOCKER / What / Where / Why it's serious / Options (with your recommendation) / I have stopped and am waiting for your decision.` Serious includes: `main` has moved or the merge is not a fast-forward; any conflict; a verifier fails; push rejected (for example branch protection); a Cloudflare build or a live check fails after the push; anything requiring a content change or a secret.
 
-Prepare `main` as the single production branch that we will connect to Cloudflare Workers Builds for deployment at `hirehrservices.com`.
+## STAGE 1: fixes and gates (on `feature/design-upgrade`; do NOT touch `main` yet)
+Start with `git fetch origin && git checkout feature/design-upgrade && git pull --ff-only`. Separate commits per item; push to `origin/feature/design-upgrade` and verify with `git ls-remote --heads origin feature/design-upgrade`.
 
-The completed HireHR implementation currently resides on `ready-site`. The `main` branch contains an older original snapshot and does not yet contain the complete Cloudflare Worker deployment configuration.
+**1.1 Mobile menu overlap (must fix).** At scroll 0 on the homepage at 390px the open overlay's first item ("HOME") overlaps the logo/wordmark and Menu button (the bar sits below a tall two-line top bar, while the overlay starts at the top). Fix: while the menu is open (`body.nav-open`), collapse/hide the top bar and pin the header bar to `top: 0`, with the overlay's `padding-top` at least bar height + 24px, so the brand, the toggle and the first item never overlap. Keep the toggle closable, the X morph, white brand/toggle on ink, Esc closes and returns focus, body scroll lock. Extend `tools/test_mobile_nav.py` with a **bounding-box overlap check** between brand, toggle and the first overlay link, and run it at widths 360, 390 and 768, at scroll 0 and 900, on the homepage and an inner page. All must pass.
 
-Your task is to reconcile the Git repository so that:
+**1.2 Polish (CSS only; no text changes):**
+- "WHY CHOOSE US" must not leave a lone word ("US") on its own line at any width from 1024 to 1920px (adjust column width, `text-wrap: balance` or letter-spacing).
+- The country select must show the whole selected value (for example "United States (+1)") without truncation at 375px and at desktop widths; widen it as needed without breaking the phone field layout.
+- Who we are photo: adjust `object-position` (or choose `slide-4-rpo-2400.*` if it frames better) so the handshake is not cut at the edge; check at 375, 768, 1280 and 1920px.
 
-1. `main` contains the complete, deployment-ready HireHR website and contact-form backend currently developed on `ready-site`.
-2. All intended and already-developed deployment changes are committed and pushed to GitHub.
-3. `main` becomes the branch we can select as the Cloudflare production branch.
-4. Existing feature branches and original project material remain preserved.
+**1.3 Performance check (measure first; change only what measurably helps, with no visual change).** A reviewer's Lighthouse run (mobile, default throttling) gave `index.html` Performance 79 with LCP about 3.1s (LCP element = `slide-1-welcome-1200.webp`, about 2.7s render delay) while `about-us/` scored 99. Reproduce with the same command three times and record the median, ALSO for current `origin/main` as a baseline (use `git worktree add /tmp/main-wt origin/main`). If home LCP render delay is above 1s, find the cause (candidates: opacity/transform entrance transition on the first active slide, `decoding="async"` on the LCP image, JS adding `is-active` late, font swap) and fix it so the first slide's image and text are painted without waiting for JS or an entrance animation. Report before/after medians. If your environment cannot reproduce the problem, say so and do not change anything.
 
-This task explicitly authorizes updating `main` to become the production-ready branch. Do not leave the deployment implementation exclusively on `ready-site`.
+**1.4 Pre-merge gates (all must pass; record in `docs/VERIFY_DESIGN.md` under "Final gates"):**
+- `python3 tools/verify_text_unchanged.py --base origin/main`, `python3 tools/verify_content.py`, `python3 tools/verify_site.py`, `python3 tools/verify_contrast.py` (every pair AA).
+- `grep -c box-shadow css/style.css` = 0; no `cd2653` outside `original/` and `docs/`; `TURNSTILE_SITE_KEY` constant unchanged vs `origin/main`.
+- Protected files unchanged: `git diff --stat origin/main HEAD -- worker wrangler.jsonc .assetsignore _headers js/countries.js original prompt.txt docs/prompts` prints nothing.
+- Lighthouse (mobile) on `index.html` and `about-us/`: Accessibility >= 95, Best Practices >= 95 (a console error caused only by blocked network access to Cloudflare Turnstile in a sandbox is acceptable; say so), SEO >= 95 except the documented "Read More" `link-text` audit on the Who we are link, CLS < 0.05. Report all four scores.
+- `npx wrangler deploy --dry-run --outdir /tmp/dry` (no login needed): the uploaded static asset list contains `css/style.css`, `js/ui.js`, `js/main.js`, `js/countries.js`, `assets/fonts/*.woff2`, `assets/slides/*`, `assets/logo/*`, all HTML pages, and contains NONE of: `docs/`, `tools/`, `content/`, `original/`, `worker/`, `prompt.txt`, `README.md`, `wrangler.jsonc`, `.git`. If the dry run cannot work offline, serve the repo with `npx wrangler dev` and request those paths instead (expected: 404 for the excluded ones).
+- `tools/test_backend.py` and its stated expectations still pass under `wrangler dev` (only the Worker-side tests that can run offline).
 
-## Known repository state
+**1.5 STOP HERE.** Push, then report in chat: commit hashes, every gate result, before/after numbers from 1.3, screenshots folder, and the exact line `READY FOR MERGE APPROVAL`. Do NOT start Stage 2. Wait for the owner's message "MERGE APPROVED".
 
-Repository: `itshim998/hirehr`
+## STAGE 2: reconcile with `main` (only after "MERGE APPROVED")
+1. `git fetch origin`. Confirm `origin/main` is still `42f4686`, and that `git merge-base --is-ancestor origin/main origin/feature/design-upgrade` succeeds. If not, STOP (blocker).
+2. **Backup first:** `git branch backup/main-before-design-upgrade origin/main && git push origin backup/main-before-design-upgrade` (do not overwrite the existing `backup/main-before-production-20261016`). Verify with `git ls-remote`.
+3. **Fast-forward merge:** `git checkout main && git pull --ff-only origin main && git merge --ff-only feature/design-upgrade`. If `--ff-only` fails or anything conflicts, STOP (blocker). No merge commit, no squash, no rebase.
+4. Before pushing, re-run `verify_text_unchanged.py --base backup/main-before-design-upgrade` (must pass), `verify_content.py`, `verify_site.py`.
+5. `git push origin main`. This triggers the Cloudflare deploy. Do not push anything else to `main` afterwards without the owner's approval.
+6. **Live verification (read-only; do NOT submit the contact form).** Poll `https://hirehrservices.com/css/style.css` every 30s for up to 10 minutes until it contains `--accent-ink` (that means the new build is live), then check with `curl -sI`/`curl -s`:
+   - 200: `/`, `/about-us/`, `/our-specialty/`, `/contact-us/`, `/css/style.css`, `/js/ui.js`, `/js/main.js`, `/assets/fonts/newsreader-latin.woff2` and `/assets/fonts/hanken-grotesk-latin.woff2` (Content-Type `font/woff2`), a hero image such as `/assets/slides/slide-1-welcome-2400.webp`.
+   - 404: `/prompt.txt`, `/docs/REPORT.md`, `/worker/index.js`, `/wrangler.jsonc`, `/content/pages.json`, `/tools/`, `/original/index.original.html`.
+   - The CSP and security headers from `_headers` are present on `/`.
+   - The homepage HTML contains `class="page-home"`, the LinkedIn URL with `hirehr-consultancy-services-3149a4206`, `Copyright © 2021`, and no Facebook/Twitter links; the visible text contains no "consultancy".
+   - `POST https://hirehrservices.com/api/contact` with an empty body returns a JSON 4xx (not a 5xx or HTML), proving the Worker is still wired (this sends no email).
+   If any check fails or the build does not go live within 10 minutes, STOP and report. Do not force-push or revert on your own.
+7. **Align the older branch:** try `git push origin main:ready-site` (fast-forward only). If it is rejected, skip it and report; never force.
+8. **Docs (commit on `main` after the live checks pass, push, and re-verify the deploy once more):** `docs/ROLLBACK.md` (a revert-based procedure: `git revert --no-commit 42f4686..HEAD` then one revert commit, plus the location of `backup/main-before-design-upgrade`; do NOT execute it), `docs/DEPLOY.md` (production branch is `main`, deploys on push; where the design system lives), `README.md` (pointer to `docs/DESIGN_SYSTEM.md`), `docs/REPORT.md` ("Design upgrade merge" section with hashes and results).
+9. Keep `feature/design-upgrade` and every other branch.
 
-Known remote branches:
-
-- `main`
-- `ready-site`
-- `feature/contact-worker`
-- `feature/content`
-
-Known facts:
-
-- `ready-site` contains `worker/index.js` and `wrangler.jsonc`.
-- `feature/contact-worker` is one commit behind `ready-site`.
-- `feature/content` is twenty commits behind `ready-site`.
-- GitHub's compare API previously reported no common ancestor between `main` and `ready-site`. Confirm this against the actual fetched Git history before selecting an integration method.
-- The current `ready-site/wrangler.jsonc` configures the Worker name as `hirehr`, static assets, the `EMAIL` binding, `MAIL_MODE: "send"`, the production allowed origins, and `MAIL_FROM: "employer@hirehrservices.com"`.
-
-Treat `ready-site` as the source of the current deployment implementation, but inspect the actual remote and local state before making changes.
-
-## Phase 1 — Inspect and preserve the existing repository
-
-1. Fetch the latest remote state using `git fetch origin`.
-2. Inspect:
-   - `git status --short --branch`
-   - `git branch -avv`
-   - `git remote -v`
-   - `git log --graph --oneline --decorate --all -40`
-   - The commit SHAs and ancestry of `origin/main` and `origin/ready-site`.
-3. Inspect the differences between the active deployment implementation and `origin/main`, including the website files, CSS, JavaScript, images/assets, `worker/`, `wrangler.jsonc`, tests and deployment-related files.
-4. Confirm that `ready-site` includes all intended changes from the contact Worker implementation and the latest Wrangler configuration change.
-5. Before modifying `main`, create and push a backup branch pointing to the current remote `main` commit. Use a descriptive name such as `backup/main-before-production-20261016`. If that name already exists, use a unique alternative.
-6. Do not discard uncommitted local work. Preserve any relevant changes and establish a safe working state before continuing.
-
-## Phase 2 — Integrate the completed implementation into `main`
-
-Use the least destructive Git strategy that produces the correct final tree and preserves the existing history.
-
-### If the branches share an ancestor
-
-Integrate the changes from `origin/ready-site` into a branch based on the latest `origin/main`. Resolve any conflicts deliberately, preserving main-only material where appropriate and retaining the current deployment implementation.
-
-### If the branches have unrelated histories
-
-Do not force-push, reset `main` to `ready-site`, or rewrite either branch's history.
-
-First attempt a normal Git merge using `--allow-unrelated-histories` on a safe integration branch created from the latest `origin/main`. Resolve conflicts deliberately.
-
-For conflicts involving active deployment files, use the completed implementation from `origin/ready-site` as the source of truth, unless inspection establishes that a different version is necessary to retain a newer intended change. Preserve unrelated `main`-only project material.
-
-If a merge cannot safely retain the necessary content, use a controlled integration branch based on `origin/main` and migrate the required deployment files from `origin/ready-site`, keeping the original `main` history intact. Do not blindly replace the entire repository tree.
-
-In either case, the final result must contain the complete working deployment implementation.
-
-### Required preservation rules
-
-- Preserve `prompt.txt`.
-- Preserve `original/index.original.html`.
-- Preserve other relevant main-only files and assets.
-- Do not delete or rewrite `ready-site`, `feature/contact-worker`, or `feature/content`.
-- Do not force-push or rewrite published Git history.
-- Do not commit `.dev.vars`, API keys, Turnstile secrets, email credentials, or any other secrets.
-- Do not introduce a paid provider or paid service.
-- Do not redesign the website or expand the scope into new features.
-
-## Phase 3 — Make `main` the final production branch
-
-1. Ensure the integration branch is based on the latest `origin/main`.
-2. Complete the integration and resolve all necessary conflicts.
-3. Run the existing project checks once, if source files were changed:
-   - `python tools/test_backend.py`
-   - `python tools/verify_content.py`
-   - `python tools/verify_site.py`
-   - `git diff --check`
-4. Do not start another open-ended audit-and-fix cycle. If a check fails, report the exact failure and stop rather than making unrelated changes.
-5. Once the integration is complete, merge the integration commit into `main` and push `main` to GitHub using a normal, non-force push.
-6. If branch protection prevents a direct push, push the integration branch and open a pull request targeting `main`. Do not bypass branch protection.
-7. Fetch the remote state again and verify that `origin/main` points to the intended completed integration commit and contains the deployment files.
-
-The final production branch must include, at minimum, the active website files, `worker/index.js`, `wrangler.jsonc`, required static assets, and the existing test/verification tools.
-
-## Phase 4 — Final report
-
-Provide a concise, factual report with:
-
-- The final production branch: `main`.
-- The backup branch created.
-- The integration strategy used, including whether histories were unrelated.
-- The final `main` commit SHA on GitHub.
-- Confirmation that the final `main` tree contains the completed website, Worker and Wrangler configuration.
-- The results of the checks run.
-- Whether the changes have been pushed directly or await merging through a pull request.
-- Any remaining Cloudflare configuration step required before deployment.
-
-Do not connect Cloudflare or deploy the website as part of this task. We will connect the GitHub repository to Cloudflare separately and select `main` as the production branch after synchronization is complete.
-
-**Success condition:** `main` on GitHub contains the completed HireHR implementation and is ready to be selected as the Cloudflare production branch, with existing history and project material preserved.
+## FINAL REPORT (in chat)
+Stage 1: fixes, gate results, performance before/after, `READY FOR MERGE APPROVAL`. After approval, Stage 2: backup branch, merge result, new `main` head, live check table (URL, status, expected), deploy timing, anything unexpected.

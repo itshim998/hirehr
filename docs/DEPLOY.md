@@ -119,9 +119,9 @@ The architecture uses **Cloudflare Workers with Static Assets** (a single unifie
    - Enter your personal or company inbox where you want to receive inquiries (e.g. `yourname@gmail.com`).
    - Check your destination inbox for the verification email from Cloudflare and click the verification link.
 4. Under **Routing rules**, create custom addresses:
-   - `employer@hirehrservices.com` -> Forward to your verified destination address.
-   - `jobseeker@hirehrservices.com` -> Forward to your verified destination address.
-5. Test forwarding: Send an email from a personal account to `employer@hirehrservices.com` and confirm it arrives in your inbox.
+   - `info@hirehrservices.com` -> Forward to your verified destination address.
+   *(Note: Legacy routing rules for `employer@hirehrservices.com` and `jobseeker@hirehrservices.com` may be retained as secondary forwarders during transition, but the single public identity is `info@hirehrservices.com`).*
+5. Test forwarding: Send an email from a personal account to `info@hirehrservices.com` and confirm it arrives in your inbox.
 
 ---
 
@@ -137,7 +137,7 @@ The architecture uses **Cloudflare Workers with Static Assets** (a single unifie
    ```
 3. Update environment variables in `wrangler.jsonc` (or via Cloudflare Dashboard):
    - `MAIL_MODE`: Change from `"log"` to `"send"`
-   - `MAIL_FROM`: Set to `"employer@hirehrservices.com"`
+   - `MAIL_FROM`: Set to `"info@hirehrservices.com"`
 4. Add the notification recipient secret:
    ```bash
    npx wrangler secret put NOTIFY_TO
@@ -186,7 +186,7 @@ The architecture uses **Cloudflare Workers with Static Assets** (a single unifie
 3. Verify the user feedback displays:
    `Thank you! Your consultation request has been sent successfully.`
 4. Check your destination inbox:
-   - Confirm email arrives from `employer@hirehrservices.com`.
+   - Confirm email arrives from `info@hirehrservices.com`.
    - Subject: `New consultation request: <Submitted Name>`.
    - Reply-To: Set to the visitor's email address (clicking **Reply** should directly reply to the visitor).
    - Body contains Name, Company, Phone, Email, and Message.
@@ -206,3 +206,28 @@ Once `hirehrservices.com` is live and verified:
 1. Navigate to **Workers & Pages > hirehr > Settings > Domains & Routes**.
 2. Click the `...` menu next to `hirehr.<your-subdomain>.workers.dev` and select **Disable**.
 3. All traffic will now exclusively route through `https://hirehrservices.com`.
+
+---
+
+### 10. Outbound Reply Workflow (Thunderbird + SMTP2GO)
+To send email replies to inquiries directly as `info@hirehrservices.com` from a desktop email client with verified SPF/DKIM authentication:
+
+1. **SMTP2GO Sender Domain Verification**:
+   - In the SMTP2GO dashboard, add and verify sender domain `hirehrservices.com`.
+   - Add the DKIM CNAME records and SPF TXT record specified by SMTP2GO into Cloudflare DNS for `hirehrservices.com`.
+2. **Dedicated SMTP User**:
+   - In SMTP2GO under **Settings > SMTP Users**, create a dedicated SMTP user for `info@hirehrservices.com`.
+3. **Thunderbird Configuration**:
+   - **Identity Settings**:
+     - Your Name: `HireHR Services`
+     - Email Address: `info@hirehrservices.com`
+     - Reply-to Address: `info@hirehrservices.com`
+   - **Outgoing Server (SMTP)**:
+     - Server Name: `mail.smtp2go.com`
+     - Port: `587` (STARTTLS) or `465` (SSL/TLS)
+     - Authentication method: Normal password
+     - User Name: `<your-smtp2go-username>`
+4. **Replying Workflow**:
+   - **Form submissions dispatched by Worker**: The Worker dispatches inquiries to your destination inbox with `Reply-To` set to the visitor's email address. Clicking **Reply** in Thunderbird addresses the reply directly to the visitor while sending From `info@hirehrservices.com` authenticated via SMTP2GO.
+   - **Direct inbound emails forwarded by Cloudflare**: Inquiries sent directly to `info@hirehrservices.com` are forwarded by Cloudflare Email Routing to your inbox; replying from Thunderbird sends From `info@hirehrservices.com` through SMTP2GO with full DKIM and SPF alignment.
+

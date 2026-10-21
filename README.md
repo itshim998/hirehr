@@ -103,9 +103,16 @@ Configured in `wrangler.jsonc` and Cloudflare Dashboard / Wrangler secrets:
 | :--- | :--- | :--- | :--- |
 | `ALLOWED_ORIGINS` | Var | Comma-separated allowed CORS origins | `http://localhost:8787` |
 | `MAIL_MODE` | Var | Email mode: `"log"` (Stage A) or `"send"` (Stage B) | `"log"` |
-| `MAIL_FROM` | Var | Sender address on custom domain (Stage B) | `""` (e.g. `employer@hirehrservices.com`) |
+| `MAIL_FROM` | Var | Sender address on custom domain (Stage B) | `""` (e.g. `info@hirehrservices.com`) |
 | `TURNSTILE_SECRET` | Secret | Cloudflare Turnstile secret key | Documented always-pass test key in dev |
 | `NOTIFY_TO` | Secret | Owner destination email (Stage B) | `owner@example.com` |
+
+### Email Architecture & Workflow
+
+The site uses a unified, secure email setup for notifications, routing, and replies:
+- **Notification Dispatch (Cloudflare Worker)**: Inquiries submitted to `/api/contact` are validated and sent via Cloudflare Worker's `send_email` binding (`env.EMAIL.send()`) with `MAIL_FROM: "info@hirehrservices.com"` to the owner's destination inbox (`NOTIFY_TO`). The visitor's submitted email is preserved in the `Reply-To` header.
+- **Inbound Forwarding (Cloudflare Email Routing)**: Incoming emails sent directly to `info@hirehrservices.com` are forwarded by Cloudflare Email Routing to the owner's verified destination address.
+- **Outbound Replies (Thunderbird + SMTP2GO)**: Owner replies to prospective clients from desktop Thunderbird configured with identity `info@hirehrservices.com`, authenticating via SMTP2GO with verified domain SPF/DKIM records.
 
 ## Deployment & Verification
 

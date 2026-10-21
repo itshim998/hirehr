@@ -20,7 +20,7 @@
   "vars": {
     "ALLOWED_ORIGINS": "https://hirehrservices.com,https://www.hirehrservices.com,http://localhost:8787",
     "MAIL_MODE": "send",
-    "MAIL_FROM": "employer@hirehrservices.com"
+    "MAIL_FROM": "info@hirehrservices.com"
   },
   "observability": {
     "enabled": true
