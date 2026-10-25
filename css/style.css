@@ -803,9 +803,12 @@ a {
    Header Scroll States: Homepage vs. Solid Inner Pages
    ========================================================================== */
 
-/* Inner Pages / 404: Solid paper from the start */
+/* Inner Pages / 404: Keep the header's document height constant.
+   The top bar scrolls naturally out of view instead of collapsing its margin,
+   which would shift scrollY back across the 24px JS scroll-state threshold. */
 .site-header.is-solid,
 body:not(.page-home) .site-header {
+  top: -37px; /* 36px top bar + 1px divider */
   background-color: var(--paper);
   border-bottom: 1px solid var(--line);
 }
@@ -815,14 +818,6 @@ body:not(.page-home) .site-header.is-scrolled {
   background-color: rgba(246, 244, 239, 0.94);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-}
-
-.site-header.is-solid.is-scrolled .top-bar,
-body:not(.page-home) .site-header.is-scrolled .top-bar {
-  margin-top: -36px;
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(-100%);
 }
 
 /* Homepage Header Behaviour */
