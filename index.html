@@ -1,535 +1,218 @@
 <!DOCTYPE html>
 <html lang="en-US">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>HireHR services</title>
+  <title>HireHR Services | Technology Recruitment</title>
   <link rel="canonical" href="https://hirehrservices.com/">
   <meta name="robots" content="max-image-preview:large">
-  <meta name="theme-color" content="#0A1624">
-  <meta name="description"
-    content="HireHR Services is a manpower hiring service provider headquartered in Kolkata, West Bengal.">
-  <link rel="preload" href="assets/fonts/newsreader-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <meta name="theme-color" content="#0b3a78">
+  <meta name="description" content="HireHR Services is a Kolkata-based IT recruitment consultancy helping businesses hire skilled technology professionals through permanent hiring, contract staffing and recruitment solutions.">
   <link rel="preload" href="assets/fonts/hanken-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="icon" type="image/png" sizes="32x32" href="assets/cropped-Capture-32x32.png">
   <link rel="stylesheet" href="css/style.css">
-
-  <!-- DISABLED (WordPress infrastructure inactive):
-  <link rel="profile" href="http://gmpg.org/xfn/11">
-  <link rel="pingback" href="https://hirehrservices.com/xmlrpc.php">
-  <link rel="alternate" type="application/rss+xml" title="HireHR services &raquo; Feed" href="https://hirehrservices.com/feed/">
-  <link rel="alternate" type="application/rss+xml" title="HireHR services &raquo; Comments Feed" href="https://hirehrservices.com/comments/feed/">
-  <link rel="https://api.w.org/" href="https://hirehrservices.com/wp-json/">
-  <link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://hirehrservices.com/xmlrpc.php?rsd">
-  <link rel="shortlink" href="https://hirehrservices.com/">
-  -->
+  <link rel="stylesheet" href="css/home-v2.css">
 </head>
-
-<body class="page-home">
-  <!-- Skip Link for Accessibility -->
+<body class="page-home v2-home">
   <a href="#site-content" class="skip-link">Skip to the content</a>
 
-  <!-- Header -->
-  <header class="site-header">
-    <!-- Top Bar -->
-    <div class="top-bar">
-      <div class="container">
-        <div class="top-bar-emails">
-          <a href="mailto:info@hirehrservices.com">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-              aria-hidden="true">
-              <rect width="20" height="16" x="2" y="4" rx="2" />
-              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-            </svg>
-            info@hirehrservices.com
-          </a>
-        </div>
-      </div>
-    </div>
+  <header class="site-header v2-header">
+    <div class="v2-nav-shell">
+      <a href="./index.html" class="v2-brand" aria-label="HireHR Services home">
+        <img src="assets/logo/hirehr-logo-full.png" alt="HireHR Services" width="205" height="70">
+      </a>
 
-    <!-- Main Navigation Bar -->
-    <div class="nav-bar">
-      <div class="container">
-        <!-- Logo Wordmark (Original image unrecoverable) -->
-        <!-- DISABLED (image unrecoverable from dead domain/archive): <img src="wp-content/uploads/2021/07/Logo-Edited-1.png" alt="HireHR services" width="389" height="156"> -->
-        <a href="./index.html" class="brand-wordmark"><img src="assets/logo/hirehr-logo.png"
-            srcset="assets/logo/hirehr-logo.png 1x, assets/logo/hirehr-logo-2x.png 2x" alt="" width="22"
-            height="44">HireHR services</a>
+      <button type="button" class="nav-toggle v2-nav-toggle" aria-expanded="false" aria-controls="primary-nav">
+        <span>Menu</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <line x1="4" x2="20" y1="6" y2="6"/>
+          <line x1="4" x2="20" y1="12" y2="12"/>
+          <line x1="4" x2="20" y1="18" y2="18"/>
+        </svg>
+      </button>
 
-        <!-- Mobile Menu Toggle Button -->
-        <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="primary-nav">
-          <span>Menu</span>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-            aria-hidden="true">
-            <line x1="4" x2="20" y1="12" y2="12" />
-            <line x1="4" x2="20" y1="6" y2="6" />
-            <line x1="4" x2="20" y1="18" y2="18" />
-          </svg>
-        </button>
+      <nav id="primary-nav" class="main-navigation v2-navigation" aria-label="Primary Navigation">
+        <ul class="nav-menu v2-nav-menu">
+          <li class="nav-item"><a href="./index.html" class="nav-link active">Home</a></li>
+          <li class="nav-item"><a href="about-us/index.html" class="nav-link">About Us</a></li>
+          <li class="nav-item has-dropdown">
+            <a href="#recruitment-solutions" class="nav-link" aria-haspopup="true" aria-expanded="false">
+              Recruitment Services <span class="dropdown-toggle-icon" aria-hidden="true">⌄</span>
+            </a>
+            <ul class="dropdown-menu">
+              <li><a href="permanent-hiring-solutions/index.html" class="dropdown-link">Permanent Hiring</a></li>
+              <li><a href="contract-hiring-solutions/index.html" class="dropdown-link">Contract Hiring</a></li>
+              <li><a href="contract-to-hire-solutions/index.html" class="dropdown-link">Contract to Hire</a></li>
+              <li><a href="recruitment-process-outsourcing/index.html" class="dropdown-link">Recruitment Process Outsourcing</a></li>
+              <li><a href="background-verification-service/index.html" class="dropdown-link">Background Verification Service</a></li>
+            </ul>
+          </li>
+          <li class="nav-item"><a href="our-specialty/index.html" class="nav-link">Technology Expertise</a></li>
+          <li class="nav-item"><a href="#recruitment-solutions" class="nav-link">Recruitment Partners</a></li>
+          <li class="nav-item has-dropdown">
+            <a href="career-advice/index.html" class="nav-link" aria-haspopup="true" aria-expanded="false">
+              Career Support <span class="dropdown-toggle-icon" aria-hidden="true">⌄</span>
+            </a>
+            <ul class="dropdown-menu">
+              <li><a href="career-advice/index.html" class="dropdown-link">Career Advice</a></li>
+              <li><a href="job-seekers/index.html" class="dropdown-link">Career Assistance</a></li>
+            </ul>
+          </li>
+          <li class="nav-item"><a href="contact-us/index.html" class="nav-link">Contact Us</a></li>
+        </ul>
+      </nav>
 
-        <!-- Main Navigation Links -->
-        <nav id="primary-nav" class="main-navigation" aria-label="Primary Navigation">
-          <ul class="nav-menu">
-            <li class="nav-item">
-              <a href="./index.html" class="nav-link active">HOME</a>
-            </li>
-            <li class="nav-item">
-              <a href="about-us/index.html" class="nav-link">ABOUT US</a>
-            </li>
-            <li class="nav-item has-dropdown">
-              <a href="#" class="nav-link" aria-haspopup="true" aria-expanded="false">
-                EMPLOYERS
-                <span class="dropdown-toggle-icon" aria-hidden="true">&#9662;</span>
-              </a>
-              <ul class="dropdown-menu">
-                <li><a href="permanent-hiring-solutions/index.html" class="dropdown-link">Permanent Hiring</a></li>
-                <li><a href="contract-hiring-solutions/index.html" class="dropdown-link">Contract Hiring</a></li>
-                <li><a href="contract-to-hire-solutions/index.html" class="dropdown-link">Contract to Hire</a></li>
-                <li><a href="recruitment-process-outsourcing/index.html" class="dropdown-link">Recruitment Process
-                    Outsourcing</a></li>
-                <li><a href="background-verification-service/index.html" class="dropdown-link">Background Verification
-                    Service</a></li>
-                <li><a href="our-specialty/index.html" class="dropdown-link">Our Speciality</a></li>
-              </ul>
-            </li>
-            <li class="nav-item has-dropdown">
-              <a href="#" class="nav-link" aria-haspopup="true" aria-expanded="false">
-                JOB SEEKERS
-                <span class="dropdown-toggle-icon" aria-hidden="true">&#9662;</span>
-              </a>
-              <ul class="dropdown-menu">
-                <li><a href="career-advice/index.html" class="dropdown-link">Career Advice</a></li>
-                <li><a href="job-seekers/index.html" class="dropdown-link">Career Assistance</a></li>
-              </ul>
-            </li>
-            <li class="nav-item">
-              <a href="contact-us/index.html" class="nav-link">CONTACT US</a>
-            </li>
-          </ul>
-        </nav>
-      </div>
+      <a class="v2-header-cta" href="contact-us/index.html">
+        <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+          <rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/>
+        </svg>
+        Get in Touch
+      </a>
     </div>
   </header>
 
-  <!-- Main Content Landmark -->
   <main id="site-content">
-    <!-- Hero Slider Section -->
-    <section class="hero-slider-section" aria-label="Featured Announcements">
-      <div class="hero-bg" aria-hidden="true">
-        <picture class="hero-bg-item is-active">
-          <source type="image/webp"
-            srcset="assets/slides/slide-1-welcome-1200.webp 1200w, assets/slides/slide-1-welcome-2400.webp 2400w"
-            sizes="100vw">
-          <img src="assets/slides/slide-1-welcome-2400.jpg" alt="" width="2172" height="724" decoding="async"
-            fetchpriority="high">
-        </picture>
-        <picture class="hero-bg-item">
-          <source type="image/webp"
-            srcset="assets/slides/slide-2-permanent-hiring-1200.webp 1200w, assets/slides/slide-2-permanent-hiring-2400.webp 2400w"
-            sizes="100vw">
-          <img src="assets/slides/slide-2-permanent-hiring-2400.jpg" alt="" width="2172" height="724" decoding="async"
-            loading="lazy">
-        </picture>
-        <picture class="hero-bg-item">
-          <source type="image/webp"
-            srcset="assets/slides/slide-3-contract-hiring-1200.webp 1200w, assets/slides/slide-3-contract-hiring-2400.webp 2400w"
-            sizes="100vw">
-          <img src="assets/slides/slide-3-contract-hiring-2400.jpg" alt="" width="2171" height="724" decoding="async"
-            loading="lazy">
-        </picture>
-        <picture class="hero-bg-item">
-          <source type="image/webp"
-            srcset="assets/slides/slide-4-rpo-1200.webp 1200w, assets/slides/slide-4-rpo-2400.webp 2400w" sizes="100vw">
-          <img src="assets/slides/slide-4-rpo-2400.jpg" alt="" width="2172" height="724" decoding="async"
-            loading="lazy">
-        </picture>
-        <picture class="hero-bg-item">
-          <source type="image/webp"
-            srcset="assets/slides/slide-5-background-verification-1200.webp 1200w, assets/slides/slide-5-background-verification-2400.webp 2400w"
-            sizes="100vw">
-          <img src="assets/slides/slide-5-background-verification-2400.jpg" alt="" width="2172" height="724"
-            decoding="async" loading="lazy">
-        </picture>
-        <div class="hero-bg-overlay"></div>
+    <section class="v2-hero" aria-labelledby="home-title">
+      <div class="v2-hero-image" aria-hidden="true">
+        <svg class="v2-bridge-art" viewBox="0 0 1000 450" preserveAspectRatio="xMidYMid slice" role="presentation">
+          <defs>
+            <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#87c8f6"/><stop offset=".6" stop-color="#d8e9f6"/><stop offset="1" stop-color="#ffd7b0"/></linearGradient>
+            <linearGradient id="water" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9bb7c8"/><stop offset="1" stop-color="#e4c5ad"/></linearGradient>
+            <linearGradient id="sunGlow" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffc67a" stop-opacity=".75"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+          </defs>
+          <rect width="1000" height="300" fill="url(#sky)"/>
+          <rect y="300" width="1000" height="150" fill="url(#water)"/>
+          <ellipse cx="250" cy="280" rx="300" ry="80" fill="url(#sunGlow)" opacity=".55"/>
+          <g fill="#31577b" opacity=".9">
+            <rect x="40" y="250" width="18" height="42"/><rect x="62" y="232" width="24" height="60"/><rect x="91" y="260" width="30" height="32"/>
+            <rect x="130" y="246" width="20" height="46"/><rect x="155" y="255" width="34" height="37"/><rect x="200" y="240" width="19" height="52"/>
+            <rect x="226" y="258" width="27" height="34"/><rect x="265" y="248" width="22" height="44"/><rect x="300" y="262" width="42" height="30"/>
+            <rect x="735" y="240" width="18" height="52"/><rect x="760" y="220" width="24" height="72"/><rect x="790" y="252" width="32" height="40"/>
+            <rect x="832" y="235" width="18" height="57"/><rect x="858" y="212" width="25" height="80"/><rect x="890" y="246" width="38" height="46"/>
+            <rect x="936" y="225" width="23" height="67"/><rect x="966" y="250" width="26" height="42"/>
+          </g>
+          <g stroke="#123c70" stroke-linecap="round">
+            <line x1="0" y1="292" x2="1000" y2="292" stroke-width="13"/>
+            <line x1="0" y1="303" x2="1000" y2="303" stroke-width="3" opacity=".65"/>
+            <g stroke-width="7" fill="none">
+              <path d="M570 292V72M610 292V72"/>
+              <path d="M558 82h64M558 105h64"/>
+              <path d="M563 74 575 50h30l12 24"/>
+            </g>
+            <g stroke-width="2.2" opacity=".95">
+              <line x1="570" y1="88" x2="60" y2="292"/><line x1="570" y1="96" x2="120" y2="292"/><line x1="570" y1="106" x2="180" y2="292"/>
+              <line x1="570" y1="116" x2="240" y2="292"/><line x1="570" y1="128" x2="300" y2="292"/><line x1="570" y1="142" x2="360" y2="292"/>
+              <line x1="570" y1="158" x2="420" y2="292"/><line x1="570" y1="176" x2="475" y2="292"/><line x1="570" y1="196" x2="520" y2="292"/>
+              <line x1="610" y1="88" x2="980" y2="292"/><line x1="610" y1="98" x2="925" y2="292"/><line x1="610" y1="110" x2="870" y2="292"/>
+              <line x1="610" y1="124" x2="820" y2="292"/><line x1="610" y1="140" x2="770" y2="292"/><line x1="610" y1="158" x2="720" y2="292"/>
+              <line x1="610" y1="178" x2="675" y2="292"/><line x1="610" y1="202" x2="640" y2="292"/>
+            </g>
+          </g>
+          <g opacity=".27" stroke="#fff" stroke-width="2"><line x1="0" y1="325" x2="1000" y2="325"/><line x1="0" y1="355" x2="1000" y2="355"/><line x1="0" y1="390" x2="1000" y2="390"/></g>
+        </svg>
       </div>
-      <div class="container">
-        <div class="slider-container">
-          <div class="slider-track" aria-live="polite">
-            <!-- Slide 1 -->
-            <div class="slider-slide is-active" data-slide-index="0">
-              <div class="slide-content">
-                <h1 class="slide-title">Welcome to HireHR Services</h1>
-                <p class="slide-subtitle">We believe service determines the success and failure of a business
-                  relationship.</p>
-              </div>
-            </div>
-            <!-- Slide 2 -->
-            <div class="slider-slide" data-slide-index="1">
-              <div class="slide-content">
-                <h2 class="slide-title">Permanent Hiring Solutions</h2>
-                <p class="slide-subtitle">Finding the right candidate for a permanent role can be time-consuming and costly. We source and place candidates who match both the role and your organization's culture.</p>
-              </div>
-            </div>
-            <!-- Slide 3 -->
-            <div class="slider-slide" data-slide-index="2">
-              <div class="slide-content">
-                <h2 class="slide-title">Contract hiring Solutions</h2>
-                <p class="slide-subtitle">Short-term or long-term projects? We provide contract staffing that helps reduce overtime costs, lower paperwork, and keep resources placed on time.</p>
-              </div>
-            </div>
-            <!-- Slide 4 -->
-            <div class="slider-slide" data-slide-index="3">
-              <div class="slide-content">
-                <h2 class="slide-title">Recruitment Process Outsourcing</h2>
-                <p class="slide-subtitle">We take on all or part of your recruitment process so you can focus on your core business. Our team works onsite and offshore to handle campus hiring, bulk hiring, and more.</p>
-              </div>
-            </div>
-            <!-- Slide 5 -->
-            <div class="slider-slide" data-slide-index="4">
-              <div class="slide-content">
-                <h2 class="slide-title">Background Verification Services</h2>
-                <p class="slide-subtitle">We assist employers with verifying employment history and conducting reference checks on prospective new employees.</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Slider Controls -->
-          <div class="slider-controls">
-            <button type="button" class="slider-btn slider-prev" aria-label="Previous slide">&#10094;</button>
-            <div class="slider-dots" role="group" aria-label="Slide Selection"></div>
-            <button type="button" class="slider-btn slider-next" aria-label="Next slide">&#10095;</button>
-          </div>
+      <div class="v2-experience-badge"><strong>20+ Years</strong><span>of Recruitment Experience</span></div>
+      <div class="v2-hero-fade" aria-hidden="true"></div>
+      <div class="v2-hero-copy">
+        <h1 id="home-title">Building Technology Teams.<br>Connecting the Right Talent.</h1>
+        <p><strong>HireHR Services</strong> is a Kolkata-based IT recruitment consultancy helping businesses hire skilled technology professionals through permanent hiring, contract staffing and recruitment solutions.</p>
+        <div class="v2-hero-actions">
+          <a class="v2-btn v2-btn-primary" href="contact-us/index.html">Discuss Your Hiring Requirements <span aria-hidden="true">→</span></a>
+          <a class="v2-btn v2-btn-secondary" href="#recruitment-solutions">Become a Recruitment Partner</a>
         </div>
       </div>
     </section>
 
-    <!-- Three Category Blocks -->
-    <section class="categories-section" aria-label="Hiring Categories">
-      <div class="container">
-        <div class="categories-grid">
-          <!-- IT Hiring -->
-          <article class="category-card" data-reveal>
-            <h2 class="category-title">IT Hiring</h2>
-            <p class="category-desc">We can help you find suitable IT profiles for your internal hiring and for your
-              clients. Whether you need Java or .Net, or newer skills like Cloud, AI and ML, we have ready resources for
-              most IT skills.</p>
-          </article>
-
-          <!-- ITES Hiring -->
-          <article class="category-card" data-reveal>
-            <h2 class="category-title">ITES Hiring</h2>
-            <p class="category-desc">We can help you find the right candidates for your BPO and KPO divisions. We have
-              expertise in bulk hiring and campus hiring in the ITES recruitment field.</p>
-          </article>
-
-          <!-- GENERAL Hiring -->
-          <article class="category-card" data-reveal>
-            <h2 class="category-title">GENERAL Hiring</h2>
-            <p class="category-desc">If you need help hiring non-IT profiles, we can help you there too. We assist with
-              non-IT hiring from support staff to management level (CEO/Director).</p>
-          </article>
-        </div>
+    <section class="v2-tech" aria-labelledby="tech-title">
+      <h2 id="tech-title" class="v2-tech-heading">Our<br>Technology<br>Expertise</h2>
+      <div class="v2-tech-grid">
+        <article class="v2-tech-item">
+          <svg class="v2-tech-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 14 8 24l10 10M30 14l10 10-10 10M28 7 20 41"/></svg>
+          <h3>Software<br>Engineering</h3>
+        </article>
+        <article class="v2-tech-item">
+          <svg class="v2-tech-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><ellipse cx="24" cy="11" rx="14" ry="6"/><path d="M10 11v10c0 3 6 6 14 6s14-3 14-6V11M10 21v10c0 3 6 6 14 6s14-3 14-6V21"/></svg>
+          <h3>ERP &amp; CTRM</h3>
+        </article>
+        <article class="v2-tech-item">
+          <svg class="v2-tech-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 11a7 7 0 0 0-7 7v2a7 7 0 0 0-4 6 7 7 0 0 0 7 7h4M30 11a7 7 0 0 1 7 7v2a7 7 0 0 1 4 6 7 7 0 0 1-7 7h-4M24 7v34M18 16h6M30 16h-6M16 25h8M32 25h-8M18 34h6M30 34h-6"/></svg>
+          <h3>AI / Machine<br>Learning</h3>
+        </article>
+        <article class="v2-tech-item">
+          <svg class="v2-tech-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 34h21a8 8 0 0 0 1-16 13 13 0 0 0-24-3 9 9 0 0 0 2 19Z"/><path d="m24 33 0-13M19 25l5-5 5 5"/></svg>
+          <h3>Cloud &amp; DevOps</h3>
+        </article>
+        <article class="v2-tech-item">
+          <svg class="v2-tech-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M24 5 39 11v11c0 10-6 17-15 21C15 39 9 32 9 22V11Z"/><path d="m17 24 5 5 10-11"/></svg>
+          <h3>Quality Assurance</h3>
+        </article>
+        <article class="v2-tech-item">
+          <svg class="v2-tech-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="10" y="20" width="28" height="22" rx="4"/><path d="M16 20v-6a8 8 0 0 1 16 0v6M24 28v6"/></svg>
+          <h3>Cybersecurity</h3>
+        </article>
       </div>
     </section>
 
-    <!-- Who We Are Section -->
-    <section class="about-preview-section" aria-label="About HireHR">
-      <div class="container">
-        <div class="about-preview-grid">
-          <div class="about-preview-content" data-reveal>
-            <span class="about-badge sr-only">Who we are ?</span>
-            <h2 id="about-heading" class="section-title">Who we are ?</h2>
-            <p class="about-text">HireHR Services is a manpower hiring service provider headquartered in Kolkata, West
-              Bengal. We do not claim to be the best, but we always try to give our clients the best service we can. We
-              help employers source the best possible manpower to fulfill their hiring needs, and job seekers can reach
-              out to us for career advice and interview guidance.</p>
-            <a href="about-us/index.html" id="about-link" class="service-link about-link"
-              aria-labelledby="about-link about-heading">Read More</a>
-          </div>
-          <figure class="about-figure" data-reveal>
-            <!-- DISABLED (image unrecoverable from dead domain/archive): <img src="wp-content/uploads/2021/07/Image-Consultant-Course-1024x682.jpg" alt="" width="580" height="386"> -->
-            <picture>
-              <source type="image/webp" srcset="assets/slides/slide-2-permanent-hiring-2400.webp">
-              <img src="assets/slides/slide-2-permanent-hiring-2400.jpg" alt="" width="2400" height="800" loading="lazy"
-                decoding="async">
-            </picture>
-            <figcaption>HireHR services</figcaption>
-          </figure>
+    <section class="v2-recruitment" id="recruitment-solutions" aria-labelledby="recruitment-title">
+      <div class="v2-solutions-panel">
+        <h2 id="recruitment-title">Our Recruitment Solutions</h2>
+        <div class="v2-solutions-grid">
+          <a class="v2-solution" href="permanent-hiring-solutions/index.html">
+            <span class="v2-solution-icon"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><rect x="8" y="15" width="32" height="23" rx="2"/><path d="M18 15v-4h12v4M8 24h32M20 24v4h8v-4"/></svg></span>
+            <span>Permanent<br>Recruitment</span>
+          </a>
+          <a class="v2-solution" href="contract-hiring-solutions/index.html">
+            <span class="v2-solution-icon"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.8" aria-hidden="true"><circle cx="18" cy="18" r="6"/><circle cx="32" cy="19" r="5"/><path d="M7 39c0-8 5-12 11-12s11 4 11 12M27 29c2-2 4-3 7-3 5 0 9 4 9 11v2"/></svg></span>
+            <span>Contract Staffing &amp;<br>Staff Augmentation</span>
+          </a>
+          <a class="v2-solution" href="contract-to-hire-solutions/index.html">
+            <span class="v2-solution-icon"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 25 8-8 7 4 4-3 13 9-7 9-7-5-4 4-14-10Z"/><path d="m16 17 6-5 8 1 5 6M26 31l4 4"/></svg></span>
+            <span>Contract-to-Hire</span>
+          </a>
+          <a class="v2-solution" href="recruitment-process-outsourcing/index.html">
+            <span class="v2-solution-icon"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="24" cy="24" r="8"/><path d="M24 6v6M24 36v6M6 24h6M36 24h6M11 11l5 5M32 32l5 5M37 11l-5 5M16 32l-5 5"/></svg></span>
+            <span>RPO</span>
+          </a>
+          <a class="v2-solution" href="contact-us/index.html">
+            <span class="v2-solution-icon"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 7h12v8h8v12h-8v14H18V27H10V15h8Z"/><path d="M15 21h18M24 12v24"/></svg></span>
+            <span>Recruitment<br>Partnerships</span>
+          </a>
         </div>
+        <a class="v2-explore" href="permanent-hiring-solutions/index.html">Explore Our Services <span aria-hidden="true">→</span></a>
       </div>
-    </section>
 
-    <!-- OUR SERVICES Section -->
-    <section class="services-section" aria-label="Our Services">
-      <div class="container">
-        <div class="section-header" data-reveal>
-          <h2 class="section-title">OUR SERVICES</h2>
+      <div class="v2-why-panel">
+        <div class="v2-why-copy">
+          <h2>Why HireHR Services?</h2>
+          <ul>
+            <li>Deep Technology Hiring Expertise</li>
+            <li>Kolkata-Focused, PAN India Support</li>
+            <li>Flexible Engagement Models</li>
+            <li>Transparent &amp; Professional Approach</li>
+            <li>Cost-Effective Solutions</li>
+          </ul>
         </div>
-        <div class="services-list">
-          <!-- Service 1 -->
-          <article class="service-row" data-reveal>
-            <h3 id="svc-title-1" class="service-title">Permanent Hiring Solutions</h3>
-            <a href="permanent-hiring-solutions/index.html" id="svc-link-1" class="service-link"
-              aria-labelledby="svc-link-1 svc-title-1">
-              Read More <span aria-hidden="true">&rarr;</span>
-            </a>
-          </article>
-
-          <!-- Service 2 -->
-          <article class="service-row" data-reveal>
-            <h3 id="svc-title-2" class="service-title">Contract Hiring Solutions</h3>
-            <a href="contract-hiring-solutions/index.html" id="svc-link-2" class="service-link"
-              aria-labelledby="svc-link-2 svc-title-2">
-              Read More <span aria-hidden="true">&rarr;</span>
-            </a>
-          </article>
-
-          <!-- Service 3 -->
-          <article class="service-row" data-reveal>
-            <h3 id="svc-title-3" class="service-title">Recruitment Process Outsourcing(RPO)</h3>
-            <a href="recruitment-process-outsourcing/index.html" id="svc-link-3" class="service-link"
-              aria-labelledby="svc-link-3 svc-title-3">
-              Read More <span aria-hidden="true">&rarr;</span>
-            </a>
-          </article>
-
-          <!-- Service 4 -->
-          <article class="service-row" data-reveal>
-            <h3 id="svc-title-4" class="service-title">Background Verification Service</h3>
-            <a href="background-verification-service/index.html" id="svc-link-4" class="service-link"
-              aria-labelledby="svc-link-4 svc-title-4">
-              Read More <span aria-hidden="true">&rarr;</span>
-            </a>
-          </article>
-
-          <!-- Service 5 -->
-          <article class="service-row" data-reveal>
-            <h3 id="svc-title-5" class="service-title">Career Advice</h3>
-            <a href="career-advice/index.html" id="svc-link-5" class="service-link"
-              aria-labelledby="svc-link-5 svc-title-5">
-              Read More <span aria-hidden="true">&rarr;</span>
-            </a>
-          </article>
-
-          <!-- Service 6 -->
-          <article class="service-row" data-reveal>
-            <h3 id="svc-title-6" class="service-title">Career Assistance</h3>
-            <a href="job-seekers/index.html" id="svc-link-6" class="service-link"
-              aria-labelledby="svc-link-6 svc-title-6">
-              Read More <span aria-hidden="true">&rarr;</span>
-            </a>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- WHY CHOOSE US Section -->
-    <section class="why-us-section" aria-label="Why Choose Us">
-      <div class="container">
-        <div class="why-us-layout">
-          <div class="why-us-sticky-header" data-reveal>
-            <h2 class="section-title">WHY CHOOSE US</h2>
-          </div>
-          <div class="why-us-grid">
-            <!-- Item 1 -->
-            <article class="why-item" data-reveal>
-              <h3 class="why-title">Experience</h3>
-              <p class="why-desc">We have a pool of experienced Talent Acquisition specialists to serve your
-                requirements. They are experts in end-to-end recruitment, including sourcing, shortlisting and
-                interviewing candidates.</p>
-            </article>
-
-            <!-- Item 2 -->
-            <article class="why-item" data-reveal>
-              <h3 class="why-title">Time</h3>
-              <p class="why-desc">We understand the importance of time. Our qualified recruiters are capable of
-                delivering talent within a quick turnaround time.</p>
-            </article>
-
-            <!-- Item 3 -->
-            <article class="why-item" data-reveal>
-              <h3 class="why-title">Tools</h3>
-              <p class="why-desc">We refer to the best available job portals when looking for resources. We also
-                emphasize social networking and headhunting when looking for the right talent to meet your requirements.
-              </p>
-            </article>
-
-            <!-- Item 4 -->
-            <article class="why-item" data-reveal>
-              <h3 class="why-title">Database</h3>
-              <p class="why-desc">We have a vast database of IT and non-IT talent to make sure the resource you need is
-                available.</p>
-            </article>
-
-            <!-- Item 5 -->
-            <article class="why-item" data-reveal>
-              <h3 class="why-title">Cost</h3>
-              <p class="why-desc">We make sure you get the best possible service at a competitive cost.</p>
-            </article>
-
-            <!-- Item 6 -->
-            <article class="why-item" data-reveal>
-              <h3 class="why-title">Coordination</h3>
-              <p class="why-desc">We emphasize proper and timely coordination with our customers to ensure customer
-                satisfaction and the further growth of the business relationship.</p>
-            </article>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- REQUEST A FREE CONSULTATION Section -->
-    <section class="consultation-section" aria-label="Request Consultation">
-      <div class="container">
-        <div class="consultation-wrapper" data-reveal>
-          <h2>REQUEST A FREE CONSULTATION</h2>
-
-          <!-- DISABLED (WordPress WPForms #308 endpoint inactive):
-          <form id="wpforms-form-308" class="wpforms-validate wpforms-form" data-formid="308" method="post" enctype="multipart/form-data" action="/" data-token="4d9ffe9007a739513819f387332dbf57" novalidate="novalidate">
-            <input type="text" id="wpforms-308-field_0" class="wpforms-field-large wpforms-field-required" name="wpforms[fields][0]" placeholder="Name" required="">
-            <input type="text" id="wpforms-308-field_3" class="wpforms-field-large" name="wpforms[fields][3]" placeholder="Company Name">
-            <input type="tel" id="wpforms-308-field_5" class="wpforms-field-large wpforms-field-required wpforms-smart-phone-field wpforms-input-temp-name" data-rule-smart-phone-field="true" name="wpf-temp-wpforms[fields][5]" placeholder="Phone Number" required="" autocomplete="off">
-            <input type="hidden" name="wpforms[fields][5]">
-            <input type="email" id="wpforms-308-field_1" class="wpforms-field-large wpforms-field-required" name="wpforms[fields][1]" placeholder="Email" required="">
-            <textarea id="wpforms-308-field_2" class="wpforms-field-small wpforms-field-required" name="wpforms[fields][2]" placeholder="Message" required=""></textarea>
-            <input type="hidden" name="wpforms[id]" value="308">
-            <input type="hidden" name="wpforms[author]" value="1">
-            <input type="hidden" name="wpforms[post_id]" value="8">
-            <button type="submit" name="wpforms[submit]" class="wpforms-submit" id="wpforms-submit-308" value="wpforms-submit">Submit</button>
-          </form>
-          -->
-
-          <!-- Active Static Consultation Form with Client-Side Validation -->
-          <form id="consultation-form" class="consultation-form" novalidate>
-            <div id="form-status" class="form-status" role="status" aria-live="polite"></div>
-
-            <div class="form-row-2">
-              <div class="form-group">
-                <label for="form-name">Name <span class="required" aria-hidden="true">*</span></label>
-                <input type="text" id="form-name" name="name" class="form-input" placeholder="Name" required
-                  autocomplete="name">
-              </div>
-              <div class="form-group">
-                <label for="form-company">Company Name</label>
-                <input type="text" id="form-company" name="company" class="form-input" placeholder="Company Name"
-                  autocomplete="organization">
-              </div>
-            </div>
-
-            <div class="form-row-2">
-              <div class="form-group">
-                <label for="form-phone">Phone Number <span class="required" aria-hidden="true">*</span></label>
-                <div class="phone-input-group">
-                  <select id="form-country" name="country_code" class="form-select" aria-label="Country Code">
-                    <option value="+1">United States (+1)</option>
-                  </select>
-                  <input type="tel" id="form-phone" name="phone" class="form-input" placeholder="Phone Number" required
-                    autocomplete="tel-national">
-                </div>
-              </div>
-              <div class="form-group">
-                <label for="form-email">Email <span class="required" aria-hidden="true">*</span></label>
-                <input type="email" id="form-email" name="email" class="form-input" placeholder="Email" required
-                  autocomplete="email">
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="form-message">Message <span class="required" aria-hidden="true">*</span></label>
-              <textarea id="form-message" name="message" class="form-textarea" placeholder="Message" required
-                rows="4"></textarea>
-            </div>
-
-            <!-- Anti-spam Honeypot Field (hidden from users) -->
-            <div style="position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden;"
-              aria-hidden="true">
-              <label for="form-website">Website</label>
-              <input type="text" id="form-website" name="website" tabindex="-1" autocomplete="off">
-            </div>
-
-            <!-- Cloudflare Turnstile Security Verification -->
-            <div class="form-group turnstile-form-group">
-              <div id="turnstile-widget" class="turnstile-wrapper"></div>
-            </div>
-
-            <button type="submit" class="btn btn-primary" data-submit-text="Submit" data-alt-text="Sending...">
-              Submit
-            </button>
-          </form>
+        <div class="v2-trusted-card" aria-label="Your Trusted IT Recruitment Partner">
+          <svg viewBox="0 0 92 72" fill="currentColor" aria-hidden="true"><circle cx="46" cy="20" r="13"/><circle cx="21" cy="27" r="9"/><circle cx="71" cy="27" r="9"/><path d="M27 62v-8c0-15 8-23 19-23s19 8 19 23v8H27ZM4 62v-7c0-11 6-17 15-17 5 0 9 2 12 6-3 5-5 11-5 18H4ZM66 62c0-7-2-13-5-18 3-4 7-6 12-6 9 0 15 6 15 17v7H66Z"/></svg>
+          <strong>Your Trusted<br>IT Recruitment<br>Partner</strong>
         </div>
       </div>
     </section>
   </main>
 
-  <!-- Footer -->
-  <footer class="site-footer">
-    <div class="container">
-      <div class="footer-grid">
-        <!-- Footer Column 1: Contact Info -->
-        <div class="footer-col footer-brand" data-reveal>
-          <!-- DISABLED (image unrecoverable from dead domain/archive): <img src="wp-content/uploads/2021/07/Logo-Edited-1.png" alt="HireHR services" width="389" height="156"> -->
-          <a href="./index.html" class="brand-wordmark" style="color: var(--white); margin-bottom: 1rem;"><img
-              src="assets/logo/hirehr-logo.png"
-              srcset="assets/logo/hirehr-logo.png 1x, assets/logo/hirehr-logo-2x.png 2x" alt="" width="22"
-              height="44">HireHR services</a>
-          <ul class="footer-contact-list">
-            <li>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                aria-hidden="true">
-                <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
-                <circle cx="12" cy="10" r="3" />
-              </svg>
-              <span>KL-1 Aswininagar, Baguiati, Kolkata-700159</span>
-            </li>
-            <li>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                aria-hidden="true">
-                <path
-                  d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
-              </svg>
-              <a href="tel:+918296558406">+91 8296558406</a>
-            </li>
-            <li>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                aria-hidden="true">
-                <rect width="20" height="16" x="2" y="4" rx="2" />
-                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-              </svg>
-              <a href="mailto:info@hirehrservices.com">info@hirehrservices.com</a>
-            </li>
-          </ul>
-        </div>
-
-        <!-- Footer Column 2: Quick Links -->
-        <div class="footer-col" data-reveal>
-          <h2 class="footer-col-title">Quick Links</h2>
-          <div class="footer-links-grid">
-            <a href="./index.html">Home</a>
-            <a href="about-us/index.html">About Us</a>
-            <a href="permanent-hiring-solutions/index.html">Permanent Hiring Solutions</a>
-            <a href="contract-hiring-solutions/index.html">Contract hiring Solutions</a>
-            <a href="contract-to-hire-solutions/index.html">Contract to Hire Solutions</a>
-            <a href="recruitment-process-outsourcing/index.html">Recruitment Process Outsourcing</a>
-            <a href="background-verification-service/index.html">Background Verification Service</a>
-            <a href="our-specialty/index.html">Our Speciality</a>
-            <a href="career-advice/index.html">Career Advice</a>
-            <a href="job-seekers/index.html">Career Assistance</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="footer-bottom">
-        Copyright &copy; 2021
-      </div>
+  <footer class="v2-footer-cta">
+    <div class="v2-footer-message">
+      <span class="v2-target" aria-hidden="true"><svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="3"><circle cx="26" cy="30" r="18"/><circle cx="26" cy="30" r="10"/><circle cx="26" cy="30" r="3"/><path d="m27 29 18-18M38 11h8v8"/></svg></span>
+      <div><h2>Let’s Build the Right Team Together</h2><p>Share your hiring needs. We’ll take care of the rest.</p></div>
     </div>
+    <div class="v2-footer-contact">
+      <a href="mailto:info@hirehrservices.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg>info@hirehrservices.com</a>
+      <a href="tel:+918296558406"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.7 19.7 0 0 1-8.6-3.1 19.4 19.4 0 0 1-6-6A19.7 19.7 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7 12.8 12.8 0 0 0 .7 2.8 2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.5 12.8 12.8 0 0 0 2.8.7 2 2 0 0 1 1.7 2.1Z"/></svg>+91 8296558406</a>
+    </div>
+    <a class="v2-footer-button" href="contact-us/index.html">Contact Us <span aria-hidden="true">→</span></a>
   </footer>
 
   <script src="js/ui.js" defer></script>
-  <script src="js/countries.js"></script>
-  <script src="js/main.js"></script>
-  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onTurnstileLoad&render=explicit" async
-    defer></script>
+  <script src="js/main.js" defer></script>
 </body>
-
 </html>
