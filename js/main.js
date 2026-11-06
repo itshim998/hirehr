@@ -304,6 +304,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const phone = (document.getElementById('form-phone')?.value || '').trim();
       const email = (document.getElementById('form-email')?.value || '').trim();
       const message = (document.getElementById('form-message')?.value || '').trim();
+      const collaboration = (document.getElementById('form-collaboration')?.value || '').trim();
       const website = (document.getElementById('form-website')?.value || '').trim();
 
       // Client-side validations
@@ -370,6 +371,7 @@ document.addEventListener('DOMContentLoaded', () => {
           phone: `${countryCode} ${phone}`,
           email,
           message,
+          collaboration,
           website,
           turnstileToken: activeToken
         };

@@ -5,9 +5,17 @@
  */
 
 const MAX_BODY_BYTES = 20 * 1024; // 20 KB
-const ALLOWED_KEYS = new Set(['name', 'company', 'phone', 'email', 'message', 'website', 'turnstileToken']);
+const ALLOWED_KEYS = new Set(['name', 'company', 'phone', 'email', 'message', 'collaboration', 'website', 'turnstileToken']);
 const PHONE_PATTERN = /^[0-9+\s\-()]+$/;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const COLLABORATION_OPTIONS = new Set([
+  "Introduce companies with new recruitment requirements.",
+  "I have direct access to companies looking for hiring support.",
+  "I am a recruitment agency looking for recruitment delivery support for my existing clients.",
+  "I want to collaborate on recruitment business and share revenue.",
+  "I am interested in receiving excess recruitment requirements from HireHR Services.",
+  "Other partnership opportunities."
+]);
 
 /**
  * Standard JSON response helper
@@ -160,6 +168,8 @@ export default {
     const rawPhone = typeof payload.phone === 'string' ? payload.phone.trim() : '';
     const rawEmail = typeof payload.email === 'string' ? payload.email.trim() : '';
     const rawMessage = typeof payload.message === 'string' ? payload.message.trim() : '';
+    const rawCollaboration = typeof payload.collaboration === 'string' ? payload.collaboration.trim() :
+      (payload.collaboration === null || payload.collaboration === undefined ? '' : null);
     const turnstileToken = typeof payload.turnstileToken === 'string' ? payload.turnstileToken.trim() : '';
 
     // Server-side validation mirroring client requirements:
@@ -198,6 +208,11 @@ export default {
     // Message: required, <= 5000 chars
     if (typeof payload.message !== 'string' || !rawMessage || rawMessage.length > 5000) {
       return jsonResponse({ ok: false, error: 'Invalid message' }, 400, origin);
+    }
+
+    // Collaboration choice is optional for non-partnership enquiries, but must match a known option when provided.
+    if (rawCollaboration === null || (rawCollaboration && !COLLABORATION_OPTIONS.has(rawCollaboration))) {
+      return jsonResponse({ ok: false, error: 'Invalid collaboration option' }, 400, origin);
     }
 
     // Turnstile token verification
@@ -273,6 +288,7 @@ export default {
         '',
         `Name: ${cleanName}`,
         `Company: ${cleanCompany || 'N/A'}`,
+        `Collaboration: ${rawCollaboration || 'Not specified'}`,
         `Phone: ${cleanPhone}`,
         `Email: ${cleanEmail}`,
         '',
