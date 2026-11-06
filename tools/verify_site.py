@@ -20,7 +20,6 @@ def run_verification():
         'contract-hiring-solutions/index.html',
         'contract-to-hire-solutions/index.html',
         'recruitment-process-outsourcing/index.html',
-        'background-verification-service/index.html',
         'our-specialty/index.html',
         'career-advice/index.html',
         'job-seekers/index.html',
@@ -39,6 +38,7 @@ def run_verification():
     # 4. Refined copy replacements on home page (Task: feature/content)
     allowed_removals = {
         'Facebook',
+        'Background Verification Service',  # explicitly retired from live pages
         'Twitter',
         'Copyright © 2021 | Design & Developed By Zauca',
         'Copyright \xa9 2021 | Design & Developed By Zauca',

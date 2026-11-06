@@ -82,12 +82,6 @@ def parse_refined_copy(copy_path):
         items['rpo.p1'] = ('recruitment-process-outsourcing/index.html', m_rpo.group(1).strip())
         items['rpo.p2'] = ('recruitment-process-outsourcing/index.html', m_rpo.group(2).strip())
 
-    # bgv.h2, p1
-    m_bgv_h2 = re.search(r'-\s*\*\*`background-verification-service/`\*\*.*?-\s*h2:\s*([^\n]+)', content, re.DOTALL)
-    m_bgv_p1 = re.search(r'-\s*\*\*`background-verification-service/`\*\*.*?-\s*p1:\s*([^\n]+)', content, re.DOTALL)
-    if m_bgv_h2: items['bgv.h2'] = ('background-verification-service/index.html', m_bgv_h2.group(1).strip())
-    if m_bgv_p1: items['bgv.p1'] = ('background-verification-service/index.html', m_bgv_p1.group(1).strip())
-
     # our-specialty: 3 h2s and 3 paragraphs (identical to home cards)
     items['specialty.it.h2'] = ('our-specialty/index.html', 'IT Hiring Service')
     items['specialty.it.p'] = ('our-specialty/index.html', items['home.card.it'][1])
