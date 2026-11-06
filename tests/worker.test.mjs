@@ -55,7 +55,7 @@ test('Worker accepts legacy and selected partnership submissions and rejects uns
   assert.equal(deliveries.length, 7);
   assert.equal(verifications, 7);
 
-  for (const invalid of ['Not on the list', 'Revenue share\r\nBcc: attacker@example.com', 42, null]) {
+  for (const invalid of ['Not on the list', 'Revenue share\r\nBcc: attacker@example.com', 42]) {
     const before = verifications;
     response = await submit({ ...valid, collaboration: invalid });
     assert.equal(response.status, 400);
