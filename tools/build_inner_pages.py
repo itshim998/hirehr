@@ -33,12 +33,7 @@ inner_pages = [
         'heading': 'Recruitment Process Outsourcing',
         'nav_active': 'recruitment-process-outsourcing'
     },
-    {
-        'dir': 'background-verification-service',
-        'heading': 'Background Verification Service',
-        'nav_active': 'background-verification-service'
-    },
-    {
+{
         'dir': 'our-specialty',
         'heading': 'Our Speciality',
         'nav_active': 'our-specialty'
@@ -149,7 +144,7 @@ def generate_inner_page(page_info):
               <a href="../about-us/index.html" class="nav-link {'active' if nav_active == 'about-us' else ''}">ABOUT US</a>
             </li>
             <li class="nav-item has-dropdown">
-              <a href="#" class="nav-link {'active' if nav_active in ['permanent-hiring-solutions', 'contract-hiring-solutions', 'contract-to-hire-solutions', 'recruitment-process-outsourcing', 'background-verification-service', 'our-specialty'] else ''}" aria-haspopup="true" aria-expanded="false">
+              <a href="#" class="nav-link {'active' if nav_active in ['permanent-hiring-solutions', 'contract-hiring-solutions', 'contract-to-hire-solutions', 'recruitment-process-outsourcing', 'our-specialty'] else ''}" aria-haspopup="true" aria-expanded="false">
                 EMPLOYERS
                 <span class="dropdown-toggle-icon" aria-hidden="true">&#9662;</span>
               </a>
@@ -158,7 +153,6 @@ def generate_inner_page(page_info):
                 <li><a href="../contract-hiring-solutions/index.html" class="dropdown-link {'active' if nav_active == 'contract-hiring-solutions' else ''}">Contract Hiring</a></li>
                 <li><a href="../contract-to-hire-solutions/index.html" class="dropdown-link {'active' if nav_active == 'contract-to-hire-solutions' else ''}">Contract to Hire</a></li>
                 <li><a href="../recruitment-process-outsourcing/index.html" class="dropdown-link {'active' if nav_active == 'recruitment-process-outsourcing' else ''}">Recruitment Process Outsourcing</a></li>
-                <li><a href="../background-verification-service/index.html" class="dropdown-link {'active' if nav_active == 'background-verification-service' else ''}">Background Verification Service</a></li>
                 <li><a href="../our-specialty/index.html" class="dropdown-link {'active' if nav_active == 'our-specialty' else ''}">Our Speciality</a></li>
               </ul>
             </li>
@@ -230,7 +224,6 @@ def generate_inner_page(page_info):
             <a href="../contract-hiring-solutions/index.html">Contract hiring Solutions</a>
             <a href="../contract-to-hire-solutions/index.html">Contract to Hire Solutions</a>
             <a href="../recruitment-process-outsourcing/index.html">Recruitment Process Outsourcing</a>
-            <a href="../background-verification-service/index.html">Background Verification Service</a>
             <a href="../our-specialty/index.html">Our Speciality</a>
             <a href="../career-advice/index.html">Career Advice</a>
             <a href="../job-seekers/index.html">Career Assistance</a>

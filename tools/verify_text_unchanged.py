@@ -15,7 +15,6 @@ PAGES = [
     'contract-hiring-solutions/index.html',
     'contract-to-hire-solutions/index.html',
     'recruitment-process-outsourcing/index.html',
-    'background-verification-service/index.html',
     'our-specialty/index.html',
     'career-advice/index.html',
     'job-seekers/index.html',

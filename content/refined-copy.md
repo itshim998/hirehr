@@ -32,9 +32,6 @@ HireHR Services is a manpower hiring service provider headquartered in Kolkata, 
 - **`recruitment-process-outsourcing/`**:
   - p1: RPO (Recruitment Process Outsourcing) is a commonly outsourced service. It is when an employer transfers all or part of its recruitment processes to an external service provider. This is where HireHR comes to your help. We release you from the burden of managing processes outside your core capabilities, while providing you with top talent. Lately, RPO firms have become immensely popular in India, and companies are choosing to use them to save time and gain monetary benefits in the long run.
   - p2: At HireHR, we provide RPO solutions with all the necessary skills, tools and technologies for the recruitment process. Our dedicated team of recruiters will work onsite as well as offshore and address your recruitment challenges. We can assist you with campus hiring and bulk hiring as well.
-- **`background-verification-service/`** (keep the page `<h1>`; add this as an `<h2>`, then the paragraph):
-  - h2: Employment Verification and Reference Check
-  - p1: HireHR can assist employers with verifying employment history as part of the background check of their prospective new employees.
 - **`our-specialty/`** (three `<h2>` blocks, each followed by its paragraph; the paragraphs are identical to the home cards):
   - h2 "IT Hiring Service" + the text of `home.card.it`
   - h2 "ITES Hiring Service" + the text of `home.card.ites`

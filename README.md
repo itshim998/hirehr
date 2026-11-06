@@ -12,7 +12,7 @@ Rebuilt from a WordPress/Elementor snapshot into a clean static website without 
 - **Accessible (WCAG AA compliant)**: Skip link, ARIA landmarks and states, explicit form labels, visible focus indicators, and prefers-reduced-motion support.
 - **Design System ("Quiet Authority")**: Built with bespoke typography (self-hosted Newsreader & Hanken Grotesk OFL variable fonts), zero container drop shadows, editorial hairlines, and 100% WCAG AA color tokens. See [`docs/DESIGN_SYSTEM.md`](docs/DESIGN_SYSTEM.md) for full design system guidelines.
 - **Hero Slider**: Lightweight vanilla JavaScript slider with 4s autoplay, infinite looping, smooth transitions, and interaction pause.
-- **International Consultation Form**: WPForms #308 recreated with 5 required fields, 243-country code selector defaulting to United States (+1), client validation, and configurable endpoint.
+- **Enquiry and Collaboration Form**: Accessible Contact Us form with existing required fields, an optional six-choice recruitment partnership selector, international dial codes, Turnstile, and validated Cloudflare Worker email delivery.
 
 ## Project Structure
 
@@ -27,7 +27,6 @@ hirehr/
 ├── sitemap.xml                         # XML sitemap
 │
 ├── about-us/index.html                 # About Us page
-├── background-verification-service/    # Background Verification Service page
 ├── career-advice/index.html            # Career Advice page
 ├── contact-us/index.html               # Contact Us page
 ├── contract-hiring-solutions/          # Contract Hiring Solutions page

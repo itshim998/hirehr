@@ -30,12 +30,7 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
-  <url>
-    <loc>https://hirehrservices.com/background-verification-service/</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
+<url>
     <loc>https://hirehrservices.com/our-specialty/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
