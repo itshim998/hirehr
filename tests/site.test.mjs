@@ -82,3 +82,23 @@ test('All V2 inner pages use the homepage navigation model', () => {
   assert.doesNotMatch(partner, /class="partner-hero-visual"[\s\S]*?<svg/);
 });
 
+
+test('Inner header geometry stays locked to the homepage grid', () => {
+  const homeCss = read('css/home-v2.css');
+  const innerCss = read('css/inner-v2.css');
+  for (const rule of [
+    'grid-template-columns:230px minmax(0,1fr) auto',
+    'min-height:90px',
+    'padding:10px 36px',
+    'gap:24px',
+    'justify-self:center',
+    'gap:12px',
+    'font-size:15px',
+    '@media(max-width:1320px)',
+    '@media(max-width:1023px)'
+  ]) {
+    assert.ok(homeCss.replace(/\s+/g,'').includes(rule.replace(/\s+/g,'')), 'homepage missing geometry: ' + rule);
+    assert.ok(innerCss.replace(/\s+/g,'').includes(rule.replace(/\s+/g,'')), 'inner pages missing geometry: ' + rule);
+  }
+  assert.doesNotMatch(innerCss, /\.v2-inner-navigation\{[^}]*margin-left:auto/);
+});
