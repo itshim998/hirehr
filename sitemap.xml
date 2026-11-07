@@ -46,6 +46,11 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://hirehrservices.com/partner-with-us/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://hirehrservices.com/contact-us/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>

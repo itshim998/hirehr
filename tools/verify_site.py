@@ -23,7 +23,8 @@ def run_verification():
         'our-specialty/index.html',
         'career-advice/index.html',
         'job-seekers/index.html',
-        'contact-us/index.html'
+        'contact-us/index.html',
+        'partner-with-us/index.html'
     ]
 
     all_new_texts = set()
