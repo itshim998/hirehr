@@ -62,3 +62,15 @@ test('Contact and partnership pages share the secure six-choice enquiry form', (
   assert.match(read('sitemap.xml'), /https:\/\/hirehrservices\.com\/partner-with-us\//);
   assert.match(home, /<strong>Backed by<\/strong><span>20\+ years of experience<\/span>/);
 });
+test('All V2 inner pages expose the partnership page in primary navigation', () => {
+  const innerPages = [
+    'about-us/index.html','career-advice/index.html','contact-us/index.html',
+    'contract-hiring-solutions/index.html','contract-to-hire-solutions/index.html',
+    'job-seekers/index.html','our-specialty/index.html','permanent-hiring-solutions/index.html',
+    'recruitment-process-outsourcing/index.html'
+  ];
+  for (const page of innerPages) {
+    assert.match(read(page), /href="\.\.\/partner-with-us\/index\.html" class="nav-link">PARTNER WITH US<\/a>/, page);
+  }
+});
+
