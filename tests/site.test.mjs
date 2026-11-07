@@ -78,7 +78,7 @@ test('All V2 inner pages use the homepage navigation model', () => {
     assert.doesNotMatch(html, />JOB SEEKERS</);
   }
   const partner = read('partner-with-us/index.html');
-  assert.match(partner, /class="partner-hero-visual"[\s\S]*?<img[^>]+images\.unsplash\.com\/photo-1758518731814-50848c31d1ae/);
+  assert.match(partner, /class="partner-hero-visual"[\s\S]*?<img[^>]+images\.pexels\.com\/photos\/8441790\/pexels-photo-8441790\.jpeg/);
   assert.doesNotMatch(partner, /class="partner-hero-visual"[\s\S]*?<svg/);
 });
 
