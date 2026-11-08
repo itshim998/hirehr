@@ -1,84 +1,648 @@
-# HireHR — Replace Contact Page Placeholder with Real Contact Information
+You are working on the production HireHR Services website repository.
 
-## Repository
-- GitHub repository: `itshim998/hirehr`
-- Branch: `main`
-- Website: https://hirehrservices.com/
+Repository:
+itshim998/hirehr
 
-## Objective
-On the Contact Us page, replace the placeholder text:
+Production branch:
+main
 
-`Content pending from site owner.`
+Target production website:
+https://hirehrservices.com/
 
-with a polished, professional contact section containing the actual contact details provided below.
+Target page currently:
+https://hirehrservices.com/our-specialty/
 
-### Official contact information
-- **Phone:** +91 8296558406
-- **Email:** info@hirehrservices.com
+I am attaching a screenshot to this prompt. That screenshot is the authoritative visual specification for the replacement Hiring Expertise / Our Speciality page. 
 
-Do not display a physical address. The address is not required.
+Objective
 
-## Implementation requirements
+Completely replace the CURRENT contents and layout of the page presently shown under Hiring Expertise / Our Speciality with the page represented by the attached screenshot.
 
-### 1. Inspect before editing
-- Inspect the current Contact Us page and identify exactly where the placeholder is rendered.
-- Examine the existing design system and styles in `css/style.css`.
-- Check other pages to understand the established typography, spacing, colours, links, and layout conventions.
-- Verify the actual local Git branch and working-tree status before making changes. Do not overwrite unrelated uncommitted work.
+The current page has content resembling:
 
-### 2. Replace the placeholder with a professional contact section
-Design a clean, elegant, responsive contact section that fits HireHR's existing visual identity and its “Quiet Authority” design system.
+“Our Speciality”
 
-Include:
+IT Hiring Service
 
-**Phone**
-- Display: `+91 8296558406`
-- Make the number clickable using `tel:+918296558406`.
+ITES Hiring Service
 
-**Email**
-- Display: `info@hirehrservices.com`
-- Make the address clickable using `mailto:info@hirehrservices.com`.
+Non-IT Hiring Service
 
-Use small, elegant phone and email icons where appropriate. Keep the information easy to scan, clearly visible, and properly spaced.
+the existing bridge/banner hero
 
-You may include a brief introduction, such as:
+the existing three large service cards
 
-“Have a hiring requirement or a career-related enquiry? Get in touch with HireHR Services.”
+That current page design/content should NOT remain.
 
-Use this copy only if it fits the page naturally.
+Do not try to modify the old three-card design into the new design.
 
-### 3. Preserve the existing design
-- Match the current serif heading typography, dark navy and teal colour palette, spacing, and restrained visual style.
-- Keep the existing header, navigation, logo, footer, and page structure intact.
-- Reuse existing CSS classes and components where appropriate.
-- If additional CSS is necessary, keep it scoped to the Contact Us section rather than changing global styles.
-- Ensure the section works on mobile, tablet, and desktop.
-- Maintain semantic HTML, accessible link labels, keyboard usability, and visible focus indicators.
-- Avoid unnecessary animations, oversized cards, decorative clutter, or generic template-like design.
+The page should instead be rebuilt to match the attached target screenshot as closely as technically possible.
 
-### 4. Scope restrictions
-- Do not display any physical address.
-- Do not invent additional phone numbers, email addresses, office hours, or social media accounts.
-- Do not introduce a third-party contact form or external dependencies.
-- Do not alter the working contact-form backend, SMTP configuration, Cloudflare DNS, email routing, or Turnstile integration.
-- Do not reintroduce `employer@hirehrservices.com` or `jobseeker@hirehrservices.com`.
-- Do not make unrelated design or content changes.
+1. FIRST INSPECT THE REPOSITORY
 
-### 5. Verification
-After implementing the change:
+Before editing anything:
 
-1. Confirm that `Content pending from site owner.` no longer appears on the Contact Us page.
-2. Verify that the displayed phone number opens the phone handler through the correct `tel:` link.
-3. Verify that the email address opens a new message through the correct `mailto:` link.
-4. Check layout and readability at approximately 375px, 768px, and 1280px viewport widths.
-5. Run the relevant available tests and report their actual results.
-6. Inspect the final diff to confirm that only the intended files were changed and no unrelated content was affected.
+Inspect the repository structure.
 
-### 6. Final report
-Provide:
-- Files changed.
-- A concise explanation of the implementation.
-- Tests executed and their results.
-- Any outstanding issues.
+Identify exactly which route/component renders:
+https://hirehrservices.com/our-specialty/
 
-**Do not commit, push, or deploy automatically.** Complete and verify the local changes first, then wait for my approval.
+Identify:
+
+the page component
+
+page-specific CSS
+
+global CSS that affects it
+
+header/navigation implementation
+
+footer implementation
+
+responsive/mobile rules
+
+routing configuration
+
+existing HireHR logos/icons/assets that can be reused
+
+Understand whether the current header/footer are global components shared by other pages.
+
+Do not blindly replace shared components if doing so would alter unrelated production pages.
+
+The visual redesign requested here is specifically for the Hiring Expertise / Our Speciality page.
+
+If the screenshot's page header/footer differ from existing shared components, implement the target carefully and avoid unintentionally redesigning unrelated pages.
+
+2. THE SCREENSHOT IS AUTHORITATIVE
+
+The attached screenshot is the target.
+
+Reproduce its:
+
+section structure
+
+hierarchy
+
+spacing
+
+typography
+
+card proportions
+
+alignment
+
+borders
+
+rounded corners
+
+backgrounds
+
+blue/orange accent system
+
+CTA layout
+
+responsive proportions
+
+visual rhythm
+
+Do not reinterpret the screenshot into a generic approximation.
+
+Do not preserve elements from the existing Our Speciality page merely because they already exist.
+
+The screenshot supersedes the current page.
+
+3. DO NOT USE THE SCREENSHOT ITSELF AS THE PAGE
+
+The attached screenshot is a visual reference only.
+
+MOST IMPORTANTLY, the navigation bar inside the picture attached differs from the real hire hr website. Preserve the real one's navigation bar. 
+
+Do NOT:
+
+Modify the navigation bar. 
+
+Place the screenshot as one giant <img>
+
+use it as a CSS background for the entire page
+
+fake the page through image slicing
+
+Build the page properly using HTML/JSX/components/CSS and reusable local assets where appropriate.
+
+Text must remain real/selectable text.
+
+Buttons and navigation must remain functional.
+
+4. TARGET PAGE STRUCTURE
+
+The new page should visually follow this structure.
+
+A. Header / navigation:
+The current real hirehr site's navigation bar remains PRESERVED. 
+
+B. The current footer is not a global components shared by other pages either. 
+Hence, PRESERVE the footer of the current HireHR site. 
+
+So you are essentially reproducing the contents of the screenshot, except the header and footer as they conflict with the curent hirehr site. 
+
+IMPORTANT — IMAGE PLACEHOLDER REQUIREMENT
+
+I DO NOT currently have a valid final image link for this hero image.
+
+Therefore:
+
+KEEP THE HERO IMAGE AREA BLANK FOR NOW.
+
+Do not invent an image URL.
+
+Do not use an external placeholder service.
+
+Do not use Unsplash/Pexels/StockCake or another random image.
+
+Do not leave a broken <img>.
+
+Do not display alt-text or a broken-image icon.
+
+Instead, create the correctly sized/right-positioned hero image container so that a real image can easily be inserted later.
+
+It should visually occupy the same dimensions/position as the photograph in the screenshot, but its image content should remain blank/neutral for now.
+
+Preserve the screenshot's blue curved/arc styling around the image region if that can be implemented cleanly without requiring the missing image.
+
+6. IT & TECHNOLOGY RECRUITMENT EXPERTISE
+
+Create the section heading:
+
+IT & Technology Recruitment Expertise
+
+Supporting line:
+
+Access to talent across modern technologies and platforms.
+
+Include the decorative horizontal lines and orange accent styling shown in the screenshot.
+
+Then create six cards in a responsive 3 × 2 desktop grid.
+
+Card 1
+
+Software Engineering
+
+Java, .NET, Python, Full Stack,
+Web & Mobile
+
+Card 2
+
+ERP & CTRM
+
+ERP Systems, CTRM Solutions,
+
+Card 3
+
+AI, ML & Data Science
+
+Machine Learning, GenAI,
+Data Science
+
+Card 4
+
+Cloud & DevOps
+
+AWS, Microsoft Azure,
+DevOps & CI/CD
+
+Card 5
+
+Cybersecurity
+
+Security Engineering,
+Network Security
+
+Card 6
+
+Quality Engineering & Testing
+
+Manual & Automation Testing
+
+Match the screenshot's card:
+
+dimensions
+
+subtle light-blue background
+
+rounded corners
+
+typography
+
+spacing
+
+centered icon
+
+blue iconography
+
+title weight
+
+description alignment
+
+Use appropriate existing icon libraries/assets already present in the project where possible.
+
+Do not add a large dependency solely for a few icons unless clearly necessary.
+
+7. NON-IT RECRUITMENT EXPERTISE
+
+Create:
+
+Non-IT Recruitment Expertise
+
+Supporting line:
+
+Supporting organisations with talent across business operations, customer service and corporate functions.
+
+Again reproduce the decorative horizontal lines/orange accent shown in the screenshot.
+
+Create six cards in a responsive 3 × 2 desktop grid.
+
+Card 1
+
+BPO & KPO
+
+Voice, Non-Voice,
+Customer Support
+
+Card 2
+
+Front Office & Administration
+
+Reception, Office Administration
+
+Card 3
+
+Back Office & Operations
+
+Data Processing, Operations Support
+
+Card 4
+
+Sales & Business Development
+
+Inside Sales, Field Sales
+
+Card 5
+
+Finance, HR & Corporate Support
+
+Accounts, Payroll, HR Operations
+
+Card 6
+
+Executive & Leadership Hiring
+
+Team Leaders, Managers,
+Senior Executives
+
+Again reproduce the visual system shown in the screenshot.
+
+8. CTA BANNER
+
+Below the expertise cards, recreate the wide blue CTA banner shown in the screenshot.
+
+Left/icon area:
+handshake-style icon
+
+Primary text:
+Let’s Build Your Team Together
+
+Secondary text:
+Connect with HireHR Services for your IT & Non-IT recruitment needs.
+
+Right-side orange CTA:
+Discuss a Partnership →
+
+The CTA must link to the appropriate existing HireHR partnership/contact route after inspecting the repository.
+
+Do not create a dead link.
+
+Match:
+
+dark/royal blue gradient or equivalent
+
+rounded container
+
+white typography
+
+orange CTA
+
+sizing
+
+vertical alignment
+
+spacing
+
+closely to the screenshot.
+
+9. FOOTER
+
+Reproduce the footer presentation shown in the screenshot for this page as closely as possible, including:
+
+HireHR Services branding
+
+navigation links
+
+LinkedIn icon
+
+YouTube icon if the project has a legitimate existing YouTube destination
+
+copyright
+
+Privacy Policy
+
+Terms & Conditions
+
+Visible copyright:
+
+© 2026 HireHR Services. All rights reserved.
+
+Do not invent social URLs.
+
+Reuse legitimate links already present in the repository/site.
+
+If a social destination shown in the concept has no valid production URL currently configured, do not create a fake destination.
+
+10. RESPONSIVENESS
+
+The provided screenshot is primarily a desktop visual reference, but this remains a production website.
+
+The implementation MUST work correctly across:
+
+large desktop
+
+normal laptop
+
+tablet
+
+mobile
+
+For smaller widths:
+
+cards should transition cleanly from 3 columns → 2 columns → 1 column as appropriate
+
+text must not overflow
+
+heading sizes must scale sensibly
+
+CTA must remain usable
+
+header/navigation must preserve the site's existing functional responsive behaviour
+
+the blank hero image region should resize/reflow intelligently
+
+there must be no horizontal page overflow
+
+Do not sacrifice production responsiveness merely to match one screenshot width.
+
+11. PAGE-SCOPED IMPLEMENTATION
+
+This is extremely important.
+
+The HireHR website is already in production.
+
+Do not create broad global CSS changes merely to make this one page match the screenshot.
+
+Prefer:
+
+page-specific classes
+
+scoped styles
+
+existing design tokens where appropriate
+
+reusable components where safe
+
+Avoid modifying shared components in ways that change unrelated pages.
+
+If a shared component must be modified, first determine all of its consumers and ensure the modification is backward-compatible.
+
+12. REMOVE THE OLD PAGE IMPLEMENTATION
+
+Once the new page is implemented, ensure none of the old visible Our Speciality presentation remains on this route.
+
+Specifically, the final page should NOT still show:
+
+old “Our Speciality” hero/banner
+
+bridge illustration
+
+IT Hiring Service large card
+
+ITES Hiring Service large card
+
+old Non-IT Hiring Service large card
+
+old spacing/layout associated with that design
+
+Avoid leaving unused duplicate page markup or obsolete page-only CSS when it is safe to remove it.
+
+However, do not delete shared assets/code still used elsewhere.
+
+13. VISUAL COMPARISON
+
+After implementation, compare the rendered page directly against the attached screenshot.
+
+Evaluate:
+
+overall proportions
+
+page width
+
+section heights
+
+header height
+
+hero proportions
+
+heading placement
+
+card width/height
+
+grid gaps
+
+icon size
+
+text size
+
+font weight
+
+section spacing
+
+colors
+
+border radius
+
+DO NOT make changes to the Header, footer and contact us section in the current website.
+
+Do not declare success merely because all requested text exists.
+
+The target is visual fidelity.
+
+Iterate on the implementation until you are satisfied that the rendered result is a close reproduction of the screenshot, except for the deliberately blank hero photograph placeholder.
+
+PRODUCTION REGRESSION CHECK
+
+After implementation, perform a careful regression review.
+
+At minimum verify:
+
+Target route
+
+/our-specialty/
+
+Check:
+
+no runtime errors
+
+no blank page
+
+no console exceptions attributable to the implementation
+
+no missing imports
+
+no broken icons
+
+no broken images
+
+no overlapping content
+
+no horizontal overflow
+
+all navigation works
+
+CTA works
+
+responsive layout works
+
+Other website areas
+
+Check representative existing pages to ensure shared styling/components were not accidentally changed.
+
+At minimum inspect:
+
+homepage
+
+About Us
+
+recruitment/services-related pages
+
+Career Support / Career Guidance
+
+Partnership
+
+Contact Us
+
+Pay particular attention to:
+
+header
+
+navigation
+
+dropdowns
+
+footer
+
+global typography
+
+global container widths
+
+responsive behaviour
+
+Run the project's appropriate:
+
+install/dependency verification if necessary
+
+lint
+
+typecheck if configured
+
+build
+
+tests if configured
+
+Do not ignore pre-existing warnings, but distinguish clearly between pre-existing issues and regressions introduced by this change.
+
+Fix every regression caused by this implementation.
+
+COMMIT AND PUSH
+
+Once verification is complete:
+
+Confirm you are working from the latest main.
+
+Ensure no unrelated user/local changes are included.
+
+Review the final diff carefully.
+
+Commit only the files necessary for this page replacement.
+
+Use a clear production-quality commit message.
+
+Push the finished implementation to:
+
+main
+
+Do not create unnecessary commits.
+
+Do not use force-push.
+
+Do not rewrite unrelated history.
+
+17. CLOUDFLARE DEPLOYMENT
+
+After pushing to main, HireHR's Cloudflare deployment should begin.
+
+Monitor/wait for the Cloudflare deployment associated with the pushed production commit to finish.
+
+Do NOT stop immediately after git push.
+
+Once deployment completes successfully:
+
+open the production Hiring Expertise / Our Speciality route
+
+verify the deployed page
+
+make sure Cloudflare is serving the new commit rather than an old cached build
+
+check the production page against the attached screenshot
+
+check browser console/runtime behaviour
+
+confirm there are no production-only regressions
+
+If deployment fails, investigate the failure rather than treating the push as completion.
+
+If the deployed result differs materially from the local verified result, investigate and correct the discrepancy.
+
+18. FINAL RESPONSE
+
+Only after the complete implementation + validation + production deployment verification, report:
+
+files changed
+
+high-level implementation summary
+
+build/test results
+
+regression checks performed
+
+commit SHA pushed to main
+
+Cloudflare deployment status
+
+production URL verified
+
+any intentional difference from the screenshot
+
+The expected intentional difference is:
+
+The hero recruitment photograph itself remains blank because no valid final image source has been provided yet.
+
+Do not call the task complete before all of the above has been addressed.
+
+Most importantly: replace the existing page cleanly rather than layering the new design on top of the old one, while NOT modifying the current hirehr site's header, footer, contact details and protect the rest of the production HireHR site from regressions.

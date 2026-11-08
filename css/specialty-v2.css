@@ -1,0 +1,440 @@
+/* ==========================================================================
+   HireHR Services — Hiring Expertise / Our Speciality Page Styles
+   Namespace: .he-* (scoped under .v2-specialty-page)
+   ========================================================================== */
+
+.v2-specialty-page {
+  background-color: #ffffff;
+  color: #1a2b49;
+  font-family: var(--font-sans, "Hanken Grotesk", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.v2-specialty-main {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* ==========================================================================
+   Hero Section
+   ========================================================================== */
+.he-hero {
+  position: relative;
+  background: radial-gradient(circle at 68% 30%, #e2f0fd 0%, #edf5fc 45%, #f7faff 85%, #ffffff 100%);
+  border-bottom: 1px solid #e1ecf6;
+  overflow: hidden;
+  padding: 46px 0 38px;
+}
+
+.he-hero-inner {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(340px, 0.85fr);
+  align-items: center;
+  gap: 36px;
+}
+
+.he-hero-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  z-index: 2;
+}
+
+.he-hero-title {
+  margin: 0;
+  color: #0e2b4c;
+  font-family: var(--font-sans, "Hanken Grotesk", system-ui, -apple-system, sans-serif);
+  font-size: clamp(2.3rem, 4vw, 3.4rem);
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+}
+
+.he-hero-bar {
+  width: 142px;
+  height: 4.5px;
+  background-color: #0e2b4c;
+  border-radius: 3px;
+  margin: 12px 0 20px;
+}
+
+.he-hero-subtitle {
+  margin: 0 0 12px;
+  color: #122842;
+  font-size: clamp(1.12rem, 1.45vw, 1.38rem);
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+}
+
+.he-hero-desc {
+  margin: 0;
+  max-width: 500px;
+  color: #4a5b73;
+  font-size: clamp(0.96rem, 1.08vw, 1.04rem);
+  line-height: 1.58;
+  font-weight: 450;
+}
+
+/* Blank Hero Media Placeholder with Blue Arc Swoosh */
+.he-hero-media {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-height: 250px;
+  z-index: 1;
+}
+
+.he-hero-arc {
+  position: absolute;
+  top: -8px;
+  bottom: -8px;
+  left: 10px;
+  width: 80px;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.he-hero-arc svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.he-hero-placeholder {
+  position: relative;
+  width: 90%;
+  height: 250px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, rgba(235, 244, 254, 0.75) 0%, rgba(218, 236, 254, 0.45) 100%);
+  border: 1.5px dashed rgba(11, 103, 205, 0.28);
+  box-shadow: inset 0 0 32px rgba(11, 103, 205, 0.05);
+  overflow: hidden;
+}
+
+/* ==========================================================================
+   Recruitment Expertise Sections
+   ========================================================================== */
+.he-section {
+  padding: 38px 0 24px;
+  background-color: #ffffff;
+}
+
+.he-section-nonit {
+  padding-top: 20px;
+}
+
+.he-container {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Header with Horizontal Dividing Lines */
+.he-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  margin-bottom: 6px;
+}
+
+.he-header-line {
+  flex: 1;
+  height: 1.5px;
+  background-color: #b8d2ee;
+  border-radius: 1px;
+}
+
+.he-section-title {
+  margin: 0;
+  color: #0e2b4c;
+  font-family: var(--font-sans, "Hanken Grotesk", system-ui, -apple-system, sans-serif);
+  font-size: clamp(1.4rem, 2.1vw, 1.85rem);
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.he-section-sub {
+  margin: 0 auto;
+  text-align: center;
+  color: #33465e;
+  font-size: clamp(0.95rem, 1.1vw, 1.04rem);
+  line-height: 1.48;
+  max-width: 800px;
+  font-weight: 500;
+}
+
+.he-orange-bar {
+  width: 72px;
+  height: 3.5px;
+  background-color: #f58220;
+  border-radius: 2px;
+  margin: 10px auto 26px;
+}
+
+/* ==========================================================================
+   Expertise Cards Grid (3x2 Desktop)
+   ========================================================================== */
+.he-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.he-card {
+  background: #ebf4fe;
+  border: 1px solid #d5e6f8;
+  border-radius: 16px;
+  padding: 22px 18px 20px;
+  min-height: unset;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(11, 84, 164, 0.03);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.he-card:hover {
+  transform: translateY(-2px);
+  border-color: #b9d8fa;
+  box-shadow: 0 8px 20px rgba(11, 84, 164, 0.08);
+}
+
+.he-card-icon {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  color: #0a66c2;
+  flex-shrink: 0;
+}
+
+.he-card-icon svg {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.he-card-title {
+  margin: 0 0 6px;
+  color: #0e2b4c;
+  font-family: var(--font-sans, "Hanken Grotesk", system-ui, -apple-system, sans-serif);
+  font-size: clamp(1.05rem, 1.2vw, 1.18rem);
+  font-weight: 800;
+  line-height: 1.28;
+  letter-spacing: -0.01em;
+}
+
+.he-card-desc {
+  margin: 0;
+  color: #465770;
+  font-size: clamp(0.86rem, 0.98vw, 0.92rem);
+  line-height: 1.45;
+  font-weight: 500;
+}
+
+/* ==========================================================================
+   Wide Royal Blue CTA Banner
+   ========================================================================== */
+.he-cta-wrap {
+  padding: 30px 0 56px;
+}
+
+.he-cta-banner {
+  background: linear-gradient(90deg, #024796 0%, #065eb8 55%, #0866ca 100%);
+  border-radius: 16px;
+  padding: 22px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  color: #ffffff;
+  box-shadow: 0 8px 26px rgba(2, 71, 150, 0.2);
+}
+
+.he-cta-left {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  min-width: 0;
+}
+
+.he-cta-icon-box {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #ffffff;
+}
+
+.he-cta-icon-box svg {
+  width: 44px;
+  height: 44px;
+}
+
+.he-cta-vdivider {
+  width: 1.5px;
+  height: 42px;
+  background-color: rgba(255, 255, 255, 0.26);
+  flex-shrink: 0;
+}
+
+.he-cta-copy {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.he-cta-heading {
+  margin: 0 0 3px;
+  color: #ffffff;
+  font-family: var(--font-sans, "Hanken Grotesk", system-ui, -apple-system, sans-serif);
+  font-size: clamp(1.22rem, 1.65vw, 1.5rem);
+  font-weight: 800;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+}
+
+.he-cta-sub {
+  margin: 0;
+  color: #d6e7fa;
+  font-size: clamp(0.86rem, 1.02vw, 0.95rem);
+  line-height: 1.42;
+  font-weight: 500;
+}
+
+.he-cta-right {
+  flex-shrink: 0;
+}
+
+.he-cta-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 26px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #ff8205 0%, #f57200 100%);
+  color: #ffffff !important;
+  font-family: var(--font-sans, "Hanken Grotesk", system-ui, -apple-system, sans-serif);
+  font-size: 0.96rem;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: 0 4px 14px rgba(245, 114, 0, 0.36);
+  transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease;
+}
+
+.he-cta-button:hover,
+.he-cta-button:focus-visible {
+  filter: brightness(1.08);
+  transform: translateY(-1.5px);
+  box-shadow: 0 6px 18px rgba(245, 114, 0, 0.46);
+}
+
+.he-cta-arrow {
+  font-size: 1.15rem;
+  line-height: 1;
+  transition: transform 0.2s ease;
+}
+
+.he-cta-button:hover .he-cta-arrow {
+  transform: translateX(3px);
+}
+
+/* ==========================================================================
+   Responsive Adaptations
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .he-hero-inner {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .he-hero-media {
+    min-height: 220px;
+    justify-content: center;
+  }
+
+  .he-hero-placeholder {
+    width: 100%;
+    height: 220px;
+    border-radius: 18px;
+  }
+
+  .he-hero-arc {
+    display: none;
+  }
+
+  .he-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .he-hero {
+    padding: 32px 0 28px;
+  }
+
+  .he-header-row {
+    gap: 12px;
+  }
+
+  .he-section-title {
+    white-space: normal;
+  }
+
+  .he-cta-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 22px 20px;
+    gap: 18px;
+  }
+
+  .he-cta-left {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .he-cta-right {
+    width: 100%;
+  }
+
+  .he-cta-button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .he-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .he-hero-placeholder {
+    height: 160px;
+  }
+
+  .he-cta-vdivider {
+    display: none;
+  }
+  
+  .he-header-line {
+    display: none;
+  }
+}
