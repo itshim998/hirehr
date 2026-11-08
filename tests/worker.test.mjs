@@ -75,4 +75,13 @@ test('Worker accepts legacy and selected partnership submissions and rejects uns
   response = await submit(valid, { 'Content-Type': 'text/plain' });
   assert.equal(response.status, 415);
   assert.equal(deliveries.length, 7);
+
+  response = await submit({ ...valid, message: '', collaboration: choices[0] });
+  assert.equal(response.status, 200, 'Partnership enquiry with optional empty message succeeds');
+  assert.equal(deliveries.length, 8);
+  assert.ok(deliveries.at(-1).text.includes('Collaboration: ' + choices[0]));
+
+  response = await submit({ ...valid, message: '', collaboration: '' });
+  assert.equal(response.status, 400);
+  assert.equal((await response.json()).error, 'Invalid message');
 });

@@ -327,9 +327,18 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      if (!message) {
+      const collaborationEl = document.getElementById('form-collaboration');
+      if (collaborationEl && collaborationEl.hasAttribute('required') && !collaboration) {
+        showStatus('error', 'Please select an option.');
+        collaborationEl.focus();
+        return;
+      }
+
+      const messageEl = document.getElementById('form-message');
+      const isMessageRequired = messageEl ? messageEl.hasAttribute('required') : true;
+      if (isMessageRequired && !message) {
         showStatus('error', 'Please enter your Message.');
-        document.getElementById('form-message')?.focus();
+        messageEl?.focus();
         return;
       }
 
@@ -370,7 +379,7 @@ document.addEventListener('DOMContentLoaded', () => {
           company,
           phone: `${countryCode} ${phone}`,
           email,
-          message,
+          message: message || (collaboration ? `Partnership enquiry: ${collaboration}` : 'Partnership consultation enquiry'),
           collaboration,
           website,
           turnstileToken: activeToken

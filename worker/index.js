@@ -205,8 +205,8 @@ export default {
       return jsonResponse({ ok: false, error: 'Invalid email' }, 400, origin);
     }
 
-    // Message: required, <= 5000 chars
-    if (typeof payload.message !== 'string' || !rawMessage || rawMessage.length > 5000) {
+    // Message: required, <= 5000 chars (optional when collaboration is specified)
+    if (typeof payload.message !== 'string' || (!rawMessage && !rawCollaboration) || rawMessage.length > 5000) {
       return jsonResponse({ ok: false, error: 'Invalid message' }, 400, origin);
     }
 
@@ -293,7 +293,7 @@ export default {
         `Email: ${cleanEmail}`,
         '',
         'Message:',
-        rawMessage
+        rawMessage || (rawCollaboration ? `Partnership enquiry: ${rawCollaboration}` : 'None provided')
       ].join('\n');
 
       try {

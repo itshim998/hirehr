@@ -1,648 +1,1022 @@
 You are working on the production HireHR Services website repository.
 
 Repository:
-itshim998/hirehr
+`itshim998/hirehr`
 
 Production branch:
-main
+`main`
 
-Target production website:
-https://hirehrservices.com/
+Production website:
+`https://hirehrservices.com/`
 
-Target page currently:
-https://hirehrservices.com/our-specialty/
+This task concerns the existing **Partner with us** page.
 
-I am attaching a screenshot to this prompt. That screenshot is the authoritative visual specification for the replacement Hiring Expertise / Our Speciality page. 
+I am attaching a screenshot to this prompt.
 
-Objective
+The attached screenshot is the **authoritative visual specification for the NEW PAGE CONTENT** of the Partner with us page.
 
-Completely replace the CURRENT contents and layout of the page presently shown under Hiring Expertise / Our Speciality with the page represented by the attached screenshot.
+However, there is an extremely important exception:
 
-The current page has content resembling:
+# THE CURRENT REAL HIREHR HEADER/NAVIGATION AND FOOTER MUST REMAIN UNALTERED.
 
-“Our Speciality”
+The header/navigation and footer visible inside the attached target concept are NOT authoritative because they differ from the actual production HireHR website.
 
-IT Hiring Service
+Preserve the existing real HireHR site's:
 
-ITES Hiring Service
+- logo/header
+- navigation structure
+- navigation labels
+- dropdowns
+- active-state behaviour
+- responsive/mobile navigation
+- sticky/fixed behaviour if present
+- "Get in Touch" CTA
+- footer
+- footer contact information
+- footer links
+- footer responsive behaviour
 
-Non-IT Hiring Service
+Do NOT redesign those shared/site-wide components to look like the screenshot.
 
-the existing bridge/banner hero
+You are essentially replacing **only the Partner with us page content between the existing production header and existing production footer**.
 
-the existing three large service cards
+---
 
-That current page design/content should NOT remain.
+# 1. FIRST INSPECT THE CURRENT IMPLEMENTATION
 
-Do not try to modify the old three-card design into the new design.
-
-The page should instead be rebuilt to match the attached target screenshot as closely as technically possible.
-
-1. FIRST INSPECT THE REPOSITORY
-
-Before editing anything:
-
-Inspect the repository structure.
-
-Identify exactly which route/component renders:
-https://hirehrservices.com/our-specialty/
+Before changing anything, inspect the repository thoroughly enough to understand the current Partner with us page.
 
 Identify:
 
-the page component
+- the exact route
+- page component
+- page-specific CSS
+- any shared CSS affecting it
+- hero implementation
+- current partnership cards
+- current form component
+- current form state/validation
+- current phone-number handling
+- current collaboration-options dropdown
+- current Cloudflare Turnstile integration
+- current form submission/API/backend integration
+- success/error states
+- any analytics or tracking associated with the form
+- shared header/navigation
+- shared footer
+- responsive rules
 
-page-specific CSS
+Also inspect the assets already available in the repository, particularly any existing handshake/recruitment partnership image that may be suitable for the new hero.
 
-global CSS that affects it
+Do not start by blindly rewriting the page.
 
-header/navigation implementation
+Understand the current functionality first.
 
-footer implementation
+---
 
-responsive/mobile rules
+# 2. WHAT IS BEING REPLACED
 
-routing configuration
+The CURRENT Partner with us page contains content resembling:
 
-existing HireHR logos/icons/assets that can be reused
+- "Partner with HireHR Services"
+- recruitment partnership hero
+- "Choose the partnership path that fits your opportunity"
+- six numbered collaboration cards
+- the current large "Why HireHR Services?" information panel
+- the current partnership enquiry form
+- associated page-specific layout
 
-Understand whether the current header/footer are global components shared by other pages.
+The visual/content structure of this page should be replaced with the NEW structure represented by the attached screenshot.
 
-Do not blindly replace shared components if doing so would alter unrelated production pages.
+Do NOT layer the new design on top of the existing one.
 
-The visual redesign requested here is specifically for the Hiring Expertise / Our Speciality page.
+Do NOT leave duplicate old sections behind.
 
-If the screenshot's page header/footer differ from existing shared components, implement the target carefully and avoid unintentionally redesigning unrelated pages.
+Once complete, the page content should follow the new concept.
 
-2. THE SCREENSHOT IS AUTHORITATIVE
+---
 
-The attached screenshot is the target.
+# 3. SCREENSHOT AUTHORITY AND NON-GOALS
 
-Reproduce its:
+The screenshot is authoritative for:
 
-section structure
+- content hierarchy
+- page sections
+- typography hierarchy
+- spacing
+- card layouts
+- icon positioning
+- blue/orange visual language
+- section proportions
+- border radii
+- form arrangement
+- CTA treatment
+- hero structure
+- responsive intent
 
-hierarchy
+The screenshot is NOT authoritative for:
 
-spacing
+- the site header
+- navigation
+- global navbar CTA
+- footer
+- global contact information
+- global shared components
 
-typography
+Those MUST continue using the current production HireHR implementation.
 
-card proportions
+Also:
 
-alignment
-
-borders
-
-rounded corners
-
-backgrounds
-
-blue/orange accent system
-
-CTA layout
-
-responsive proportions
-
-visual rhythm
-
-Do not reinterpret the screenshot into a generic approximation.
-
-Do not preserve elements from the existing Our Speciality page merely because they already exist.
-
-The screenshot supersedes the current page.
-
-3. DO NOT USE THE SCREENSHOT ITSELF AS THE PAGE
-
-The attached screenshot is a visual reference only.
-
-MOST IMPORTANTLY, the navigation bar inside the picture attached differs from the real hire hr website. Preserve the real one's navigation bar. 
+DO NOT use the screenshot itself as the webpage.
 
 Do NOT:
 
-Modify the navigation bar. 
+- put the screenshot into one large `<img>`
+- use it as the page background
+- slice portions of the screenshot into fake UI
+- recreate text through images
 
-Place the screenshot as one giant <img>
+Build the page properly with JSX/HTML/components/CSS.
 
-use it as a CSS background for the entire page
+All text should remain real/selectable text.
 
-fake the page through image slicing
+All buttons and forms must remain genuinely functional.
 
-Build the page properly using HTML/JSX/components/CSS and reusable local assets where appropriate.
+---
 
-Text must remain real/selectable text.
+# 4. PRESERVE EXISTING PRODUCTION FORM FUNCTIONALITY
 
-Buttons and navigation must remain functional.
+This is CRITICAL.
 
-4. TARGET PAGE STRUCTURE
+The existing Partner with us form already has working production functionality.
 
-The new page should visually follow this structure.
+The redesign must NOT break it.
 
-A. Header / navigation:
-The current real hirehr site's navigation bar remains PRESERVED. 
+Before changing the form UI, understand the existing:
 
-B. The current footer is not a global components shared by other pages either. 
-Hence, PRESERVE the footer of the current HireHR site. 
+- field state
+- validation
+- payload
+- API endpoint
+- submission handler
+- Cloudflare Turnstile
+- bot protection
+- success state
+- failure state
+- loading state
+- collaboration-option values
+- phone-number handling
 
-So you are essentially reproducing the contents of the screenshot, except the header and footer as they conflict with the curent hirehr site. 
+Reuse the existing functional architecture.
 
-IMPORTANT — IMAGE PLACEHOLDER REQUIREMENT
+The screenshot defines how the form should LOOK, not permission to replace its backend behaviour.
 
-I DO NOT currently have a valid final image link for this hero image.
+Do NOT create a fake static form.
 
-Therefore:
+Do NOT change submission endpoints unnecessarily.
 
-KEEP THE HERO IMAGE AREA BLANK FOR NOW.
+Do NOT remove security or anti-spam protections.
 
-Do not invent an image URL.
+### Cloudflare Turnstile
 
-Do not use an external placeholder service.
+The current production page visibly uses Cloudflare Turnstile.
 
-Do not use Unsplash/Pexels/StockCake or another random image.
+The target concept does not display it.
 
-Do not leave a broken <img>.
+Nevertheless:
 
-Do not display alt-text or a broken-image icon.
+**DO NOT REMOVE CLOUDFLARE TURNSTILE.**
 
-Instead, create the correctly sized/right-positioned hero image container so that a real image can easily be inserted later.
+Keep the existing working Turnstile integration intact.
 
-It should visually occupy the same dimensions/position as the photograph in the screenshot, but its image content should remain blank/neutral for now.
+Integrate it cleanly into the redesigned form, preferably between the message field and submit CTA, without allowing it to visually dominate the layout.
 
-Preserve the screenshot's blue curved/arc styling around the image region if that can be implemented cleanly without requiring the missing image.
+Do not change Turnstile configuration/mode merely to hide it.
 
-6. IT & TECHNOLOGY RECRUITMENT EXPERTISE
+Its presence is an acceptable intentional difference from the concept because production form security takes priority.
 
-Create the section heading:
+---
 
-IT & Technology Recruitment Expertise
+# 5. PRESERVE HEADER/NAVIGATION EXACTLY
 
-Supporting line:
+MOST IMPORTANTLY:
 
-Access to talent across modern technologies and platforms.
+The current real HireHR navigation bar remains preserved.
 
-Include the decorative horizontal lines and orange accent styling shown in the screenshot.
+Do NOT attempt to reproduce the header from the target screenshot.
 
-Then create six cards in a responsive 3 × 2 desktop grid.
+The current website's header contains items such as:
 
-Card 1
+- Home
+- About Us
+- Services we offer
+- Hiring Expertise
+- Partner with us
+- Career Support
+- Contact Us
+- Get in Touch
 
-Software Engineering
+Preserve the real implementation.
 
-Java, .NET, Python, Full Stack,
-Web & Mobile
+Keep **Partner with us** as the appropriate active navigation item on this page.
 
-Card 2
+Do not modify shared header CSS merely to match the screenshot.
 
-ERP & CTRM
+---
 
-ERP Systems, CTRM Solutions,
+# 6. PRESERVE THE CURRENT FOOTER EXACTLY
 
-Card 3
+The footer shown inside the target screenshot must NOT replace the existing production HireHR footer.
 
-AI, ML & Data Science
+Keep the current real HireHR footer unchanged.
 
-Machine Learning, GenAI,
-Data Science
+Preserve:
 
-Card 4
+- current styling
+- HireHR branding
+- address
+- email
+- phone
+- Quick Links
+- spacing
+- responsiveness
+- existing links
 
-Cloud & DevOps
+Do not modify global/shared footer code for this task.
 
-AWS, Microsoft Azure,
-DevOps & CI/CD
+---
 
-Card 5
+# 7. NEW HERO SECTION
 
-Cybersecurity
+Recreate the target screenshot's hero content beneath the existing HireHR header.
 
-Security Engineering,
-Network Security
+The left side should contain:
 
-Card 6
+### Main heading
 
-Quality Engineering & Testing
+**Let’s Connect.**
 
-Manual & Automation Testing
+followed by:
 
-Match the screenshot's card:
+**Collaborate. Grow Together.**
 
-dimensions
+The phrase **Grow Together.** should use the bright blue emphasis shown in the concept.
 
-subtle light-blue background
+Reproduce the line-break and typography hierarchy closely.
 
-rounded corners
+### Supporting copy
 
-typography
+Use:
 
-spacing
+**HireHR Services welcomes organisations seeking IT and Non-IT recruitment support, along with Tier-1 vendors, recruitment agencies and independent professionals.**
 
-centered icon
+### CTA
 
-blue iconography
+**Discuss a Partnership →**
 
-title weight
+Use the orange CTA treatment represented in the concept.
 
-description alignment
-
-Use appropriate existing icon libraries/assets already present in the project where possible.
-
-Do not add a large dependency solely for a few icons unless clearly necessary.
-
-7. NON-IT RECRUITMENT EXPERTISE
-
-Create:
-
-Non-IT Recruitment Expertise
-
-Supporting line:
-
-Supporting organisations with talent across business operations, customer service and corporate functions.
-
-Again reproduce the decorative horizontal lines/orange accent shown in the screenshot.
-
-Create six cards in a responsive 3 × 2 desktop grid.
-
-Card 1
-
-BPO & KPO
-
-Voice, Non-Voice,
-Customer Support
-
-Card 2
-
-Front Office & Administration
-
-Reception, Office Administration
-
-Card 3
-
-Back Office & Operations
-
-Data Processing, Operations Support
-
-Card 4
-
-Sales & Business Development
-
-Inside Sales, Field Sales
-
-Card 5
-
-Finance, HR & Corporate Support
-
-Accounts, Payroll, HR Operations
-
-Card 6
-
-Executive & Leadership Hiring
-
-Team Leaders, Managers,
-Senior Executives
-
-Again reproduce the visual system shown in the screenshot.
-
-8. CTA BANNER
-
-Below the expertise cards, recreate the wide blue CTA banner shown in the screenshot.
-
-Left/icon area:
-handshake-style icon
-
-Primary text:
-Let’s Build Your Team Together
-
-Secondary text:
-Connect with HireHR Services for your IT & Non-IT recruitment needs.
-
-Right-side orange CTA:
-Discuss a Partnership →
-
-The CTA must link to the appropriate existing HireHR partnership/contact route after inspecting the repository.
+The CTA should smoothly scroll/navigate to the partnership form on this same page where appropriate.
 
 Do not create a dead link.
 
+---
+
+# 8. HERO IMAGE
+
+The screenshot contains a handshake/recruitment-partnership photograph occupying the right side of the hero with a large blue curved divider/arc.
+
+Inspect the repository first.
+
+The current Partner with us page already appears to use a handshake image.
+
+If that existing production asset is suitable and sufficiently close to the concept:
+
+**REUSE THE EXISTING LOCAL/PRODUCTION ASSET.**
+
+Prefer that over introducing another random external dependency.
+
+Do not scrape the image out of the reference screenshot.
+
+Do not invent an unreliable image URL.
+
+Do not introduce a random stock-photo dependency unless a legitimate existing project asset already provides one.
+
+Reproduce the blue curved/arc treatment between the text and photograph as closely as practical using CSS/layout techniques.
+
+The hero must remain responsive.
+
+---
+
+# 9. "WHO CAN PARTNER WITH US?" SECTION
+
+Create the section:
+
+**Who Can Partner With Us?**
+
+Use the visual hierarchy from the screenshot:
+
+- dark navy heading
+- short orange underline/accent
+- spacious section layout
+
+Create four desktop cards across one row.
+
+## Card 1
+
+Icon:
+corporate/building style icon
+
+Title:
+
+**Corporate Clients**
+
+Description:
+
+**Companies looking for reliable  
+IT and Non-IT recruitment  
+support.**
+
+## Card 2
+
+Icon:
+people/group style icon
+
+Title:
+
+**Tier-1 Vendors &  
+Staffing Companies**
+
+Description:
+
+**Empanel HireHR Services as a  
+recruitment delivery partner.**
+
+## Card 3
+
+Icon:
+handshake style icon
+
+Title:
+
+**Recruitment Agencies &  
+Consultancies**
+
+Description:
+
+**Share client requirements  
+or outsource recruitment.**
+
+## Card 4
+
+Icon:
+individual/person style icon
+
+Title:
+
+**Independent Recruiters &  
+Business Associates**
+
+Description:
+
+**Introduce opportunities  
+and grow together.**
+
+Match the screenshot's:
+
+- pale/light blue cards
+- rounded corners
+- centered icons
+- saturated blue icons
+- navy titles
+- centered descriptions
+- consistent heights
+- balanced spacing
+
+Prefer the project's existing icon library if suitable.
+
+Do not add a heavy new dependency just for these icons.
+
+---
+
+# 10. "OUR COLLABORATION MODELS" SECTION
+
+Create:
+
+**Our Collaboration Models**
+
+with the short orange underline treatment shown in the screenshot.
+
+Create three horizontally aligned collaboration models on desktop.
+
+These are visually more open than the cards above.
+
+### Model 1
+
+Icon:
+megaphone
+
+Title:
+
+**Business Generation**
+
+Description:
+
+**Bring new recruitment  
+opportunities.**
+
+### Model 2
+
+Icon:
+handshake
+
+Title:
+
+**Recruitment Delivery Partnership**
+
+Description:
+
+**Support your existing  
+client requirements.**
+
+### Model 3
+
+Icon:
+two-way arrows / exchange
+
+Title:
+
+**Requirement Sharing**
+
+Description:
+
+**Access suitable assignments  
+when needed.**
+
+Reproduce:
+
+- large circular pale-blue icon backgrounds
+- blue iconography
+- thin vertical divider lines between columns
+- centered titles/descriptions
+- spacing shown in the reference
+
+On mobile, collapse naturally without awkward vertical divider lines.
+
+---
+
+# 11. LOWER TWO-COLUMN SECTION
+
+Below the collaboration models, build the target screenshot's two-column layout.
+
+LEFT:
+
+**Why Partner With HireHR Services?**
+
+RIGHT:
+
+the redesigned **Discuss a Partnership** enquiry form.
+
+These should sit side-by-side at desktop widths and stack cleanly on smaller screens.
+
+---
+
+# 12. "WHY PARTNER WITH HIREHR SERVICES?" CONTENT
+
+Create the heading:
+
+**Why Partner With HireHR Services?**
+
+with the orange underline accent.
+
+Below it, reproduce six benefits with blue circular checkmark icons:
+
+1. **Mutual business growth and long-term relationships**
+
+2. **Transparent recruitment fee-sharing arrangements**
+
+3. **Flexible commercial terms**
+
+4. **Professional coordination and communication**
+
+5. **Opportunities across IT and Non-IT recruitment**
+
+6. **Clear responsibilities and agreed terms**
+
 Match:
 
-dark/royal blue gradient or equivalent
+- checkmark size
+- blue circular background
+- vertical spacing
+- font weight
+- text alignment
+- overall proportions
 
-rounded container
+to the target concept.
 
-white typography
+---
 
-orange CTA
+# 13. TRANSPARENT PARTNERSHIP CALLOUT
 
-sizing
+Below those six benefits, reproduce the light-blue horizontal callout card from the concept.
 
-vertical alignment
+Use a large handshake icon on the left.
 
-spacing
+Heading:
 
-closely to the screenshot.
+**Transparent Partnership. Shared Success.**
 
-9. FOOTER
+Supporting copy:
 
-Reproduce the footer presentation shown in the screenshot for this page as closely as possible, including:
+**We believe in trust and clarity. All commercial terms will be discussed and documented in a formal agreement.**
 
-HireHR Services branding
+Match the target concept's:
 
-navigation links
+- pale-blue background
+- rounded corners
+- blue handshake icon
+- navy text
+- compact but balanced padding
 
-LinkedIn icon
+---
 
-YouTube icon if the project has a legitimate existing YouTube destination
+# 14. REDESIGNED PARTNERSHIP FORM
 
-copyright
+On the right-hand side create the screenshot's form card.
 
-Privacy Policy
+Top header area:
 
-Terms & Conditions
+dark blue/royal blue background.
 
-Visible copyright:
+Heading:
 
-© 2026 HireHR Services. All rights reserved.
+**Discuss a Partnership**
 
-Do not invent social URLs.
+Subheading:
 
-Reuse legitimate links already present in the repository/site.
+**Tell us about your interest. We’ll get in touch with you shortly.**
 
-If a social destination shown in the concept has no valid production URL currently configured, do not create a fake destination.
+Below that, use the white form body shown in the screenshot.
 
-10. RESPONSIVENESS
+Target layout:
 
-The provided screenshot is primarily a desktop visual reference, but this remains a production website.
+### Row 1
 
-The implementation MUST work correctly across:
+**Your Name \***
 
-large desktop
+**Your Email \***
 
-normal laptop
+### Row 2
 
-tablet
+**Company / Organisation**
 
-mobile
+**Phone Number \***
 
-For smaller widths:
+### Row 3 — full width
 
-cards should transition cleanly from 3 columns → 2 columns → 1 column as appropriate
+**I am interested as \***
 
-text must not overflow
+Dropdown placeholder:
 
-heading sizes must scale sensibly
+**Select an option**
 
-CTA must remain usable
+### Row 4 — full width
 
-header/navigation must preserve the site's existing functional responsive behaviour
+**Message (Optional)**
 
-the blank hero image region should resize/reflow intelligently
+Placeholder:
 
-there must be no horizontal page overflow
+**Tell us more about your partnership proposal...**
 
-Do not sacrifice production responsiveness merely to match one screenshot width.
+### Submit CTA
 
-11. PAGE-SCOPED IMPLEMENTATION
+**Submit Partnership Enquiry →**
 
-This is extremely important.
+Use the large orange pill-shaped CTA represented in the screenshot.
 
-The HireHR website is already in production.
+---
 
-Do not create broad global CSS changes merely to make this one page match the screenshot.
+# 15. IMPORTANT — DO NOT THROW AWAY THE CURRENT DROPDOWN DATA
+
+The existing production form already contains partnership/collaboration choices.
+
+Inspect the current values and their backend mapping.
+
+Preserve those actual production choices unless there is a strong technical reason not to.
+
+The current collaboration opportunities include concepts such as:
+
+- introducing companies with new recruitment requirements
+- direct access to companies looking for hiring support
+- recruitment agencies seeking delivery support
+- recruitment business/revenue-sharing collaboration
+- receiving excess recruitment requirements
+- other partnership opportunities
+
+Do NOT silently replace working backend values with arbitrary new strings merely because the visible label in the concept says:
+
+**I am interested as**
+
+The visible form can follow the concept while preserving existing form semantics and submission compatibility.
+
+If necessary, map the displayed choices cleanly to the existing backend values.
+
+---
+
+# 16. PHONE NUMBER FIELD
+
+The screenshot visually shows a simple phone-number field.
+
+The current production implementation appears to have international/country handling.
+
+Inspect how that works before modifying it.
+
+If the existing phone component is required for validation or backend compatibility:
+
+preserve its functionality.
+
+You may restyle it so it fits naturally inside the target form.
+
+Do NOT break valid international-number handling just to visually eliminate the country selector.
+
+Functional production behaviour is more important than a tiny visual discrepancy.
+
+---
+
+# 17. FORM REQUIRED/OPTIONAL SEMANTICS
+
+Target concept indicates:
+
+Required:
+
+- Your Name
+- Your Email
+- Phone Number
+- I am interested as
+
+Optional:
+
+- Company / Organisation
+- Message
+
+Before altering backend validation, inspect how the existing implementation works.
+
+Where safely compatible, align front-end validation with the concept.
+
+Do not introduce frontend/backend validation mismatches.
+
+Most importantly, preserve successful production submission behaviour.
+
+---
+
+# 18. REMOVE OLD PAGE-SPECIFIC SECTIONS
+
+After implementing the new design, the Partner with us content area should NO LONGER visibly contain the old presentation:
+
+- old "Recruitment Partnerships" badge
+- old "Partner with HireHR Services" hero structure
+- old "Choose the partnership path that fits your opportunity" section
+- six old numbered cards
+- old "What HireHR already brings to the conversation" panel
+- old form layout
+
+Do not leave duplicate sections hidden underneath or below the new page.
+
+Remove obsolete page-only markup/styles when safe.
+
+However:
+
+DO NOT delete shared code/assets used elsewhere.
+
+---
+
+# 19. PAGE-SCOPED CSS ONLY
+
+This is a production site.
+
+Do not solve this redesign through broad global CSS mutations.
 
 Prefer:
 
-page-specific classes
+- page-specific wrapper
+- page-specific class names
+- scoped component styles
+- reusable existing tokens
+- existing responsive breakpoints
 
-scoped styles
+Avoid generic selectors such as:
 
-existing design tokens where appropriate
+`h1`
+`section`
+`.container`
+`button`
+`form`
 
-reusable components where safe
+when those changes could affect other pages.
 
-Avoid modifying shared components in ways that change unrelated pages.
+Do not modify global typography/container/header/footer rules simply to make this page match.
 
-If a shared component must be modified, first determine all of its consumers and ensure the modification is backward-compatible.
+---
 
-12. REMOVE THE OLD PAGE IMPLEMENTATION
+# 20. RESPONSIVE REQUIREMENTS
 
-Once the new page is implemented, ensure none of the old visible Our Speciality presentation remains on this route.
+The reference image is primarily a desktop design, but the implementation must be production-quality at:
 
-Specifically, the final page should NOT still show:
+- wide desktop
+- ordinary laptop
+- tablet
+- mobile
 
-old “Our Speciality” hero/banner
+Expected responsive behaviour:
 
-bridge illustration
+### Hero
 
-IT Hiring Service large card
+Desktop:
+text left / image right.
 
-ITES Hiring Service large card
+Mobile:
+stack cleanly.
 
-old Non-IT Hiring Service large card
+Blue arc treatment must not cause clipping or horizontal overflow.
 
-old spacing/layout associated with that design
+### Partner cards
 
-Avoid leaving unused duplicate page markup or obsolete page-only CSS when it is safe to remove it.
+Desktop:
+4 columns.
 
-However, do not delete shared assets/code still used elsewhere.
+Tablet:
+2 columns.
 
-13. VISUAL COMPARISON
+Mobile:
+1 column.
 
-After implementation, compare the rendered page directly against the attached screenshot.
+### Collaboration models
+
+Desktop:
+3 columns.
+
+Tablet/mobile:
+stack or reduce columns appropriately.
+
+Remove/reorient desktop-only divider lines when stacked.
+
+### Lower content/form
+
+Desktop:
+benefits left / form right.
+
+Tablet/mobile:
+stack vertically with sensible spacing.
+
+### Form
+
+Two-column fields become single-column as needed.
+
+No input should overflow its card.
+
+CTA remains fully usable.
+
+No horizontal scrolling anywhere.
+
+The existing shared header and footer must retain their current responsive behaviour.
+
+---
+
+# 21. VISUAL FIDELITY PASS
+
+Once implementation is functioning, compare the actual rendered Partner with us page with the attached concept.
+
+Do not stop merely because all text is present.
 
 Evaluate:
 
-overall proportions
+- overall visual hierarchy
+- hero height
+- hero split ratio
+- blue arc size
+- heading placement
+- heading line breaks
+- font sizes
+- blue/orange emphasis
+- card dimensions
+- grid spacing
+- icon proportions
+- section spacing
+- divider placement
+- callout proportions
+- form width
+- form header height
+- field gaps
+- CTA proportions
+- border radius
+- light-blue backgrounds
+- whitespace
 
-page width
+Iterate until the content area is a close visual reproduction of the screenshot.
 
-section heights
+Remember the intentional exceptions:
 
-header height
+1. CURRENT production header/navigation remains unchanged.
+2. CURRENT production footer remains unchanged.
+3. Existing Cloudflare Turnstile/security remains present.
+4. Functional phone handling may remain if necessary for production compatibility.
 
-hero proportions
+Do NOT "fix" these differences by breaking production behaviour.
 
-heading placement
+---
 
-card width/height
+# 22. REGRESSION CHECK
 
-grid gaps
+After implementation perform a careful regression review.
 
-icon size
+## Partner with us page
 
-text size
+Verify:
 
-font weight
+- no runtime errors
+- no console errors caused by this implementation
+- no missing imports
+- no broken images
+- no broken icons
+- no clipping
+- no horizontal overflow
+- hero CTA works
+- form fields work
+- dropdown works
+- phone entry works
+- Turnstile works
+- form validation works
+- form submission works
+- success state works
+- failure state remains handled
+- responsive layout works
 
-section spacing
+Actually test the enquiry flow safely enough to verify the frontend/backend integration where the project's environment permits it.
 
-colors
+Do not repeatedly create real production enquiries merely for visual testing.
 
-border radius
+---
 
-DO NOT make changes to the Header, footer and contact us section in the current website.
+# 23. CROSS-PAGE REGRESSION CHECK
 
-Do not declare success merely because all requested text exists.
-
-The target is visual fidelity.
-
-Iterate on the implementation until you are satisfied that the rendered result is a close reproduction of the screenshot, except for the deliberately blank hero photograph placeholder.
-
-PRODUCTION REGRESSION CHECK
-
-After implementation, perform a careful regression review.
+Because this is a production site, inspect representative pages after the implementation.
 
 At minimum verify:
 
-Target route
+- homepage
+- About Us
+- Services we offer pages
+- Hiring Expertise / Our Speciality
+- Career Support
+- Contact Us
 
-/our-specialty/
+Pay special attention to:
 
-Check:
+- header
+- navbar alignment
+- dropdowns
+- active navigation state
+- global typography
+- footer
+- contact information
+- responsive behaviour
+- container widths
 
-no runtime errors
+The Partner page redesign must not visually leak into these pages.
 
-no blank page
+---
 
-no console exceptions attributable to the implementation
+# 24. BUILD / QUALITY CHECKS
 
-no missing imports
+Run the repository's appropriate existing checks.
 
-no broken icons
+At minimum, where configured:
 
-no broken images
+- dependency/install integrity
+- lint
+- typecheck
+- build
+- existing tests
 
-no overlapping content
+Distinguish clearly between:
 
-no horizontal overflow
-
-all navigation works
-
-CTA works
-
-responsive layout works
-
-Other website areas
-
-Check representative existing pages to ensure shared styling/components were not accidentally changed.
-
-At minimum inspect:
-
-homepage
-
-About Us
-
-recruitment/services-related pages
-
-Career Support / Career Guidance
-
-Partnership
-
-Contact Us
-
-Pay particular attention to:
-
-header
-
-navigation
-
-dropdowns
-
-footer
-
-global typography
-
-global container widths
-
-responsive behaviour
-
-Run the project's appropriate:
-
-install/dependency verification if necessary
-
-lint
-
-typecheck if configured
-
-build
-
-tests if configured
-
-Do not ignore pre-existing warnings, but distinguish clearly between pre-existing issues and regressions introduced by this change.
+- pre-existing warnings/problems
+- regressions introduced by this change
 
 Fix every regression caused by this implementation.
 
-COMMIT AND PUSH
+Do not introduce unnecessary dependencies.
 
-Once verification is complete:
+---
 
-Confirm you are working from the latest main.
+# 25. REVIEW THE DIFF BEFORE PUSHING
 
-Ensure no unrelated user/local changes are included.
+Before committing:
 
-Review the final diff carefully.
+1. ensure you started from/currently incorporate latest `main`
+2. inspect `git status`
+3. inspect the complete diff
+4. ensure only intended Partner-page changes are included
+5. ensure shared header/footer were not inadvertently redesigned
+6. ensure no unrelated files were modified
+7. ensure no secrets or generated junk files are included
 
-Commit only the files necessary for this page replacement.
+Keep the implementation focused.
 
-Use a clear production-quality commit message.
+---
 
-Push the finished implementation to:
+# 26. COMMIT AND PUSH
 
-main
+ONLY after you are 100% satisfied with:
 
-Do not create unnecessary commits.
+- visual fidelity
+- form functionality
+- responsiveness
+- regression safety
+- build success
 
-Do not use force-push.
+commit the implementation.
 
-Do not rewrite unrelated history.
+Use one sensible production-quality commit where practical.
 
-17. CLOUDFLARE DEPLOYMENT
+Push to:
 
-After pushing to main, HireHR's Cloudflare deployment should begin.
+`main`
 
-Monitor/wait for the Cloudflare deployment associated with the pushed production commit to finish.
+Do NOT:
 
-Do NOT stop immediately after git push.
+- force push
+- rewrite unrelated history
+- create unnecessary commits
+- include unrelated local changes
 
-Once deployment completes successfully:
+---
 
-open the production Hiring Expertise / Our Speciality route
+# 27. CLOUDFLARE PRODUCTION DEPLOYMENT
 
-verify the deployed page
+Pushing to `main` should trigger the HireHR Cloudflare deployment.
 
-make sure Cloudflare is serving the new commit rather than an old cached build
+Do NOT treat `git push` as completion.
 
-check the production page against the attached screenshot
+Monitor the deployment until the corresponding production build completes.
 
-check browser console/runtime behaviour
+If Cloudflare reports a failure:
 
-confirm there are no production-only regressions
+investigate the actual failure and correct it.
 
-If deployment fails, investigate the failure rather than treating the push as completion.
+Do not simply report that the push succeeded.
 
-If the deployed result differs materially from the local verified result, investigate and correct the discrepancy.
+---
 
-18. FINAL RESPONSE
+# 28. POST-DEPLOYMENT VERIFICATION
 
-Only after the complete implementation + validation + production deployment verification, report:
+After Cloudflare finishes successfully:
 
-files changed
+open the live Partner with us page.
 
-high-level implementation summary
+Verify that production is actually serving the new commit.
 
-build/test results
+Compare the deployed content area with the attached concept.
 
-regression checks performed
+Check:
 
-commit SHA pushed to main
+- header remains the existing HireHR production header
+- footer remains the existing HireHR production footer
+- hero rendering
+- cards
+- collaboration models
+- benefit list
+- callout
+- form
+- Turnstile
+- responsive behaviour
+- browser console
+- no production-only missing assets
+- no stale cached version
 
-Cloudflare deployment status
+Also spot-check at least the homepage and Hiring Expertise page after deployment to ensure shared UI remains untouched.
 
-production URL verified
+---
 
-any intentional difference from the screenshot
+# 29. FINAL RESPONSE
 
-The expected intentional difference is:
+Only after implementation, regression checks, push, deployment and production verification are complete, report:
 
-The hero recruitment photograph itself remains blank because no valid final image source has been provided yet.
+- files changed
+- what was replaced
+- any reusable components/assets used
+- form functionality preserved
+- Turnstile status
+- build/lint/test results
+- regression checks performed
+- final commit SHA
+- push status
+- Cloudflare deployment status
+- live production page verified
+- any intentional visual differences from the screenshot
 
-Do not call the task complete before all of the above has been addressed.
+Do not call the work complete earlier.
 
-Most importantly: replace the existing page cleanly rather than layering the new design on top of the old one, while NOT modifying the current hirehr site's header, footer, contact details and protect the rest of the production HireHR site from regressions.
+The governing principle for this task is:
+
+**Reproduce the attached Partner with us concept as closely as possible inside the page's content area, while preserving HireHR's existing production navigation, footer, form security, working submission flow and unrelated pages.**
