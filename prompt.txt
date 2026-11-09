@@ -1,656 +1,671 @@
-You are working on the production HireHR Services website repository.
+You are working on the production website repository:
 
-Repository:
+**Repository:** `itshim998/hirehr`  
+**Target branch:** `main`
 
-`itshim998/hirehr`
+This is a production website. Please approach this collaboratively and conservatively: inspect the current repository state first, understand the relevant implementation, then make the smallest correct set of changes necessary.
 
-Production branch:
+Do **not** blindly implement based only on this prompt. First verify the current files and current `main` HEAD yourself, because the repository may have changed since this prompt was written.
 
-`main`
+At the time this task was planned, the inspected baseline was:
 
-Production website:
+`7f93404c53d1fdb4a67b1dc546450e73a4fe8d2b`
 
-`https://hirehrservices.com/`
+If `main` has advanced, use the latest `main` and preserve all newer work.
 
-I am also attaching screenshots showing the CURRENT homepage and CURRENT About Us page for visual/context reference.
+## Objective
 
-This is primarily a **content update**, NOT a redesign.
+Implement the following HireHR website refinements safely without redesigning unrelated parts of the site.
 
-The current visual designs of both pages are already approved and should remain intact.
+### 1. Homepage headline — remove the periods
 
-## CURRENT PRODUCTION BASELINE
+The current homepage hero text is approximately:
 
-At the time this task was prepared, latest `main` was:
+`Bridging Talent and Employers.`  
+`Building Stronger Teams.`
 
-`2bfa61771ed01d89970de90f307c5aca78edfed7`
+Change it to exactly:
 
-This is the recent Partner-with-us redesign commit.
+`Bridging Talent and Employers`  
+`Building Stronger Teams`
 
-Before editing, fetch/pull and verify the actual latest `main`.
+Preserve the existing two-line layout, typography, spacing, responsive behaviour and surrounding hero design.
 
-If `main` has advanced, work from the newest version rather than resetting to the SHA above.
-
-Do NOT discard newer production work.
+Only remove the full stops.
 
 ---
 
-# 1. FIRST INSPECT BEFORE EDITING
+### 2. Replace the homepage introductory paragraph
 
-Inspect the relevant implementation before making changes.
+Replace the current paragraph beneath the hero heading with exactly:
 
-At minimum inspect:
+`At HireHR Services, we connect businesses with the right talent. Based in Kolkata, we provide end-to-end recruitment solutions, helping organisations meet their hiring needs while supporting individuals in finding the right career opportunities.`
+
+Do not rewrite or paraphrase this copy.
+
+Preserve the existing styling and structure.
+
+---
+
+### 3. Change "experience" to "expertise"
+
+The homepage currently contains an experience badge approximately equivalent to:
+
+`Backed by`  
+`20+ years of experience`
+
+Change it to:
+
+`Backed by`  
+`20+ years of expertise`
+
+Do not change the badge design.
+
+Also inspect automated tests because the existing site regression test previously asserted the old phrase `20+ years of experience`.
+
+Update the relevant assertion to the new intended copy.
+
+---
+
+### 4. Remove the "Explore Our Services" button
+
+On the homepage there is currently an `Explore Our Services` link/button beneath the recruitment-solutions section.
+
+Remove that UI element completely.
+
+Do not remove the surrounding recruitment-solutions section.
+
+Do not perform unnecessary CSS cleanup merely because `.v2-explore` or related styling becomes unused. This task is not a stylesheet refactor.
+
+---
+
+## 5. About Us copy update
+
+On the About Us page, under **Who We Are**, the current sentence is approximately:
+
+`Hiring the right people is important for every business, but managing recruitment alongside daily business operations is not always easy.`
+
+Replace it with exactly:
+
+`Hiring the right people is important for every business, but managing recruitment alongside daily business operations demands significant time and focus.`
+
+This wording currently exists in more than one source.
+
+Inspect and synchronize at least:
+
+- `about-us/index.html`
+- the About Us meta description where the old sentence is used
+- `content/pages.json`
+  - `about-us.meta_description`
+  - the corresponding About Us `content_html`
+
+Do not leave the old phrase in any currently authoritative/current About Us content source.
+
+### CRITICAL GENERATOR GUARDRAIL
+
+There is an old/historical generator:
+
+`tools/build_inner_pages.py`
+
+**DO NOT run this generator to regenerate the current pages.**
+
+The current production V2 inner-page layouts have evolved beyond the generator's old template. Regenerating pages using it could overwrite current navigation/layout/design work.
+
+You may update `content/pages.json` for source consistency, but **do not regenerate the website with `tools/build_inner_pages.py`.**
+
+Its Python syntax may still be checked as part of the existing regression suite, but it must not be used to overwrite the production HTML.
+
+---
+
+# 6. Hiring Expertise page — add the missing hero image
+
+The Hiring Expertise page is:
+
+`our-specialty/index.html`
+
+At the time of inspection its hero media area intentionally contained a blank placeholder approximately like:
+
+`<div class="he-hero-placeholder"></div>`
+
+Replace the blank image placeholder with the supplied image:
+
+`https://media.istockphoto.com/id/2158956320/photo/executive-offering-handshake-in-confident-team.jpg?s=612x612&w=0&k=20&c=eRTADCfPnhPJjXp19GxpQOKVrW_KZG_9K63bIlCRKBs=`
+
+Keep the existing hero design, including:
+
+- the blue curved arc/accent
+- hero copy
+- sizing/layout
+- responsive structure
+- spacing
+- rounded image presentation
+
+The image should visually fill the existing hero-image area rather than changing the layout.
+
+Use appropriate image behaviour, for example:
+
+- `width: 100%`
+- `height: 100%`
+- `object-fit: cover`
+
+with whatever scoped CSS is necessary to avoid stretching or distortion.
+
+Keep CSS changes scoped to the Hiring Expertise page, preferably in:
+
+`css/specialty-v2.css`
+
+Do not redesign this page.
+
+### Accessibility
+
+Use a sensible descriptive `alt` value for the photograph unless the existing visual semantics genuinely justify decorative treatment.
+
+---
+
+## CRITICAL: Content Security Policy
+
+The site currently has a restrictive CSP in:
+
+`_headers`
+
+At the time of inspection the image policy included approximately:
+
+`img-src 'self' data: https://images.stockcake.com;`
+
+The supplied image is hosted on:
+
+`https://media.istockphoto.com`
+
+Therefore the image may be blocked in production unless the CSP is updated.
+
+Update the existing `img-src` directive to preserve the current allowed origins and additionally permit:
+
+`https://media.istockphoto.com`
+
+Conceptually:
+
+`img-src 'self' data: https://images.stockcake.com https://media.istockphoto.com;`
+
+Do not weaken the rest of the CSP.
+
+Do not replace the existing Stockcake permission because the Partner With Us page still uses it.
+
+Verify in-browser that the image actually loads and that there is no CSP violation in the console.
+
+---
+
+# 7. Partner With Us hero tagline
+
+The current Partner With Us hero is approximately:
+
+`Let’s Connect.`  
+`Collaborate. Grow Together.`
+
+The intended presentation is three separate lines with the full stops removed:
+
+`Let’s Connect`  
+`Collaborate`  
+`Grow Together`
+
+Preserve the current visual emphasis/accent on **Grow Together**.
+
+Prefer an explicit line structure rather than relying on wrapping behaviour.
+
+Do not redesign the hero.
+
+---
+
+# 8. Partner With Us form — remove the "I am interested as" dropdown
+
+On:
+
+`partner-with-us/index.html`
+
+the partnership form currently includes a required dropdown labelled approximately:
+
+`I am interested as`
+
+with six partnership choices.
+
+Remove that **entire form field** from the UI.
+
+The user does not want that dropdown at all.
+
+Do not replace it with another dropdown, radio group or hidden selector.
+
+Preserve the other form fields, including:
+
+- Name
+- Email
+- Company / Organisation
+- Phone
+- Message
+- Honeypot
+- Cloudflare Turnstile
+- form status area
+- submit button
+
+Preserve the current form design and responsive layout.
+
+After removal, check the grid so that there is no ugly blank space or alignment problem.
+
+---
+
+# 9. Contact Us form — remove collaboration dropdown
+
+On:
+
+`contact-us/index.html`
+
+remove the complete form field labelled:
+
+`How would you like to collaborate with us?`
+
+including its `<select>` and all partnership options.
+
+Do not replace it with anything.
+
+Keep the remaining Contact Us form intact:
+
+- Name
+- Company
+- Phone
+- Email
+- Message
+- Honeypot
+- Turnstile
+- status
+- submit action
+
+The Contact Us message field should remain required.
+
+---
+
+# IMPORTANT FORM ARCHITECTURE GUIDANCE
+
+Inspect `js/main.js` and `worker/index.js` before changing them.
+
+At the time this task was planned, `js/main.js` already handled the collaboration selector defensively using optional access, approximately:
+
+`document.getElementById('form-collaboration')?.value`
+
+and only enforced the collaboration field when the element existed and had `required`.
+
+The partnership form could therefore function without that selector.
+
+The client also already generated a fallback message for partnership submissions when no explicit message was supplied.
+
+Likewise, the Worker treated `collaboration` as optional.
+
+Therefore:
+
+### Do NOT unnecessarily rewrite the Worker or form architecture.
+
+The intended change is to remove the dropdowns from the UI.
+
+It is acceptable — and preferable for backward compatibility — for the backend to continue accepting an optional legacy `collaboration` field if an older client submits one.
+
+Do not remove Worker security validation just to purge every mention of `collaboration`.
+
+Do not weaken:
+
+- allowed-field validation
+- Turnstile verification
+- origin checks
+- Content-Type checks
+- honeypot protection
+- email sanitization
+- email delivery safeguards
+
+Only change `js/main.js` or `worker/index.js` if inspection/testing proves a real runtime problem after the HTML dropdowns are removed.
+
+Keep the blast radius minimal.
+
+---
+
+# 10. Update the automated regression tests
+
+There is an existing test in:
+
+`tests/site.test.mjs`
+
+that previously expected the Contact and Partner pages to share a six-choice collaboration dropdown.
+
+That assertion is now obsolete.
+
+Refactor the test to represent the new intended behaviour.
+
+Do NOT simply delete useful regression coverage.
+
+The revised tests should verify, at minimum:
+
+### Forms
+
+Both forms still contain the expected fundamental fields and infrastructure:
+
+- `consultation-form`
+- `form-name`
+- `form-company`
+- `form-country`
+- `form-phone`
+- `form-email`
+- `form-message`
+- `form-website`
+- `turnstile-widget`
+- `form-status`
+
+Verify:
+
+- `form-collaboration` does NOT exist in `contact-us/index.html`
+- `form-collaboration` does NOT exist in `partner-with-us/index.html`
+- Contact Us no longer contains `How would you like to collaborate with us?`
+- Partner With Us no longer contains `I am interested as`
+
+Keep assertions for:
+
+- country data script
+- Cloudflare Turnstile
+- `/api/contact`
+- relevant partnership anchor/section
+- Contact message required state
+- partnership form behaviour required by current markup
+
+Do not force deletion of optional backend support for old `collaboration` submissions.
+
+### Homepage
+
+Add/update assertions for:
+
+- `Bridging Talent and Employers` without a period
+- `Building Stronger Teams` without a period
+- exact new homepage paragraph
+- `20+ years of expertise`
+- absence of `Explore Our Services`
+
+### About Us
+
+Assert the new:
+
+`demands significant time and focus`
+
+wording and ensure the obsolete:
+
+`is not always easy`
+
+does not remain in the current About Us HTML/source where it should have been synchronized.
+
+### Hiring Expertise
+
+Assert:
+
+- the supplied iStock URL is present in the Hiring Expertise hero
+- the obsolete blank hero placeholder is no longer the rendered hero content
+- `_headers` permits `https://media.istockphoto.com`
+
+Keep the existing Stockcake CSP/image assertions for the Partner page.
+
+### Partner hero
+
+Assert that the intended words remain and the periods after:
+
+- `Let’s Connect`
+- `Collaborate`
+- `Grow Together`
+
+are not part of the hero tagline.
+
+Be careful with HTML structure when writing the regex/assertion.
+
+---
+
+# Expected primary change surface
+
+Based on the previously inspected architecture, the likely files that need modification are:
 
 - `index.html`
 - `about-us/index.html`
+- `content/pages.json`
+- `our-specialty/index.html`
+- `css/specialty-v2.css`
+- `partner-with-us/index.html`
+- `contact-us/index.html`
+- `_headers`
+- `tests/site.test.mjs`
+
+Potentially no changes should be required in:
+
+- `js/main.js`
+- `worker/index.js`
+- `css/partner-v2.css`
 - `css/inner-v2.css`
-- relevant global CSS
-- `content/pages.json`
-- `tools/build_inner_pages.py`
-- content verification tooling relevant to About Us
-- existing tests
-- `.github/workflows/website-regression.yml`
 
-Understand which files are actually runtime-authoritative and which files are historical/documentation/content-source files.
-
-Important repository facts to verify yourself:
-
-- The homepage hero heading currently lives directly inside `index.html`.
-- The About Us page currently uses three `.v2-content-card` cards inside the existing About Us layout.
-- `content/pages.json` has historically been consumed by `tools/build_inner_pages.py`.
-- There are historical content/reference files containing the old About Us copy.
-
-Do NOT blindly run the inner-page generator if doing so would overwrite newer production page markup/design.
-
-If content-source files genuinely need synchronization for reproducibility, update the relevant About Us source entries carefully, but avoid unrelated regenerated changes.
+Do not treat that list as an absolute rule: inspect the repository first. But any expansion beyond the likely change surface should have a concrete technical reason.
 
 ---
 
-# 2. CRITICAL NON-GOAL — DO NOT REDESIGN ANYTHING
+# IMPLEMENTATION APPROACH
 
-This task does NOT authorize a homepage redesign or About Us redesign.
+Please proceed in this order.
 
-Preserve the current production:
+## Phase A — inspect before editing
 
-- header
-- navigation bar
-- navigation spacing
-- active nav behavior
-- dropdowns
-- Get in Touch button
-- footer
-- contact information
-- homepage hero illustration
-- homepage buttons
-- homepage technology expertise section
-- homepage recruitment solutions section
-- About Us hero
-- bridge artwork
-- About Us identity panel
-- About Us three-card visual system
-- colors
-- borders
-- card styling
-- responsive behavior
-- typography system
+1. Fetch/pull the latest `main`.
+2. Confirm current HEAD.
+3. Ensure the working tree does not contain unrelated user changes that could be lost.
+4. Inspect the relevant files before editing.
+5. Confirm that the implementation assumptions in this prompt still match the latest repository.
+6. If newer code has already solved part of the task, preserve it and adapt rather than reverting it.
 
-Do not modify the recently completed:
-
-- Hiring Expertise page
-- Partner with us page
-
-unless absolutely required to fix an actual regression caused by this task.
-
-This should remain a focused content change.
+Do not overwrite newer work.
 
 ---
 
-# 3. HOMEPAGE HEADLINE CHANGE
+## Phase B — implement surgically
 
-Current homepage hero headline:
+Make the smallest coherent set of modifications necessary.
 
-**Building Technology Teams.  
-Connecting the Right Talent.**
+Do not:
 
-Replace it with EXACTLY:
-
-**Bridging Talent and Employers.  
-Building Stronger Teams.**
-
-The intended HTML may preserve the current explicit desktop line break, e.g.:
-
-`Bridging Talent and Employers.<br>Building Stronger Teams.`
-
-provided the visible wording remains EXACTLY:
-
-**Bridging Talent and Employers. Building Stronger Teams.**
-
-Do not modify:
-
-- supporting paragraph
-- hero artwork
-- experience badge
-- hero CTAs
-- hero dimensions
-- surrounding layout
-
-Only change the headline copy.
-
-After changing it, visually inspect desktop/tablet/mobile to ensure the new wording wraps cleanly and does not collide with the hero artwork or buttons.
-
-Do NOT reduce typography unnecessarily just because the text changed.
-
-Preserve the existing design first.
+- redesign unrelated pages
+- refactor global CSS
+- rewrite navigation
+- change footer
+- alter recruitment service pages
+- change branding
+- remove security controls
+- regenerate pages with the stale generator
+- clean up unrelated historical files
+- make opportunistic code-style changes
+- change wording not requested here
 
 ---
 
-# 4. ABOUT US — PRESERVE EXISTING PAGE DESIGN
+# Phase C — local verification BEFORE pushing
 
-The current About Us page has:
+Do not use GitHub Actions as your iterative debugger.
 
-- existing HireHR navigation
-- About Us hero/bridge treatment
-- left-side About Us identity card
-- three numbered cards: 01, 02, 03
-- existing footer
+Run all appropriate checks locally first.
 
-KEEP THAT DESIGN.
+At minimum run the equivalent of the repository's current workflow:
 
-We are replacing the **content inside the three numbered cards**, not creating a new About Us page.
+`node --check js/main.js`
 
-Preserve the existing visible number styling:
+`node --check js/ui.js`
 
-- 01
-- 02
-- 03
+`node --check worker/index.js`
 
-Do not duplicate the numbers inside the headings.
+and:
 
-For example, card 01 should visually remain:
+`python -m py_compile tools/build_inner_pages.py tools/verify_site.py tools/verify_content.py tools/verify_text_unchanged.py`
 
-`01`
+Important again:
 
-followed by the new heading:
+**`py_compile` is fine. Do NOT execute `tools/build_inner_pages.py`.**
 
-`Who We Are`
+Then run:
 
-rather than rendering:
+`node --test tests/*.test.mjs`
 
-`01`
-`01. Who We Are`
+If other repository-local verification scripts are relevant and safe, inspect them and run them as appropriate.
 
-The user's supplied `01.`, `02.`, and `03.` indicate which current numbered card each replacement belongs to.
+Do not modify tests merely to make failures disappear. Every updated test should represent the intended production behaviour.
 
 ---
 
-# 5. CARD 01 — REPLACE CURRENT COPY
+# Phase D — browser/visual regression inspection
 
-The current long recruitment/sourcing paragraph inside card 01 should be completely removed.
+Before committing/pushing, inspect the affected pages in a browser.
 
-Keep the existing visible `01` number.
+Check both desktop and mobile/responsive widths.
 
-Add heading:
+At minimum inspect:
 
-**Who We Are**
+### Homepage
 
-Then use EXACTLY this content:
+Confirm:
 
-**Hiring the right people is important for every business, but managing recruitment alongside daily business operations is not always easy.**
+- headline periods are gone
+- two-line structure remains
+- new paragraph is exact
+- badge says `20+ years of expertise`
+- Explore Our Services is gone
+- surrounding layout has not shifted unexpectedly
+- navigation/footer unchanged
 
-**At HireHR Services, we help organisations meet their hiring needs through:**
+### About Us
 
-- Internal and client-driven recruitment support
-- Flexible hiring solutions for businesses of all sizes
-- Support for both ongoing and project-based requirements
+Confirm:
 
-Use semantic HTML.
+- new sentence appears
+- layout/cards remain unchanged
+- navigation/footer unchanged
 
-Preferred structure:
+### Hiring Expertise
 
-- existing `.v2-card-number`
-- semantic heading (`h2` or the appropriate accessible heading level)
-- paragraphs
-- `<ul>` for the three bullet points
+Confirm:
 
-Do NOT turn bullet characters into one large paragraph.
-
----
-
-# 6. CARD 02 — REPLACE CURRENT COPY
-
-Remove the current paragraph beginning:
-
-`We are committed to helping our clients find the best possible talent...`
-
-Keep the existing visible `02`.
-
-Add heading EXACTLY:
-
-**How We Work : Beyond CV Sourcing**
-
-Preserve that wording exactly, including the user's chosen title.
-
-Then:
-
-**We believe recruitment is more than finding resumes. It's about finding candidates who are genuinely suitable for the job.**
-
-**Our recruitment process covers:**
-
-1. Understanding the job requirements
-2. Sourcing relevant candidates
-3. Initial screening and evaluation
-4. Technical and functional assessment
-5. Candidate suitability and interest validation
-6. Interview coordination and feedback
-7. Offer management and joining follow-up
-
-Then:
-
-**Our focus: Better-matched profiles, fewer avoidable rejections and less time spent by clients on screening.**
-
-Use a proper semantic ordered list (`<ol>`) for the seven process steps.
-
-Do not manually type `1.`, `2.`, etc. into `<br>`-separated paragraph text.
-
-Preserve the wording exactly.
-
----
-
-# 7. CARD 03 — REPLACE CURRENT COPY
-
-Remove the current paragraph beginning:
-
-`We at HireHR are ready to extend our support...`
-
-Keep the existing visible `03`.
-
-Add heading:
-
-**What We Believe In**
-
-Then:
-
-**We believe good recruitment partnerships are built through trust, transparency and consistent delivery.**
-
-Use the following as a semantic bullet list:
-
-- Quality over quantity in candidate submissions
-- Clear communication and timely follow-ups
-- Flexible solutions at competitive costs
-- A genuine commitment to client requirements
-
-Then:
-
-**We welcome an opportunity to understand your hiring needs and show how HireHR Services can support your business.**
-
-Finally:
-
-**HireHR Services: The Right Talent. The Right Approach.**
-
-The final line may be given slightly stronger typographic emphasis, such as `<strong>`, provided it remains visually consistent with the existing About Us card design and does not turn into a new banner/component.
-
----
-
-# 8. ABOUT US CARD LAYOUT — HANDLE LONGER CONTENT SAFELY
-
-The new content is substantially longer and more structured than the existing three paragraphs, particularly card 02.
-
-Do not force the content into the old paragraph-only structure.
-
-Use semantic:
-
-- headings
-- paragraphs
-- `<ul>`
-- `<ol>`
-
-The existing three-card design should remain visually recognisable and intact.
-
-Allow cards to grow vertically as needed.
-
-Do NOT:
-
-- use fixed heights that clip text
-- use internal scrollbars
-- shrink body copy to an unreadable size
-- hide content
-- overflow outside cards
-- compress line-height excessively
-
-Because these three cards share one CSS grid row at desktop widths, evaluate how the differing content lengths affect their visual balance.
-
-The result should remain clean and intentional.
-
-At tablet/mobile widths, preserve the existing responsive collapse behavior.
-
----
-
-# 9. CSS — ONLY IF NEEDED, AND SCOPE IT TO ABOUT US
-
-The existing CSS currently styles `.v2-content-card p`, but the new content introduces headings, multiple paragraphs, unordered lists and ordered lists.
-
-If additional styling is required for:
-
-- card headings
-- paragraph spacing
-- list spacing
-- list indentation
-- ordered list markers
-- bullet alignment
-- final tagline
-
-make those changes narrowly scoped to the About Us page.
-
-Prefer adding a page-specific class such as an About Us body/page modifier if needed.
-
-For example, conceptually:
-
-`.about-page .v2-content-card ...`
-
-rather than globally altering every `.v2-content-card` across the website.
-
-Do NOT make generic changes that affect:
-
-- Career Advice
-- Career Assistance
-- Contact Us
-- Hiring Expertise
-- Partner with us
-- recruitment solution pages
-- any other inner page using the same shared card styles
-
-This is particularly important because `.v2-content-card` is reused elsewhere.
-
----
-
-# 10. ABOUT US META DESCRIPTION
-
-The current About Us `<meta name="description">` still contains the OLD copy:
-
-`Recruitment, sourcing, hiring, staffing and talent acquisition are very common terms used when employers look for manpower.`
-
-That becomes stale after this change.
-
-Update the About Us meta description to:
-
-**Hiring the right people is important for every business, but managing recruitment alongside daily business operations is not always easy.**
-
-Do not alter unrelated metadata.
-
----
-
-# 11. CONTENT SOURCE / GENERATOR CONSISTENCY
-
-The repository contains:
-
-- `content/pages.json`
-- `content/refined-copy.md`
-- `tools/build_inner_pages.py`
-- older content verification/documentation
-
-These historically contain the existing About Us text.
-
-Inspect their current purpose before deciding what to edit.
-
-Important rules:
-
-1. The live `about-us/index.html` MUST contain the new content.
-2. Do NOT blindly regenerate every inner page.
-3. If `content/pages.json` is still treated as the reproducible source of the About Us content, synchronize the relevant About Us entry.
-4. If a verification tool relies on a maintained source file, update only what is required to keep the new About Us content internally consistent.
-5. Do NOT rewrite historical reports/changelogs merely to erase history.
-6. Do NOT produce broad unrelated diffs.
-7. Do NOT allow an old generator invocation to revert newer header/footer/page redesign work.
-
-Review the diff carefully after any generator/tool invocation.
-
-If running a generator causes unrelated page rewrites, revert those generated changes and implement this task surgically.
-
----
-
-# 12. COPY FIDELITY
-
-Do not rewrite, improve, shorten or paraphrase the supplied content.
-
-Keep:
-
-- `organisations`
-- `It's`
-- `Better-matched`
-- `HireHR Services: The Right Talent. The Right Approach.`
-
-as supplied.
-
-Do not substitute American/British spelling based on your own preference.
-
-Do not add marketing language not requested here.
-
----
-
-# 13. VISUAL VERIFICATION
-
-After implementing, run the site locally and visually inspect both affected pages.
-
-## Homepage
-
-Verify:
-
-- new headline appears correctly
-- expected two-line composition remains visually balanced
-- no collision with hero graphic
-- no overlap with CTAs
+- photograph renders
+- no blank placeholder remains
+- photograph is not stretched/distorted
+- photograph fills the intended hero area
+- blue arc still appears correctly
+- image remains sensible on mobile
 - no horizontal overflow
-- desktop/laptop/tablet/mobile all remain sound
+- browser console contains no CSP violation
+- there are no 4xx/blocked image requests related to iStock
 
-## About Us
+### Partner With Us
 
-Verify:
+Confirm:
 
-- existing header is unchanged
-- existing bridge hero is unchanged
-- About Us identity panel is unchanged
-- cards still appear as the same three numbered cards
-- headings are readable
-- bullets are aligned correctly
-- ordered list is readable
-- no clipping
-- no text overlap
-- no internal scrollbars
-- no horizontal overflow
-- responsive 2-column/1-column behavior remains correct
-- footer remains unchanged
+- hero reads on three lines:
+  - `Let’s Connect`
+  - `Collaborate`
+  - `Grow Together`
+- periods are removed
+- Grow Together retains its existing accent
+- `I am interested as` dropdown is gone
+- form alignment remains clean
+- remaining fields work
+- no console errors
 
-Check representative viewport widths such as:
+Test partnership form logic with:
 
-- 375px
-- 768px
-- 1280px
-- wide desktop
+1. a normal message
+2. an empty optional message, if current product behaviour permits it
 
-Do not redesign surrounding elements to compensate for content length unless genuinely necessary.
+Ensure client-side logic does not throw because `form-collaboration` is absent.
 
----
+### Contact Us
 
-# 14. REGRESSION CHECKS
+Confirm:
 
-This is a production website.
+- collaboration dropdown is completely gone
+- Message remains required
+- remaining form fields align correctly
+- no console errors
+- client-side validation still works
 
-After the changes, inspect representative pages:
+### Security/form infrastructure
 
-- homepage
-- About Us
-- Hiring Expertise
-- Partner with us
-- Contact Us
-- one recruitment services page
-- Career Support/Career Assistance page
+Confirm Turnstile still renders on both forms.
 
-Pay particular attention to shared:
-
-- header
-- navigation
-- dropdown
-- footer
-- typography
-- shared card CSS
-- container widths
-- responsive behavior
-
-The About Us CSS changes must not leak into unrelated cards.
+Do not bypass Turnstile or weaken security for easier testing.
 
 ---
 
-# 15. REPOSITORY-NATIVE AUTOMATED CHECKS
-
-This repository is a static HTML/CSS/JS site and does not have a conventional package.json build pipeline.
-
-Do NOT invent `npm run build`, `npm run lint`, etc. if they do not exist.
-
-Run the checks represented by the existing GitHub Actions regression workflow.
-
-At minimum:
-
-```bash
-node --check js/main.js
-node --check js/ui.js
-node --check worker/index.js
-python -m py_compile tools/build_inner_pages.py tools/verify_site.py tools/verify_content.py tools/verify_text_unchanged.py
-node --test tests/*.test.mjs
-```
-
-Also run any relevant repository-specific verification script if it remains valid for the new intentionally changed content.
-
-If an older content-verification tool fails solely because it is intentionally asserting the superseded About Us copy, determine whether its source-of-truth needs to be updated rather than disabling the test.
-
-Do not weaken regression checks simply to make them green.
-
----
-
-# 16. FINAL DIFF REVIEW BEFORE COMMIT
+# Phase E — inspect the final diff
 
 Before committing:
 
-- fetch latest `main` again if necessary
-- inspect `git status`
-- inspect the complete diff
-- confirm homepage change is limited to the requested headline and any truly necessary supporting change
-- confirm About Us changes are limited to the requested content, metadata, and narrowly scoped styling/source consistency
-- confirm navigation was not altered
-- confirm footer was not altered
-- confirm Partner with us was not altered
-- confirm Hiring Expertise was not altered
-- confirm no generated junk/artifacts are included
-- confirm no secrets are present
+1. Review `git diff` carefully.
+2. Verify no unrelated files changed.
+3. Verify no unexpected generated HTML rewrites occurred.
+4. Verify navigation and footer were not modified unnecessarily.
+5. Verify no security configuration was weakened.
+6. Verify `_headers` retains all previous CSP directives and only expands the intended image host permission.
+7. Verify no accidental old-layout regeneration occurred.
+8. Verify all requested copy is exact.
 
-Do NOT include unrelated local modifications.
+If anything looks broader than necessary, investigate and reduce the diff.
 
 ---
 
-# 17. COMMIT AND PUSH TO MAIN
+# Phase F — commit and push only after verification
 
-ONLY when you are 100% satisfied that:
+Only once you are genuinely satisfied that:
 
-- requested copy is exact
-- homepage layout remains correct
-- About Us layout remains correct
-- semantic lists/headings are implemented properly
-- responsive behavior is sound
-- no shared styles regressed other pages
-- repository-native tests/checks pass
-- diff contains no unrelated changes
+- all requested changes are implemented;
+- automated tests pass;
+- browser checks pass;
+- forms remain functional;
+- iStock image renders;
+- CSP is correct;
+- there are no console errors attributable to the implementation;
+- no unrelated regressions were introduced;
 
-commit the work.
+then commit the changes.
 
-Use one focused production-quality commit where practical.
+Use a clear production-oriented commit message.
 
-Push to:
+Push the final verified implementation to:
 
 `main`
 
-Do NOT:
+Please avoid multiple experimental pushes.
 
-- force-push
-- rewrite unrelated history
-- reset away newer work
-- create unnecessary commits
+The repository's GitHub Actions workflow runs on pushes, so the preferred process is:
 
----
+**inspect → implement → local verification → browser verification → diff review → one final commit → one push**
 
-# 18. CLOUDFLARE DEPLOYMENT
+After pushing, monitor the resulting GitHub Actions workflow and verify that it completes successfully.
 
-After pushing to `main`, the production Cloudflare deployment should begin.
+If the production deployment is automatically triggered from `main`, also verify that deployment completes successfully and inspect the deployed affected pages where available.
 
-Do NOT stop at `git push`.
-
-Monitor/wait for the deployment associated with this exact commit to complete.
-
-If deployment fails:
-
-- inspect the actual failure
-- fix issues attributable to this change
-- re-run validation
-- push the corrected implementation
-
-Do not report completion while production deployment is failing.
+Do not declare the task complete if the GitHub Actions run or deployment is failing.
 
 ---
 
-# 19. POST-DEPLOYMENT PRODUCTION VERIFICATION
+# FINAL REPORT
 
-Once Cloudflare finishes successfully, open the live production website.
+After completion, give me a concise but technically useful report containing:
 
-Verify:
+1. Starting `main` commit SHA.
+2. Final commit SHA.
+3. Exact files changed.
+4. Summary of each implemented requirement.
+5. Whether `js/main.js` changed and why/why not.
+6. Whether `worker/index.js` changed and why/why not.
+7. Confirmation that `tools/build_inner_pages.py` was **not executed**.
+8. Local verification commands and outcomes.
+9. Automated test results.
+10. Browser/visual checks performed.
+11. Confirmation that the iStock image loaded without CSP errors.
+12. Confirmation that both collaboration dropdowns are absent.
+13. GitHub Actions result.
+14. Deployment result, if applicable.
+15. Any remaining concern that you could not conclusively verify.
 
-### Homepage
-`https://hirehrservices.com/`
+Do not claim 100% verification for anything you did not actually test.
 
-Confirm the live hero says:
-
-**Bridging Talent and Employers.  
-Building Stronger Teams.**
-
-### About Us
-`https://hirehrservices.com/about-us/`
-
-Confirm the three cards contain:
-
-- **Who We Are**
-- **How We Work : Beyond CV Sourcing**
-- **What We Believe In**
-
-with all requested paragraphs/lists intact.
-
-Then spot-check:
-
-- Hiring Expertise
-- Partner with us
-
-to ensure the recent redesigns remain intact.
-
-Check the browser console for runtime errors attributable to this change.
-
-Make sure Cloudflare is serving the new production commit rather than a stale cached copy.
-
----
-
-# 20. FINAL RESPONSE
-
-Only after implementation, verification, commit, push, Cloudflare deployment and live production checking are complete, report:
-
-- starting `main` SHA
-- files changed
-- homepage change made
-- About Us changes made
-- whether any page-scoped CSS was required
-- whether content source/generator files needed synchronization
-- automated test/check results
-- regression checks performed
-- final commit SHA
-- push status
-- Cloudflare deployment status
-- live homepage verified
-- live About Us page verified
-- confirmation that Hiring Expertise and Partner with us remained intact
-
-The governing principle is:
-
-**Change the requested copy and only the supporting markup/styling required to present that copy properly. Preserve the approved HireHR design and all unrelated production behavior.**
+The goal is a **small, production-safe refinement**, not a broad cleanup or redesign.
